@@ -2,12 +2,21 @@ package BankOnAspect;
 
 public class BasicAccount implements BankAccount {
 	private int balance;
-	private int accNum;
+	private String accNum;
 	
-	public BasicAccount(int accountNum)
+	public BasicAccount(String accountNum)
 	{
 		this.accNum = accountNum;
-		balance = 0;
+		this.balance = 0;
+	} // BasicAccount
+	
+	public BasicAccount(String accountNum, int initBalance)
+	{
+		this.accNum = accountNum;
+		if ( initBalance >= 0 )
+			this.balance = initBalance;
+		else 
+			throw new AccountOperationException("Initial Balance should be equal or greater than 0");
 	} // BasicAccount
 	
 	@Override
@@ -26,7 +35,7 @@ public class BasicAccount implements BankAccount {
 	} // getBalance
 
 	@Override
-	public int getAccNum() {
+	public String getAccNum() {
 		return this.accNum;
 	} // getAccNum
 } // BasicAccount
