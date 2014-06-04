@@ -2,12 +2,16 @@ package Aspects;
 
 import BankOnAspect.AccountOperationException;
 
-public aspect ErrorHandling {
+//import BankOnAspect.AccountOperationException;
+
+//import BankOnAspect.AccountOperationException;
+
+public aspect ErrorHandling extends OperationHandling {
 	
-	before (AccountOperationException exception): handler(Exception+) && args(exception) 
+	after(BankOnAspect.BankAccount account, int amount) throwing (AccountOperationException exception): deposit(account, amount)
 	{
-		String errorMessage = exception.getMessage();
-		// Do something with message
-		System.out.println(errorMessage);
-    }
+		  System.out.println("Exception: " + exception.getMessage() + "\n\tAccount: " + account.getAccNum() + "\n\tAmount: " + amount);		  
+		  // Log Exception
+	}
+	
 }
