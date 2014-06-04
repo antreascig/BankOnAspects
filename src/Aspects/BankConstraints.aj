@@ -11,7 +11,7 @@ public aspect BankConstraints extends OperationHandling{
 	{
 		if ( amount < 0 )
 		{
-			System.out.println("Exception thrown");
+			System.out.println("Exception thrown - Error: Deposit amount must not be negative");
 			throw new AccountOperationException("Deposit amount must not be negative");
 		} // if
 	}	
@@ -23,13 +23,13 @@ public aspect BankConstraints extends OperationHandling{
 		
 		if ( accountBalance < amount )
 		{
-			System.out.println("Exception thrown");
+			System.out.println("Exception thrown - Error: The account contains insufficient funds");
 			throw new AccountOperationException("The account contains insufficient funds");
 		} // if
 		
 		if ( amount < 0 )
 		{
-			System.out.println("Exception thrown");
+			System.out.println("Exception thrown - Error: Withdrawal amount must not be negative");
 			throw new AccountOperationException("Withdrawal amount must not be negative");
 		} // if
 	}
