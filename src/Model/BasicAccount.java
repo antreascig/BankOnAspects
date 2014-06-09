@@ -1,4 +1,4 @@
-package BankOnAspect;
+package Model;
 
 public class BasicAccount implements BankAccount {
 	private int balance;

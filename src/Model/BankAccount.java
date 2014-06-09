@@ -1,4 +1,4 @@
-package BankOnAspect;
+package Model;
 
 public interface BankAccount {
 	void deposit(int amount);

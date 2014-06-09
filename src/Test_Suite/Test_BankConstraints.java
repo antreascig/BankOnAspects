@@ -6,9 +6,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import BankOnAspect.AccountOperationException;
-import BankOnAspect.BankAccount;
-import BankOnAspect.BasicAccount;
+import Model.AccountOperationException;
+import Model.BankAccount;
+import Model.BasicAccount;
 
 public class Test_BankConstraints 
 {

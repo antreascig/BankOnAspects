@@ -1,4 +1,4 @@
-package BankOnAspect;
+package Model;
 
 public class AccountOperationException extends RuntimeException {
 	
