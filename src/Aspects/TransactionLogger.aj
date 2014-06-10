@@ -4,6 +4,10 @@ import Model.AccountOperationException;
 
 public aspect TransactionLogger extends OperationHandling
 {
+	//////////////////////////////////////////////////////////////////////////////////
+	/////// Deposit 
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	// Advice to log before a deposit transaction
 	before(Model.BankAccount account, int amount) : deposit(account, amount) 
 	{
@@ -37,11 +41,15 @@ public aspect TransactionLogger extends OperationHandling
 			// Logger.write(transactionLog);
 		} // before deposit
 	
+	//////////////////////////////////////////////////////////////////////////////////
+	/////// Withdrawal 
+	//////////////////////////////////////////////////////////////////////////////////		
+
 	// Advice to log before a withdrawal transaction
 	before(Model.BankAccount account, int amount) : withdraw(account, amount) 
 	{
 		String transactionLog = "Account:" + account.getAccNum() + "\tPrior Balance: " + account.getBalance()
-				             + " \tOperation: Withdrawal \tStatus: Pending \tAmount: " + amount;
+				             + "  \tOperation: Withdrawal \tStatus: Pending \tAmount: " + amount;
 		
 		System.out.println(transactionLog);		          
 		
@@ -52,7 +60,7 @@ public aspect TransactionLogger extends OperationHandling
 	after(Model.BankAccount account, int amount) returning : withdraw(account, amount) 
 	{
 		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
-				             + " \tOperation: Withdrawal \tStatus: Completed \tAmount: " + amount;
+				             + "  \tOperation: Withdrawal \tStatus: Completed \tAmount: " + amount;
 		
 		System.out.println(transactionLog);		          
 		
@@ -60,14 +68,14 @@ public aspect TransactionLogger extends OperationHandling
 	} // before deposit
 	
 	// Advice to log after a withdrawal transaction has failed
-			after(Model.BankAccount account, int amount) throwing (AccountOperationException e) : withdraw(account, amount) 
-			{
-				String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
-						             + " \tOperation: Withdrawal \tStatus: Failed \tAmount: " + amount;
-				
-				System.out.println(transactionLog);		          
-				
-				// Logger.write(transactionLog);
-			} // before deposit
+	after(Model.BankAccount account, int amount) throwing (AccountOperationException e) : withdraw(account, amount) 
+	{
+		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
+				             + "  \tOperation: Withdrawal \tStatus: Failed \tAmount: " + amount;
+		
+		System.out.println(transactionLog);		          
+		
+		// Logger.write(transactionLog);
+	} // before deposit
 	
 }

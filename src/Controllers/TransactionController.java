@@ -37,6 +37,7 @@ public class TransactionController{
 		// Call deposit on account
 		AccountController.depositInAccount(acc, amount);
 		
+		System.out.println("\n-----------------------------------------------\n");		
 	} // deposit
 	
 	public static void withdraw(JFrame parent, String acc)
@@ -71,6 +72,7 @@ public class TransactionController{
 		// Call withdrawal on account
 		AccountController.withdrawFromAccount(acc, amount);
 		
+		System.out.println("\n-----------------------------------------------\n");
 	} // deposit
 	
 	
