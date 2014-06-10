@@ -71,9 +71,7 @@ public class Test_Account_Operations {
 		
 		account.deposit(amount);
 		
-		
-		
-		
+		assertEquals(100, account.getBalance());
 	}
 	
 }

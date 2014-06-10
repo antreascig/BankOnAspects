@@ -37,7 +37,7 @@ public class BankDemoInterface extends JFrame {
 	} // BankDemoInterface
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialise the contents of the frame.
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	private void initialize() {
@@ -124,7 +124,7 @@ public class BankDemoInterface extends JFrame {
 		getContentPane().setLayout(groupLayout);
 		
 		this.setSize(601, 407);
-	} // initialize
+	} // Initialise
 
 	protected void accountSelectedEvent() 
 	{
