@@ -1,7 +1,6 @@
 package Interface;
 
 import javax.swing.JFrame;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -9,32 +8,38 @@ import javax.swing.JScrollPane;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
+
+import Controllers.BankDemoController;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 @SuppressWarnings("serial")
 public class BankDemoInterface extends JFrame {
 
 	// GUI Components
-	private JList<DefaultListModel<String>> list;
+	@SuppressWarnings("rawtypes")
+	private JList list;
 	private JButton addAccButton;
 	private JButton viewAccButton;
 	private JButton deleteAccButton;
-	
-	
-	private DefaultListModel<String> accountsList;
-	
+		
 	public BankDemoInterface() 
 	{
-		accountsList = new DefaultListModel<>();
 		initialize();		
-		
+		updateScreen();
+		setLocationRelativeTo(null);
 	} // BankDemoInterface
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings({ "rawtypes" })
 	private void initialize() {
 		
 		addAccButton = new JButton("Add New Account");
@@ -45,9 +50,19 @@ public class BankDemoInterface extends JFrame {
 		});
 		
 		viewAccButton = new JButton("View Account");
+		viewAccButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewAccount();
+			}
+		});
 		viewAccButton.setEnabled(false);
 		
 		deleteAccButton = new JButton("Delete Account");
+		deleteAccButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteAccount();
+			}
+		});
 		deleteAccButton.setEnabled(false);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -92,23 +107,89 @@ public class BankDemoInterface extends JFrame {
 					.addContainerGap())
 		);
 		
-		list = new JList(accountsList);
+		list = new JList();
+		list.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				accountSelectedEvent();
+			}
+		});
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				accountSelectedEvent();
+			}
+		});
 		scrollPane.setViewportView(list);
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		getContentPane().setLayout(groupLayout);
 		
 		this.setSize(601, 407);
+	} // initialize
+
+	protected void accountSelectedEvent() 
+	{
+		if ( !list.isSelectionEmpty() )
+		{
+			viewAccButton.setEnabled(true);
+			deleteAccButton.setEnabled(true);
+		}
+		else
+		{
+			viewAccButton.setEnabled(false);
+			deleteAccButton.setEnabled(false);
+		}
+	} // accountSelectedEvent
+
+	protected void viewAccount() 
+	{
+		String accNum;
+		if ( list.isSelectionEmpty() )
+			return;
+		else
+		{			
+			accNum = (String) list.getSelectedValue();
+			
+//			System.out.println("Selected Account: " + accNum);
+			
+			BankDemoController.viewAccount(accNum);
+		} // else		
 	}
 
-	protected void closeApp() 
-	{
-		this.dispose();
-	} // closeApp
+	protected void deleteAccount() {
+		String accNum;
+		
+		if ( list.isSelectionEmpty() )
+			return;
+		else
+		{
+			accNum = (String) list.getSelectedValue();
+			
+			BankDemoController.removeAccount(accNum);
+			
+			updateScreen();
+		} // else		
+	} // deleteAccount
 
 	protected void addAccount() 
 	{
 		String acc1 = "acc1";
-
-		accountsList.addElement(acc1);
+		
+		BankDemoController.addAccount(acc1, null);
+			
+		updateScreen();
 	} // addAccount
+	
+	@SuppressWarnings("unchecked")
+	private void updateScreen()
+	{
+		DefaultListModel<String> updatedModel = BankDemoController.getAccountList();
+		
+		list.setModel(updatedModel);
+		
+	} // updateScreen
+	
+	protected void closeApp() 
+	{
+		this.dispose();
+	} // closeApp
 }
