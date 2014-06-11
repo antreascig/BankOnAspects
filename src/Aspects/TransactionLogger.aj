@@ -1,81 +1,62 @@
 package Aspects;
 
 import Model.AccountOperationException;
+import Model.BankAccount;
 
 public aspect TransactionLogger extends OperationHandling
 {
-	//////////////////////////////////////////////////////////////////////////////////
-	/////// Deposit 
-	//////////////////////////////////////////////////////////////////////////////////
 	
-	// Advice to log before a deposit transaction
-	before(Model.BankAccount account, int amount) : deposit(account, amount) 
+	before(Model.BankAccount account, int amount) : bank_operations(account, amount) 
 	{
-		String transactionLog = "Account:" + account.getAccNum() + "\tPrior Balance: " + account.getBalance()
-				             + " \tOperation: Deposit \tStatus: Pending \tAmount: " + amount;
+		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
+		
+		String transactionLog = getLogMessage(account,operation,"Pending", amount);
 		
 		System.out.println(transactionLog);		          
 		
 		// Logger.write(transactionLog);
-	} // before deposit
+	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has completed
-	after(Model.BankAccount account, int amount) returning : deposit(account, amount) 
+	after(Model.BankAccount account, int amount) returning : bank_operations(account, amount) 
 	{
-		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
-				             + " \tOperation: Deposit \tStatus: Completed \tAmount: " + amount;
+		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
-		System.out.println(transactionLog);		          
+		String transactionLog = getLogMessage(account,operation,"Completed", amount);
+		
+		System.out.println(transactionLog);    
 		
 		// Logger.write(transactionLog);
-	} // before deposit
+	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has failed
-		after(Model.BankAccount account, int amount) throwing (AccountOperationException e) : deposit(account, amount) 
-		{
-			String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
-					             + " \tOperation: Deposit \tStatus: Failed \tAmount: " + amount;
-			
-			System.out.println(transactionLog);		          
-			
-			// Logger.write(transactionLog);
-		} // before deposit
+	after(Model.BankAccount account, int amount) throwing (AccountOperationException e) : bank_operations(account, amount) 
+	{
+		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
+		
+		String transactionLog = getLogMessage(account,operation,"Failed", amount);
+		
+		System.out.println(transactionLog);		          
+		
+		// Logger.write(transactionLog);
+	} // before bank_operations
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	/////// Withdrawal 
-	//////////////////////////////////////////////////////////////////////////////////		
-
-	// Advice to log before a withdrawal transaction
-	before(Model.BankAccount account, int amount) : withdraw(account, amount) 
+	private String getLogMessage(BankAccount account, String operation, String status, int amount )
 	{
-		String transactionLog = "Account:" + account.getAccNum() + "\tPrior Balance: " + account.getBalance()
-				             + "  \tOperation: Withdrawal \tStatus: Pending \tAmount: " + amount;
+		String log = "Account:" + account.getAccNum() + "\tPrior Balance: " + account.getBalance()
+        + " \tOperation: " + operation + "\tStatus: " + status + " \tAmount: " + amount;
 		
-		System.out.println(transactionLog);		          
-		
-		// Logger.write(transactionLog);
-	} // before deposit
-
-	// Advice to log after a withdrawal transaction has completed
-	after(Model.BankAccount account, int amount) returning : withdraw(account, amount) 
-	{
-		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
-				             + "  \tOperation: Withdrawal \tStatus: Completed \tAmount: " + amount;
-		
-		System.out.println(transactionLog);		          
-		
-		// Logger.write(transactionLog);
-	} // before deposit
+		return log;
+	}
 	
-	// Advice to log after a withdrawal transaction has failed
-	after(Model.BankAccount account, int amount) throwing (AccountOperationException e) : withdraw(account, amount) 
+	private String getOperation(String operationOrigin)
 	{
-		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance: " + account.getBalance()
-				             + "  \tOperation: Withdrawal \tStatus: Failed \tAmount: " + amount;
-		
-		System.out.println(transactionLog);		          
-		
-		// Logger.write(transactionLog);
-	} // before deposit
+		if (operationOrigin.contains("deposit"))
+			return "Deposit";
+		else if ( operationOrigin.contains("withdraw") )
+			return "Withrawal";
+		else 
+			return "Unknown Operation";
+	} // getOperation
 	
 }

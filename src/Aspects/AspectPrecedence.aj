@@ -2,5 +2,5 @@ package Aspects;
 
 public aspect AspectPrecedence 
 {
-	declare precedence : TransactionSynchronization, TransactionLogger, ErrorHandling, BankConstraints;
+	declare precedence : LoginService, TransactionSynchronization, TransactionLogger, ErrorHandling, BankConstraints;
 } // AspectPrecedence
