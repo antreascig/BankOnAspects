@@ -39,9 +39,9 @@ public class AccountController
 		BankAccount newAccount;
 		
 		if ( initAmount == null)
-			newAccount	 = new BasicAccount(accNum);
+			newAccount	 = new BasicAccount(accNum, "password");
 		else
-			 newAccount = new BasicAccount(accNum, initAmount);
+			 newAccount = new BasicAccount(accNum, "password", initAmount);
 		
 		accountList.put(accNum, newAccount);
 	} // addAccount

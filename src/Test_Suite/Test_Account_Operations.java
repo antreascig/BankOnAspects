@@ -17,7 +17,7 @@ public class Test_Account_Operations {
 	public void test_Account_creation_Only_AccNum() 
 	{
 		String accountNum = "1111";
-		BankAccount account = new BasicAccount(accountNum);
+		BankAccount account = new BasicAccount(accountNum, "password");
 		
 		assertNotEquals(account, null);
 		
@@ -29,20 +29,20 @@ public class Test_Account_Operations {
 	{
 		// Check with "correct" parameters
 		String accountNum = "1111";
-		BankAccount account = new BasicAccount(accountNum, 10);
+		BankAccount account = new BasicAccount(accountNum,"password", 10);
 		
 		assertNotEquals(account, null);	
 		assertEquals(accountNum, account.getAccNum());
 		
 		
 		// Check with initial balance = 0
-		account = new BasicAccount(accountNum, 10);
+		account = new BasicAccount(accountNum, "password", 10);
 		assertNotEquals(account, null);	
 		assertEquals(accountNum, account.getAccNum());
 		
 		// Check that exception is thrown for initial balance <0
 		exception.expect(AccountOperationException.class);
-		account = new BasicAccount("1111", -10);
+		account = new BasicAccount("1111", "password", -10);
 		
 	} // test_Account_creation
 	
@@ -52,11 +52,11 @@ public class Test_Account_Operations {
 	@Test
 	public void test_account_get_balance()
 	{
-		BankAccount account = new BasicAccount("1111", 10);
+		BankAccount account = new BasicAccount("1111", "password", 10);
 		
 		assertEquals(10, account.getBalance());
 		
-		account = new BasicAccount("1111", 0);
+		account = new BasicAccount("1111", "password", 0);
 		
 		assertEquals(0, account.getBalance());
 		
@@ -67,7 +67,7 @@ public class Test_Account_Operations {
 	{
 		int amount = 100;
 		
-		BankAccount account = new BasicAccount("1111");
+		BankAccount account = new BasicAccount("1111", "password");
 		
 		account.deposit(amount);
 		

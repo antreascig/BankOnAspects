@@ -5,4 +5,5 @@ public interface BankAccount {
 	void withdraw(int amount);
 	int getBalance();
 	String getAccNum();
+	boolean evaluateCredentials(String pass);
 } // BankAccount

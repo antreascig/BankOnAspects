@@ -3,16 +3,19 @@ package Model;
 public class BasicAccount implements BankAccount {
 	private int balance;
 	private String accNum;
+	private String password;
 	
-	public BasicAccount(String accountNum)
+	public BasicAccount(String accountNum, String pass)
 	{
 		this.accNum = accountNum;
 		this.balance = 0;
 	} // BasicAccount
 	
-	public BasicAccount(String accountNum, int initBalance)
+	public BasicAccount(String accountNum, String pass, int initBalance)
 	{
 		this.accNum = accountNum;
+		this.password = pass;
+		
 		if ( initBalance >= 0 )
 			this.balance = initBalance;
 		else 
@@ -38,4 +41,13 @@ public class BasicAccount implements BankAccount {
 	public String getAccNum() {
 		return this.accNum;
 	} // getAccNum
+
+	@Override
+	public boolean evaluateCredentials(String pass) 
+	{
+		if ( this.password == pass )
+			return true;
+		else
+			return false;
+	}
 } // BasicAccount

@@ -19,7 +19,7 @@ public class Test_BankConstraints
 	@Test
 	public void testWithdrawException() 
 	{
-		BankAccount account = new BasicAccount("1111");
+		BankAccount account = new BasicAccount("1111", "password");
 		
 		assertEquals(account.getBalance(), 0);
 		
@@ -30,7 +30,7 @@ public class Test_BankConstraints
 	@Test
 	public void testDepositException()
 	{
-		BankAccount account = new BasicAccount("1111");
+		BankAccount account = new BasicAccount("1111", "password");
 				
 		exception.expect(AccountOperationException.class);
 		account.deposit(-10);		
