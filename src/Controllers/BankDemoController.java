@@ -1,7 +1,8 @@
 package Controllers;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
-import javax.swing.DefaultListModel;
+
 import Interface.AccountView;
 
 public class BankDemoController 
@@ -24,15 +25,27 @@ public class BankDemoController
 		AccountController.addAccount(accNum, initAmount);
 	} // addAccount
 	
-	public static DefaultListModel<String> getAccountList() {
+	public static ArrayList<String> getAccountList() {
 		
 		Enumeration<String> accNumbers = AccountController.getAccountNumbersList();
 		
-		DefaultListModel<String> accList = new DefaultListModel<>();
-				
-		while ( accNumbers.hasMoreElements() )
-			accList.addElement(accNumbers.nextElement());
+		ArrayList<String> accList = new ArrayList<>();
 		
+		while (accNumbers.hasMoreElements())
+		{
+			accList.add(accNumbers.nextElement());
+		}	
 		return accList;
 	} // getAccountList
+	
+	public static String getAccountType(String accNum)
+	{
+		return AccountController.getAccountType(accNum);
+	} // getAccountType
+
+	public static void initializeServer() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 } // BankDemoController

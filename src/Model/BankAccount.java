@@ -6,4 +6,5 @@ public interface BankAccount {
 	int getBalance();
 	String getAccNum();
 	boolean evaluateCredentials(String pass);
+	String getAccountType();
 } // BankAccount

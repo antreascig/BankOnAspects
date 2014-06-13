@@ -28,6 +28,13 @@ public class AccountController
 		} // if
 		return accountList.keys();		
 	} // getAccountList
+	
+	public static String getAccountType(String accNum)
+	{
+		BankAccount account = accountList.get(accNum);
+
+		return account.getAccountType();
+	}
 
 	public static void removeAccount(String accNum) 
 	{

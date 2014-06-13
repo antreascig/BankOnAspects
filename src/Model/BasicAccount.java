@@ -50,4 +50,9 @@ public class BasicAccount implements BankAccount {
 		else
 			return false;
 	}
+
+	@Override
+	public String getAccountType() {
+		return "Basic Account";
+	}
 } // BasicAccount
