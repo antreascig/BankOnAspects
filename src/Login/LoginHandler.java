@@ -4,8 +4,14 @@ import Model.BankAccount;
 
 public class LoginHandler 
 {
+	private Integer password;
+	
+	public LoginHandler(Integer pin)
+	{
+		password = pin;
+	}
 
-	public static void login(BankAccount account, int amount) {
+	public void login(BankAccount account, int amount) {
 		// TODO Auto-generated method stub
 		
 	}

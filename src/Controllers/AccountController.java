@@ -3,8 +3,6 @@ package Controllers;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.swing.JOptionPane;
-
 import Model.AccountOperationException;
 import Model.BankAccount;
 import Model.BasicAccount;
@@ -28,21 +26,22 @@ public class AccountController
 		} // if
 		return accountList.keys();		
 	} // getAccountList
-	
-	public static String getAccountType(String accNum)
-	{
-		BankAccount account = accountList.get(accNum);
-
-		return account.getAccountType();
-	}
 
 	public static void removeAccount(String accNum) 
 	{
+		if ( accountList == null || accountList.isEmpty())
+		{
+			throw new NullPointerException("The account list is either unitialized or empty");
+		} // if
 		accountList.remove(accNum);
 	} // removeAccount
 	
 	public static void addAccount(String accNum, Integer initAmount) 
 	{
+		if ( accountList == null )
+		{
+			initAccList();
+		} // if
 		BankAccount newAccount;
 		
 		if ( initAmount == null)
@@ -53,43 +52,20 @@ public class AccountController
 		accountList.put(accNum, newAccount);
 	} // addAccount
 
-	public static int getAccountBalance(String accNum) {
-		BankAccount account = accountList.get(accNum);
-
-		return account.getBalance();
-	} // getAccountBalance
-
-	public static void depositInAccount(String accNum, int amount) 
-	{
-		BankAccount account = accountList.get(accNum);
-		try
+	public static BankAccount getAccount(String accNum) {
+		if ( accountList == null || accountList.isEmpty())
 		{
-			account.deposit(amount);
-		}
-		catch (AccountOperationException exception)
-		{
-			JOptionPane.showMessageDialog(null,
-					exception.getMessage(),
-				    "Account Operation Error",
-				    JOptionPane.WARNING_MESSAGE);
-		}
-	} // depositInAccount
-
-	public static void withdrawFromAccount(String accNum, int amount) 
-	{
-		BankAccount account = accountList.get(accNum);
+			throw new NullPointerException("The account list is either unitialized or empty");
+		} // if		return ;
 		
 		try
 		{
-			account.withdraw(amount);
-		}
-		catch (AccountOperationException exception)
+			BankAccount account = accountList.get(accNum);
+			return account;
+		} // try		
+		catch( NullPointerException exc)
 		{
-			JOptionPane.showMessageDialog(null,
-					exception.getMessage(),
-				    "Account Operation Error",
-				    JOptionPane.WARNING_MESSAGE);
-		}
-	} // withdrawFromAccount
-
-}
+			throw new AccountOperationException("Account not found!");
+		} // catch		
+	} // getAccount
+} // AccountController

@@ -6,7 +6,7 @@ import Model.AccountOperationException;
 
 //import BankOnAspect.AccountOperationException;
 
-public aspect ErrorHandling extends OperationHandling {
+public aspect ErrorHandling extends Transactions {
 	
 	after(Model.BankAccount account, int amount) throwing (AccountOperationException exception): bank_operations(account, amount)
 	{

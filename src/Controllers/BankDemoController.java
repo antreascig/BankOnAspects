@@ -3,29 +3,39 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import Controllers.TransactionControllers.RootTransactionController;
+import Controllers.TransactionControllers.TransactionController;
+import Global.UserMode;
 import Interface.AccountView;
 
 public class BankDemoController 
 {
-	public static void viewAccount(String accNum) {
-		int balance = AccountController.getAccountBalance(accNum);
+	private TransactionController transactionCtrl;
+	
+	public BankDemoController()
+	{
+		transactionCtrl = new RootTransactionController(UserMode.ADMIN);
+	}
+	
+	public void viewAccount(String accNumber) {
+		Integer balance = transactionCtrl.getBalance(accNumber);
 		
-		AccountView newAccountView = new AccountView(accNum, balance);
+		AccountView newAccountView = new AccountView(accNumber, balance, transactionCtrl );
 		
 		newAccountView.setVisible(true);
 	} // viewAccount
 
-	public static void removeAccount(String accNum) 
+	public void removeAccount(String accNumber) 
 	{
-		AccountController.removeAccount(accNum);
+		AccountController.removeAccount(accNumber);
 	} // removeAccount
 
-	public static void addAccount(String accNum, Integer initAmount) 
+	public void addAccount(String accNum, Integer initAmount) 
 	{
 		AccountController.addAccount(accNum, initAmount);
 	} // addAccount
 	
-	public static ArrayList<String> getAccountList() {
+	public ArrayList<String> getAccountList() {
 		
 		Enumeration<String> accNumbers = AccountController.getAccountNumbersList();
 		
@@ -38,14 +48,13 @@ public class BankDemoController
 		return accList;
 	} // getAccountList
 	
-	public static String getAccountType(String accNum)
+	public String getAccountType(String accNumber)
 	{
-		return AccountController.getAccountType(accNum);
+		return transactionCtrl.getAccountType(accNumber);
 	} // getAccountType
 
-	public static void initializeServer() {
-		// TODO Auto-generated method stub
-		
+	public void initializeServer() {
+		// TODO Auto-generated method stub	
 	}
 	
 } // BankDemoController

@@ -2,6 +2,7 @@ package Interface;
 
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
+import javax.swing.JOptionPane;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 
@@ -10,7 +11,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import Controllers.TransactionController;
+import Controllers.TransactionControllers.TransactionController;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -23,15 +24,19 @@ public class AccountView extends JFrame {
 	
 	private JLabel lblAccNum, lblAccBalance;
 	
+	private TransactionController controller;
+	
 	/**
 	 * Create the frame.
 	 * @param balance 
 	 * @param accNum 
 	 */
-	public AccountView(String accNum, int accBal) 
+	public AccountView(String accNum, int accBal, TransactionController trController) 
 	{
 		accNumber = accNum;
 		accBalance = accBal;
+		
+		controller = trController;
 		
 		initialize();
 		
@@ -123,19 +128,73 @@ public class AccountView extends JFrame {
 	
 	protected void withdraw() 
 	{
-		TransactionController.withdraw(this, accNumber);			
+		String amountString = (String) JOptionPane.showInputDialog(
+				this,
+                "Enter amount to withdraw:",
+                "Withdraw",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                0);		
+		
+		while ( !controller.isInteger(amountString) )
+		{
+			if (amountString == null)
+				return;
+			
+			amountString = (String) JOptionPane.showInputDialog(
+					this,
+	                "Amount Must be An integer Number!"
+	                + "\nEnter amount to withdraw:",
+	                "Withdrawal",
+	                JOptionPane.PLAIN_MESSAGE,
+	                null,
+	                null,
+	                0);
+		} // while	
+		
+		int amount = Integer.parseInt(amountString);
+		
+		
+		controller.withdraw(accNumber, amount);			
 		updateScreen();
 	} // withdraw
 
 	protected void deposit() 
 	{
-		TransactionController.deposit(this, accNumber);
+		String amountString = (String) JOptionPane.showInputDialog(
+				this,
+                "Enter amount to deposit:",
+                "Deposit",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                0);	
+		
+		while ( !controller.isInteger(amountString) )
+		{
+			if (amountString == null)
+				return;
+			
+			amountString = (String) JOptionPane.showInputDialog(
+					this,
+	                "Amount Must be An integer Number!"
+	                + "\nEnter amount to deposit:",
+	                "Deposit",
+	                JOptionPane.PLAIN_MESSAGE,
+	                null,
+	                null,
+	                0);
+		} // while	
+		
+		int amount = Integer.parseInt(amountString);
+		controller.deposit(accNumber, amount);
 		updateScreen();
 	} // deposit	
 
 	private void updateScreen()
 	{
-		accBalance = TransactionController.getBalance(accNumber);
+		accBalance = controller.getBalance(accNumber);
 		lblAccBalance.setText("£" + accBalance);
 	}
 	

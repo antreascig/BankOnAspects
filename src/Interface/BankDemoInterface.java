@@ -14,6 +14,7 @@ import javax.swing.border.BevelBorder;
 import Controllers.BankDemoController;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
@@ -43,13 +44,16 @@ public class BankDemoInterface extends JFrame {
 	private CardLayout panels;
 	private JMenuBar menuBar;
 	private JTextField textField;
+	private ButtonGroup accountRadioGroup;
+	private JButton viewAccButton, deleteAccButton;
+	private JScrollPane accountScrollPane;
 	
 	private String currentPanel;
-	
-	private ButtonGroup accountRadioGroup;
-			
-	public BankDemoInterface() 
+	private BankDemoController controller;
+				
+	public BankDemoInterface(BankDemoController bankDemoController) 
 	{
+		controller = bankDemoController;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		initialize();		
 		setLocationRelativeTo(null);
@@ -168,8 +172,8 @@ public class BankDemoInterface extends JFrame {
 		mainPanel.add(infoScrPane, "infoScrPane");
 		infoScrPane.setBackground(new Color(245, 245, 245));
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		JScrollPane serverScrollPane = new JScrollPane();
+		serverScrollPane.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		
 		JLabel lblOnlineUsers = new JLabel("Online Users:");
 		lblOnlineUsers.setFont(new Font("Liberation Serif", Font.BOLD | Font.ITALIC, 20));
@@ -180,7 +184,7 @@ public class BankDemoInterface extends JFrame {
 		GroupLayout gl_infoScrPane = new GroupLayout(infoScrPane);
 		gl_infoScrPane.setHorizontalGroup(
 			gl_infoScrPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+				.addComponent(serverScrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
 				.addGroup(gl_infoScrPane.createSequentialGroup()
 					.addGap(31)
 					.addComponent(lblOnlineUsers)
@@ -196,11 +200,11 @@ public class BankDemoInterface extends JFrame {
 						.addComponent(lblOnlineUsers)
 						.addComponent(userCountLbl, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE))
+					.addComponent(serverScrollPane, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE))
 		);
 		
 		JTextArea serverLog = new JTextArea();
-		scrollPane.setViewportView(serverLog);
+		serverScrollPane.setViewportView(serverLog);
 		serverLog.setWrapStyleWord(true);
 		serverLog.setForeground(new Color(0, 0, 0));
 		serverLog.setBackground(new Color(255, 255, 255));
@@ -210,8 +214,13 @@ public class BankDemoInterface extends JFrame {
 		
 		JPanel viewAccountPanel = new JPanel();
 		mainPanel.add(viewAccountPanel, "viewAccountPanel");
+			
+		accountsPanel = new JPanel();
+		accountsPanel.setBackground(new Color(255, 255, 255));
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		
+		accountScrollPane = new JScrollPane(accountsPanel);
+		accountsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JButton newAccButton = new JButton("New Account");
 		newAccButton.addActionListener(new ActionListener() {
@@ -221,15 +230,17 @@ public class BankDemoInterface extends JFrame {
 			}
 		});
 		
-		JButton vewAccButton = new JButton("View Account");
-		vewAccButton.addActionListener(new ActionListener() {
+		viewAccButton = new JButton("View Account");
+		viewAccButton.setEnabled(false);
+		viewAccButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
 				viewAccount();
 			}
 		});
 		
-		JButton deleteAccButton = new JButton("Delete Account");
+		deleteAccButton = new JButton("Delete Account");
+		deleteAccButton.setEnabled(false);
 		deleteAccButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -247,7 +258,7 @@ public class BankDemoInterface extends JFrame {
 		GroupLayout gl_viewAccountPanel = new GroupLayout(viewAccountPanel);
 		gl_viewAccountPanel.setHorizontalGroup(
 			gl_viewAccountPanel.createParallelGroup(Alignment.LEADING)
-				.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
+				.addComponent(accountScrollPane, GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
 				.addGroup(gl_viewAccountPanel.createSequentialGroup()
 					.addGap(12)
 					.addComponent(textField, GroupLayout.PREFERRED_SIZE, 296, GroupLayout.PREFERRED_SIZE)
@@ -260,7 +271,7 @@ public class BankDemoInterface extends JFrame {
 					.addContainerGap(59, Short.MAX_VALUE)
 					.addComponent(newAccButton)
 					.addGap(56)
-					.addComponent(vewAccButton)
+					.addComponent(viewAccButton)
 					.addGap(31)
 					.addComponent(deleteAccButton)
 					.addGap(90))
@@ -271,7 +282,7 @@ public class BankDemoInterface extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_viewAccountPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(deleteAccButton)
-						.addComponent(vewAccButton)
+						.addComponent(viewAccButton)
 						.addComponent(newAccButton))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_viewAccountPanel.createParallelGroup(Alignment.BASELINE)
@@ -279,16 +290,10 @@ public class BankDemoInterface extends JFrame {
 						.addComponent(lblSeravhBy)
 						.addComponent(searchOptions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE))
+					.addComponent(accountScrollPane, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE))
 		);
-		
-		accountRadioGroup = new ButtonGroup();
-		
-		accountsPanel = new JPanel();
-		accountsPanel.setBackground(new Color(255, 255, 255));
-		scrollPane_1.setViewportView(accountsPanel);
-		accountsPanel.setLayout(new GridLayout(0, 1, 0, 0));
 				
+		
 		viewAccountPanel.setLayout(gl_viewAccountPanel);
 		getContentPane().setLayout(groupLayout);
 		
@@ -297,7 +302,6 @@ public class BankDemoInterface extends JFrame {
 	
 	protected void initializeDemo() 
 	{
-		BankDemoController.initializeServer();
 		viewServerInfo();
 		menuBar.setVisible(true);
 		
@@ -308,30 +312,61 @@ public class BankDemoInterface extends JFrame {
 		if (currentPanel.equals("viewAccountPanel"))
 		{
 			updateViewAccount();
+			accountRadioGroup.clearSelection();
+			updateButtons();
 		} // if
 		
 	} // updateScreen
 	
+	protected void updateButtons() 
+	{
+		ButtonModel selection = accountRadioGroup.getSelection();
+		if (selection != null)
+		{
+			viewAccButton.setEnabled(true);
+			deleteAccButton.setEnabled(true);
+		} // if
+		else
+		{
+			viewAccButton.setEnabled(false);
+			deleteAccButton.setEnabled(false);
+		} // else				
+	} // updateButtons
+	
 	protected void updateViewAccount() 
 	{
-		ArrayList<String> accountList = BankDemoController.getAccountList();
+		ArrayList<String> accountList = controller.getAccountList();
 		
 		JRadioButton accountRadio;
 		String radioTxt;
 		
-		accountsPanel.removeAll();
+		accountRadioGroup = new ButtonGroup();
 		
+		accountsPanel.removeAll();
+			
 		for (String account : accountList)
 		{
-			radioTxt = account + "\t-\t" + BankDemoController.getAccountType(account);
-//			System.out.println(radioTxt);
+			radioTxt = account + "\t-\t" + controller.getAccountType(account);
+			System.out.println(radioTxt);
 			accountRadio = new JRadioButton(radioTxt);
 			accountRadio.setActionCommand(account);
+			accountRadio.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					updateButtons();
+				}
+			});
 
 			accountRadioGroup.add(accountRadio);
-			accountsPanel.add(accountRadio);
-			accountsPanel.validate();
+			
+			accountsPanel.add(accountRadio);			
 		} // for
+		
+		accountsPanel.repaint();
+		accountsPanel.validate();		
+		accountScrollPane.revalidate();
 		
 		panels = (CardLayout) mainPanel.getLayout();
 	    
@@ -348,11 +383,14 @@ public class BankDemoInterface extends JFrame {
 		currentPanel = "infoScrPane";	
 	} // viewServerInfo
 	
+	int counter = 1;
+	
 	protected void addAccount() 
 	{
-		String acc1 = "acc1";
+		String acc1 = "acc" + counter;
+		counter++;
 		
-		BankDemoController.addAccount(acc1, null);
+		controller.addAccount(acc1, null);
 			
 		updateScreen();
 	} // addAccount
@@ -360,13 +398,17 @@ public class BankDemoInterface extends JFrame {
 	protected void viewAccount() 
 	{
 		String accNum = accountRadioGroup.getSelection().getActionCommand();
-		BankDemoController.viewAccount(accNum);
+		controller.viewAccount(accNum);
 	} // viewAccount
 	
 	protected void deleteAccount() 
 	{
 		String accNum = accountRadioGroup.getSelection().getActionCommand();
-		BankDemoController.removeAccount(accNum);		
+		controller.removeAccount(accNum);	
+		
+		updateScreen();
+		
+		
 	} // deleteAccount
 	
 	protected void closeApplication() 

@@ -1,20 +1,18 @@
 package Aspects;
 
-import Login.LoginHandler;
-import Model.AccountOperationException;
 import Model.BankAccount;
 
-public aspect LoginService extends OperationHandling 
+public aspect LoginService extends Transactions 
 {		
 	before(BankAccount account, int amount): bank_operations(account, amount) 
 	{		
-		try
-		{
-			LoginHandler.login(account, amount);
-		}
-		catch(RuntimeException exc)
-		{
-			throw new AccountOperationException(exc.getMessage());
-		} // 
+//		try
+//		{
+//			
+//		}
+//		catch(RuntimeException exc)
+//		{
+//			throw new AccountOperationException(exc.getMessage());
+//		} // 
 	} // before bank_operations
 }

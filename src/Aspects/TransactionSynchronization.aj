@@ -2,7 +2,7 @@ package Aspects;
 
 import Model.BankAccount;
 
-public aspect TransactionSynchronization extends OperationHandling {
+public aspect TransactionSynchronization extends Transactions {
     
 	private static Object lock = new Object();
    

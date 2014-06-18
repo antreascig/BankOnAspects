@@ -3,7 +3,7 @@ package Aspects;
 import Model.AccountOperationException;
 import Model.BankAccount;
 
-public aspect TransactionLogger extends OperationHandling
+public aspect TransactionLogger extends Transactions
 {
 	
 	before(Model.BankAccount account, int amount) : bank_operations(account, amount) 
