@@ -54,10 +54,10 @@ public class BankDemoController
 		return transactionCtrl.getAccountType(accNumber);
 	} // getAccountType
 
-	public boolean serverRunning() {
+	public int getClientNumber() {
 
 		Server server = Server.getServerInstance();
-		return server.isRunning();
-	}
+		return server.getClientCount();
+	} // serverRunning
 	
 } // BankDemoController

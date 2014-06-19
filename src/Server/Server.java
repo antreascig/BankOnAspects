@@ -6,33 +6,74 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import Global.Pair;
+
 public class Server extends Observable implements Runnable
 { 
 	private boolean running;
 	
-	private ArrayList<Socket> clients;
+	private ArrayList<UserThread> clients;
+	
+	private int clientNumber;
 	
 	private Server()
 	{
 		running = false;
 		clients = new ArrayList<>();
+	} // Server
+	
+	@Override
+	public void run() {
+        ServerSocket listener = null;
+        clientNumber = 1;
+		try {
+			listener = new ServerSocket(9898);
+			
+			running = true;
+			setChanged();
+	    	notifyObservers(new Pair<>("STATUS", running));
+	    	
+            while (true) 
+            {
+                addUser(listener.accept());
+            } // while
+        } catch (IOException e) {
+			System.out.println(e.getMessage());
+		} finally {
+            try {
+				listener.close();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			} // catch
+            finally
+            {
+            	running = false;
+            	notifyObservers(new Pair<>("STATUS", running));
+            }
+        } // finally
+	} // run
+
+	private void addUser(Socket newClientSocket) {
+		UserThread newClient = new UserThread(newClientSocket, clientNumber );		
+		clients.add(newClient);
+		setChanged();
+		notifyObservers("");
+		notifyObservers(new Pair<>("USER_ADDED", clientNumber));
+		
+		newClient.start();
+			
+		clientNumber++;
 	}
     
-    public void removeClient(Socket client)
+    public void removeClient(UserThread client)
     {
     	clients.remove(client);
     	setChanged();
-    	notifyObservers(clients.size());
+    	notifyObservers(new Pair<>("USER_REMOVED", client.getClientNumber() ));
     } // removeClient
     
     public int getClientCount()
     {
-    	// Checks for disconnected clients
-    	for (Socket client : clients)
-    	{
-    		if (client.isClosed())
-    			clients.remove(client);
-    	} // for
     	return clients.size();
     } // getClientCount
     
@@ -49,40 +90,7 @@ public class Server extends Observable implements Runnable
     		instance = new Server();
 
     	return instance;
-    } // getServerInstance
-
-	@Override
-	public void run() {
-		int clientNumber = 0;
-        ServerSocket listener = null;
-		try {
-			listener = new ServerSocket(9898);
-			
-			running = true;
-			System.out.println("The Server is actually running.");
-            while (true) 
-            {
-            	Socket newClient = listener.accept();
-                new UserThread(newClient, clientNumber++).start();
-                
-                clients.add(newClient);
-                setChanged();
-                notifyObservers(clients.size());
-            } // while
-        } catch (IOException e) {
-			System.out.println(e.getMessage());
-		} finally {
-            try {
-				listener.close();
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-			} // catch
-            finally
-            {
-            	running = false;
-            }
-        } // finally
-	} // run
+    } // getServerInstance	
     
 } // Server
 

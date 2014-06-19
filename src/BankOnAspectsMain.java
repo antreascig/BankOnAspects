@@ -11,9 +11,7 @@ public class BankOnAspectsMain {
 		Server server = Server.getServerInstance();
 		
 		server.addObserver(newDemo);
-			
-		System.out.println("Count: " + server.countObservers());
-		
+					
 		new Thread(server).start();;
 	}
 

@@ -12,6 +12,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 
 import Controllers.BankDemoController;
+import Global.Pair;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -52,7 +53,6 @@ public class BankDemoInterface extends JFrame implements Observer {
 	private JScrollPane accountScrollPane;
 	private JLabel userCountLbl;
 	
-	private String currentPanel;
 	private BankDemoController controller;
 				
 	public BankDemoInterface(BankDemoController bankDemoController) 
@@ -82,7 +82,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		mntmServerStatistics.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				viewServerInfo();
+				updateScreen("infoScrPane");
 			}
 		});
 		mnView.add(mntmServerStatistics);
@@ -112,7 +112,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		mntmViewAccounts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				updateViewAccount();
+				updateScreen("viewAccountPanel");
 			}
 		});
 		mnAccounts.add(mntmViewAccounts);
@@ -186,38 +186,25 @@ public class BankDemoInterface extends JFrame implements Observer {
 		userCountLbl = new JLabel("....");
 		lblOnlineUsers.setLabelFor(userCountLbl);
 		userCountLbl.setFont(new Font("Liberation Serif", Font.BOLD | Font.ITALIC, 20));
-		
-		JButton btnRefresh = new JButton("Refresh");
-		btnRefresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateClientsNumber();
-			}
-		});
 		GroupLayout gl_infoScrPane = new GroupLayout(infoScrPane);
 		gl_infoScrPane.setHorizontalGroup(
-			gl_infoScrPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(serverScrollPane, Alignment.TRAILING)
-				.addGroup(gl_infoScrPane.createSequentialGroup()
+			gl_infoScrPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_infoScrPane.createSequentialGroup()
 					.addGap(31)
 					.addComponent(lblOnlineUsers)
 					.addGap(92)
 					.addComponent(userCountLbl, GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(106, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_infoScrPane.createSequentialGroup()
-					.addContainerGap(376, Short.MAX_VALUE)
-					.addComponent(btnRefresh)
-					.addGap(114))
+				.addComponent(serverScrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
 		);
 		gl_infoScrPane.setVerticalGroup(
 			gl_infoScrPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_infoScrPane.createSequentialGroup()
+				.addGroup(Alignment.LEADING, gl_infoScrPane.createSequentialGroup()
 					.addGap(29)
 					.addGroup(gl_infoScrPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblOnlineUsers)
 						.addComponent(userCountLbl, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(btnRefresh)
-					.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
 					.addComponent(serverScrollPane, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE))
 		);
 		
@@ -318,38 +305,91 @@ public class BankDemoInterface extends JFrame implements Observer {
 		this.setSize(601, 407);
 	} // Initialise
 	
-	protected void updateClientsNumber() {
-		
-	}
 	
 	@Override
 	public void update(Observable o, Object arg) {	
-		int clientNumber = (Integer)arg;
-		System.out.println("Update - New number: " + clientNumber);
-		userCountLbl.setText(clientNumber + "");		
-	}
+		Pair<?> update = (Pair<?>)arg;
+		
+		String key = update.getKey();
+		String log;
+		
+		if (key.equals("STATUS"))
+		{
+			boolean serverRunning = (Boolean) update.getValue();
+			
+			log = "Server ";
+			if (serverRunning)
+				log += "is running.";
+			else
+				log += "has stopped.";
+					
+			updateServerLog(log);
+		}
+		else if (key.equals("USER_ADDED"))
+		{
+			Integer clientNumber = (Integer) update.getValue(); 
+			log = "New connection with client# " + clientNumber + "." ;
+			updateServerLog(log);
+		}
+		else if (key.equals("USER_REMOVED"))
+		{
+			Integer clientNumber = (Integer) update.getValue(); 
+			log = "Client# " + clientNumber + "disconnected." ;
+			updateServerLog(log);
+		} // else if
+		else
+			throw new RuntimeException("Unforseen key update");
 	
+		int clientNumber = controller.getClientNumber();
+		
+		userCountLbl.setText(clientNumber + "");
+	} //update
 
 	protected void initializeDemo() 
 	{
-		viewServerInfo();
 		menuBar.setVisible(true);
-		
-		if ( controller.serverRunning() )
-			updateServerLog("The Server is running.");
-		else
-			updateServerLog("The Server is not running.");
-		
+		updateScreen("infoScrPane");		
 	} // initializeDemo
 	
-	private void updateScreen()
-	{
-		if (currentPanel.equals("viewAccountPanel"))
+	private void updateScreen(String panel)
+	{	
+		// Change screen to the - panel - provided as argument
+		panels = (CardLayout) mainPanel.getLayout();  
+		panels.show(mainPanel, panel );
+		
+		if (panel.equals("viewAccountPanel"))
 		{
-			updateViewAccount();
+			accountsPanel.removeAll();
+			
+			ArrayList<String> accountList = controller.getAccountList();
+			accountRadioGroup = new ButtonGroup();	
+			JRadioButton accountRadio;
+			String radioTxt;	
+						
+			for (String account : accountList)
+			{
+				radioTxt = account + "\t-\t" + controller.getAccountType(account);
+				accountRadio = new JRadioButton(radioTxt);
+				accountRadio.setActionCommand(account);
+				accountRadio.addActionListener(new ActionListener() {			
+					@Override
+					public void actionPerformed(ActionEvent e) 
+					{
+						updateButtons();
+					}
+				});
+				
+				accountRadioGroup.add(accountRadio);
+				accountsPanel.add(accountRadio);			
+			} // for
+			
+			accountsPanel.repaint();
+			accountsPanel.validate();		
+			accountScrollPane.revalidate();
+			
 			accountRadioGroup.clearSelection();
 			updateButtons();
-		} // if	
+		} // if		
 	} // updateScreen
 	
 	protected void updateButtons() 
@@ -366,53 +406,11 @@ public class BankDemoInterface extends JFrame implements Observer {
 			deleteAccButton.setEnabled(false);
 		} // else				
 	} // updateButtons
-	
-	protected void updateViewAccount() 
-	{
-		accountsPanel.removeAll();
-		
-		ArrayList<String> accountList = controller.getAccountList();
-		accountRadioGroup = new ButtonGroup();	
-		JRadioButton accountRadio;
-		String radioTxt;	
-					
-		for (String account : accountList)
-		{
-			radioTxt = account + "\t-\t" + controller.getAccountType(account);
-			System.out.println(radioTxt);
-			accountRadio = new JRadioButton(radioTxt);
-			accountRadio.setActionCommand(account);
-			accountRadio.addActionListener(new ActionListener() {			
-				@Override
-				public void actionPerformed(ActionEvent e) 
-				{
-					updateButtons();
-				}
-			});
-			
-			accountRadioGroup.add(accountRadio);
-			accountsPanel.add(accountRadio);			
-		} // for
-		
-		accountsPanel.repaint();
-		accountsPanel.validate();		
-		accountScrollPane.revalidate();
-		
-		panels = (CardLayout) mainPanel.getLayout();
-		panels.show(mainPanel, "viewAccountPanel" );		
-		currentPanel = "viewAccountPanel";
-	} // updateViewAccount
 
 	public void updateServerLog(String log)
 	{
 		serverLog.append(log);
 	}
-	protected void viewServerInfo()
-	{
-		panels = (CardLayout) mainPanel.getLayout();  
-		panels.show(mainPanel, "infoScrPane" );
-		currentPanel = "infoScrPane";	
-	} // viewServerInfo
 	
 	int counter = 1;
 	
@@ -423,7 +421,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		
 		controller.addAccount(acc1, null);
 			
-		updateScreen();
+		updateScreen("viewAccountPanel");
 	} // addAccount
 	
 	protected void viewAccount() 
@@ -437,7 +435,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		String accNum = accountRadioGroup.getSelection().getActionCommand();
 		controller.removeAccount(accNum);	
 		
-		updateScreen();	
+		updateScreen("viewAccountPanel");	
 	} // deleteAccount
 	
 	protected void closeApplication() 
