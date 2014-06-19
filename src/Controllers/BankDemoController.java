@@ -7,6 +7,7 @@ import Controllers.TransactionControllers.RootTransactionController;
 import Controllers.TransactionControllers.TransactionController;
 import Global.UserMode;
 import Interface.AccountView;
+import Server.Server;
 
 public class BankDemoController 
 {
@@ -53,8 +54,10 @@ public class BankDemoController
 		return transactionCtrl.getAccountType(accNumber);
 	} // getAccountType
 
-	public void initializeServer() {
-		// TODO Auto-generated method stub	
+	public boolean serverRunning() {
+
+		Server server = Server.getServerInstance();
+		return server.isRunning();
 	}
 	
 } // BankDemoController

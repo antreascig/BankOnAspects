@@ -27,16 +27,16 @@ public class AccountController
 		return accountList.keys();		
 	} // getAccountList
 
-	public static void removeAccount(String accNum) 
+	public static void removeAccount(String accNumber) 
 	{
 		if ( accountList == null || accountList.isEmpty())
 		{
 			throw new NullPointerException("The account list is either unitialized or empty");
 		} // if
-		accountList.remove(accNum);
+		accountList.remove(accNumber);
 	} // removeAccount
 	
-	public static void addAccount(String accNum, Integer initAmount) 
+	public static void addAccount(String accNumber, Integer initAmount) 
 	{
 		if ( accountList == null )
 		{
@@ -45,14 +45,14 @@ public class AccountController
 		BankAccount newAccount;
 		
 		if ( initAmount == null)
-			newAccount	 = new BasicAccount(accNum, "password");
+			newAccount	 = new BasicAccount(accNumber, 1234);
 		else
-			 newAccount = new BasicAccount(accNum, "password", initAmount);
+			 newAccount = new BasicAccount(accNumber, 1234, initAmount);
 		
-		accountList.put(accNum, newAccount);
+		accountList.put(accNumber, newAccount);
 	} // addAccount
 
-	public static BankAccount getAccount(String accNum) {
+	public static BankAccount getAccount(String accNumber) {
 		if ( accountList == null || accountList.isEmpty())
 		{
 			throw new NullPointerException("The account list is either unitialized or empty");
@@ -60,7 +60,7 @@ public class AccountController
 		
 		try
 		{
-			BankAccount account = accountList.get(accNum);
+			BankAccount account = accountList.get(accNumber);
 			return account;
 		} // try		
 		catch( NullPointerException exc)

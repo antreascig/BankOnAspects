@@ -1,10 +1,10 @@
 package Logging;
 
-public class TransactionLogger 
+public class Logger 
 {
 	public static void writeLog(String message)
 	{
-		// Needs Implementation
+		System.out.println(message);
 	}
 
 }

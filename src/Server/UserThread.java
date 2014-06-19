@@ -7,11 +7,9 @@ import java.util.ArrayList;
 public class UserThread extends Thread {
 	
 	private Socket socket;
-    private int clientNumber;
-
+	
     public UserThread(Socket socket, int clientNumber) {
         this.socket = socket;
-        this.clientNumber = clientNumber;
         log("New connection with client# " + clientNumber + " at " + socket);
     } // UserThread
 
@@ -27,9 +25,11 @@ public class UserThread extends Thread {
           ObjectOutputStream socketOut = new ObjectOutputStream(socket.getOutputStream());    
           
           socketOut.writeObject(testing);
-          socketOut.flush();
-          
+          socketOut.flush();         
+                    
           socket.close();
+          Server server = Server.getServerInstance();
+          server.removeClient(socket);
         }catch(Exception e) {
             System.out.print("Whoops! It didn't work!\n");
         }

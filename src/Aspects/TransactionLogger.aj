@@ -2,6 +2,7 @@ package Aspects;
 
 import Model.AccountOperationException;
 import Model.BankAccount;
+import Logging.Logger;
 
 public aspect TransactionLogger extends Transactions
 {
@@ -10,11 +11,9 @@ public aspect TransactionLogger extends Transactions
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
-		String transactionLog = getLogMessage(account,operation,"Pending", amount);
+		String transactionLog = getLogMessage(account,operation,"Pending", amount);          
 		
-		System.out.println(transactionLog);		          
-		
-		// Logger.write(transactionLog);
+		Logger.writeLog(transactionLog);
 	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has completed
@@ -22,11 +21,9 @@ public aspect TransactionLogger extends Transactions
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
-		String transactionLog = getLogMessage(account,operation,"Completed", amount);
+		String transactionLog = getLogMessage(account,operation,"Completed", amount);  
 		
-		System.out.println(transactionLog);    
-		
-		// Logger.write(transactionLog);
+		Logger.writeLog(transactionLog);
 	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has failed
@@ -34,12 +31,12 @@ public aspect TransactionLogger extends Transactions
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
-		String transactionLog = getLogMessage(account,operation,"Failed", amount);
+		String transactionLog = getLogMessage(account,operation,"Failed", amount);          
 		
-		System.out.println(transactionLog);		          
-		
-		// Logger.write(transactionLog);
+		Logger.writeLog(transactionLog);
 	} // before bank_operations
+	
+	
 	
 	private String getLogMessage(BankAccount account, String operation, String status, int amount )
 	{
