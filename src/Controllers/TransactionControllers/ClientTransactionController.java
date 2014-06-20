@@ -1,23 +1,20 @@
 package Controllers.TransactionControllers;
 
 import Global.UserMode;
-import Login.LoginHandler;
-
 
 public class ClientTransactionController extends TransactionController 
 {
-	private LoginHandler loginService;
-	
+	private int password;
 	public ClientTransactionController(UserMode uRole, Integer pin) 
 	{
 		super(uRole);
 		
-		loginService = new LoginHandler(pin);
+		password = pin;
 	}
 	
-	public LoginHandler getLoginService()
+	public int getPassword()
 	{
-		return this.loginService;
-	}
+		return this.password;
+	} // getPassword
 	
 }

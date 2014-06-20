@@ -20,8 +20,8 @@ public abstract aspect Transactions {
 		    || withdraw(BankAccount, int ) && target(account) && args(amount);
 		    
 		    
-	pointcut transactions(TransactionController controller, String accNumber,  int amount) : 
-			execution(void TransactionController.deposit(int)) && target(controller) && args(accNumber) && args(amount)
-		||  execution(void TransactionController.withdraw(int)) && target(controller) && args(accNumber) && args(amount)
-		||  execution(void TransactionController.getBalance(int)) && target(controller) && args(accNumber) && args(amount);
+	pointcut basic_transactions(TransactionController controller, String accNumber,  int amount) : 
+			execution(void TransactionController.deposit(String,int)) && target(controller) && args(accNumber, amount)
+		||  execution(void TransactionController.withdraw(String,int)) && target(controller) && args(accNumber, amount)
+		||  execution(void TransactionController.getBalance(String,int)) && target(controller) && args(accNumber, amount);
 	} 

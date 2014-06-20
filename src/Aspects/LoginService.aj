@@ -1,10 +1,10 @@
 package Aspects;
 
-import Model.BankAccount;
+import Controllers.TransactionControllers.TransactionController;
 
 public aspect LoginService extends Transactions 
 {		
-	before(BankAccount account, int amount): bank_operations(account, amount) 
+	before(TransactionController controller, String accNumber,  int amount) : basic_transactions(controller, accNumber, amount)
 	{		
 //		try
 //		{

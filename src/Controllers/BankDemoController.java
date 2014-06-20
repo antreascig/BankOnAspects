@@ -60,4 +60,10 @@ public class BankDemoController
 		return server.getClientCount();
 	} // serverRunning
 	
+	public void stopApplication()
+	{
+		Server server = Server.getServerInstance();
+		server.stopServer();
+	} // stopApplication
+	
 } // BankDemoController

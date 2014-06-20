@@ -441,6 +441,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 	protected void closeApplication() 
 	{
 		// TODO Auto-generated method stub
+		controller.stopApplication();
 		this.dispose();
 	} // closeApplication
 }

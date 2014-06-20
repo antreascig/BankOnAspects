@@ -2,7 +2,7 @@ package Aspects;
 
 import Model.AccountOperationException;
 import Model.BankAccount;
-import Logging.Logger;
+import Services.Logging.Logger;
 
 public aspect TransactionLogger extends Transactions
 {
@@ -31,11 +31,10 @@ public aspect TransactionLogger extends Transactions
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
-		String transactionLog = getLogMessage(account,operation,"Failed", amount);          
+		String transactionLog = getLogMessage(account,operation,"Failed ", amount);          
 		
 		Logger.writeLog(transactionLog);
 	} // before bank_operations
-	
 	
 	
 	private String getLogMessage(BankAccount account, String operation, String status, int amount )

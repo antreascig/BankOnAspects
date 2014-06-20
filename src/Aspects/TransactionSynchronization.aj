@@ -8,7 +8,8 @@ public aspect TransactionSynchronization extends Transactions {
    
     before(BankAccount account, int amount): bank_operations(account, amount) 
     {
-    	System.out.println("\tAttempting to get Lock on Account: " + account.getAccNum());
+    	System.out.println();
+    	System.out.println("Attempting to get Lock on Account: " + account.getAccNum());
     } // before bank_operations
     
     Object around(BankAccount account, int amount): bank_operations(account, amount)
@@ -22,7 +23,8 @@ public aspect TransactionSynchronization extends Transactions {
     
     after(BankAccount account, int amount): bank_operations(account, amount)
     {
-    	System.out.println("\tReleased Lock on Account: " + account.getAccNum());
+    	System.out.println("Released Lock on Account: " + account.getAccNum());
+    	System.out.println();
     } // before bank_operations
  
 }

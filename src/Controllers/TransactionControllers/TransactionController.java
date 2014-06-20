@@ -35,7 +35,6 @@ public abstract class TransactionController {
 				    JOptionPane.WARNING_MESSAGE);
 		}					
 		finally {
-			System.out.println("\n-----------------------------------------------\n");
 		} //finally
 	} // deposit
 
@@ -54,7 +53,6 @@ public abstract class TransactionController {
 				    JOptionPane.WARNING_MESSAGE);
 		}
 		finally {
-			System.out.println("\n-----------------------------------------------\n");
 		} //finally
 	} // deposit
 
@@ -84,7 +82,6 @@ public abstract class TransactionController {
 				    JOptionPane.WARNING_MESSAGE);
 		}
 		finally {
-			System.out.println("\n-----------------------------------------------\n");
 		} //finally
 		return null;
 
@@ -105,7 +102,6 @@ public abstract class TransactionController {
 				    JOptionPane.WARNING_MESSAGE);
 		}
 		finally {
-			System.out.println("\n-----------------------------------------------\n");
 		} //finally
 		return null;
 	}
