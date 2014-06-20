@@ -3,42 +3,41 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import Controllers.TransactionControllers.RootTransactionController;
-import Controllers.TransactionControllers.TransactionController;
-import Global.UserMode;
-import Interface.AccountView;
+import Model.AccountOperationException;
+import Model.BankAccounts.BankAccount;
 import Server.Server;
+import Services.Logging.Logger;
 
 public class BankDemoController 
-{
-	private TransactionController transactionCtrl;
-	
+{	
 	public BankDemoController()
 	{
-		transactionCtrl = new RootTransactionController(UserMode.ADMIN);
 	}
 	
 	public void viewAccount(String accNumber) {
-		Integer balance = transactionCtrl.getBalance(accNumber);
-		
-		AccountView newAccountView = new AccountView(accNumber, balance, transactionCtrl );
-		
-		newAccountView.setVisible(true);
+		try
+		{
+			AccountViewController newAccountViewCtrl = new AccountViewController(accNumber);
+			newAccountViewCtrl.viewAccount();
+		} catch (AccountOperationException exception)
+		{
+			
+		}
 	} // viewAccount
 
 	public void removeAccount(String accNumber) 
 	{
-		AccountController.removeAccount(accNumber);
+		AccountsController.removeAccount(accNumber);
 	} // removeAccount
 
 	public void addAccount(String accNum, Integer initAmount) 
 	{
-		AccountController.addAccount(accNum, initAmount);
+		AccountsController.addAccount(accNum, initAmount);
 	} // addAccount
 	
 	public ArrayList<String> getAccountList() {
 		
-		Enumeration<String> accNumbers = AccountController.getAccountNumbersList();
+		Enumeration<String> accNumbers = AccountsController.getAccountNumbersList();
 		
 		ArrayList<String> accList = new ArrayList<>();
 		
@@ -51,7 +50,8 @@ public class BankDemoController
 	
 	public String getAccountType(String accNumber)
 	{
-		return transactionCtrl.getAccountType(accNumber);
+		BankAccount account = AccountsController.getAccount(accNumber);
+		return account.getAccountType();
 	} // getAccountType
 
 	public int getClientNumber() {
@@ -65,5 +65,10 @@ public class BankDemoController
 		Server server = Server.getServerInstance();
 		server.stopServer();
 	} // stopApplication
+
+	public void logServerActivity(String message) {
+		Logger.logServerActivity(message);
+		
+	}
 	
 } // BankDemoController

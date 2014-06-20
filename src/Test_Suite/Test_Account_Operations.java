@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import Model.AccountOperationException;
-import Model.BankAccount;
-import Model.BasicAccount;
+import Model.BankAccounts.BankAccount;
+import Model.BankAccounts.BasicAccount;
 
 public class Test_Account_Operations {
 	

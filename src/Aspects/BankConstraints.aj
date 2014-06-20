@@ -1,13 +1,14 @@
 package Aspects;
 
 import Model.AccountOperationException;
+import Model.BankAccounts.BankAccount;
 
 // Aspect that validates the account operations based on constraints
 // amount must be >= 0 and the account must contain balance >= amount
 public aspect BankConstraints extends Transactions{
 		
 	// Advice to check deposit(..)
-	before(Model.BankAccount account, int amount) : deposit(account, amount) 
+	before(BankAccount account, int amount) : deposit(account, amount) 
 	{
 		if ( amount < 0 )
 		{
@@ -17,7 +18,7 @@ public aspect BankConstraints extends Transactions{
 	} // before deposit
 	
 	// Advice to check withdrawal
-	before(Model.BankAccount account, int amount) : withdraw(account, amount) 
+	before(BankAccount account, int amount) : withdraw(account, amount) 
 	{
 		int accountBalance = account.getBalance();
 		

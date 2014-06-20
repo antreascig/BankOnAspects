@@ -1,39 +1,39 @@
 package Aspects;
 
 import Model.AccountOperationException;
-import Model.BankAccount;
+import Model.BankAccounts.BankAccount;
 import Services.Logging.Logger;
 
 public aspect TransactionLogger extends Transactions
 {
 	
-	before(Model.BankAccount account, int amount) : bank_operations(account, amount) 
+	before(BankAccount account, int amount) : bank_operations(account, amount) 
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
 		String transactionLog = getLogMessage(account,operation,"Pending", amount);          
 		
-		Logger.writeLog(transactionLog);
+		Logger.logTransaction(transactionLog);
 	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has completed
-	after(Model.BankAccount account, int amount) returning : bank_operations(account, amount) 
+	after(BankAccount account, int amount) returning : bank_operations(account, amount) 
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
 		String transactionLog = getLogMessage(account,operation,"Completed", amount);  
 		
-		Logger.writeLog(transactionLog);
+		Logger.logTransaction(transactionLog);
 	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has failed
-	after(Model.BankAccount account, int amount) throwing (AccountOperationException e) : bank_operations(account, amount) 
+	after(BankAccount account, int amount) throwing (AccountOperationException e) : bank_operations(account, amount) 
 	{
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
 		String transactionLog = getLogMessage(account,operation,"Failed ", amount);          
 		
-		Logger.writeLog(transactionLog);
+		Logger.logTransaction(transactionLog);
 	} // before bank_operations
 	
 	

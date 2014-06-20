@@ -4,10 +4,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import Model.AccountOperationException;
-import Model.BankAccount;
-import Model.BasicAccount;
+import Model.BankAccounts.BankAccount;
+import Model.BankAccounts.BasicAccount;
 
-public class AccountController 
+public class AccountsController 
 {
 	private static Hashtable<String, BankAccount> accountList = null;
 		

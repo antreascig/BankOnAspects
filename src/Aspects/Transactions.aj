@@ -1,7 +1,7 @@
 package Aspects;
 
-import Controllers.TransactionControllers.TransactionController;
-import Model.BankAccount;
+import Model.BankAccounts.BankAccount;
+import Model.Transactions.Transaction;
 
 
 public abstract aspect Transactions {
@@ -11,7 +11,7 @@ public abstract aspect Transactions {
 	   execution(void BankAccount.deposit(int)) && target(account) && args(amount) ;
 	
 	// Matches execution of withdraw method in BankAccount
-	pointcut withdraw(Model.BankAccount account, int amount) : 
+	pointcut withdraw(BankAccount account, int amount) : 
 		   execution(void BankAccount.withdraw(int)) && target(account) && args(amount);
 	
 	// Matches the previous two pointcuts - Combination of all operations
@@ -20,8 +20,6 @@ public abstract aspect Transactions {
 		    || withdraw(BankAccount, int ) && target(account) && args(amount);
 		    
 		    
-	pointcut basic_transactions(TransactionController controller, String accNumber,  int amount) : 
-			execution(void TransactionController.deposit(String,int)) && target(controller) && args(accNumber, amount)
-		||  execution(void TransactionController.withdraw(String,int)) && target(controller) && args(accNumber, amount)
-		||  execution(void TransactionController.getBalance(String,int)) && target(controller) && args(accNumber, amount);
+	pointcut basic_transactions(Transaction transaction) : 
+			execution(void Transaction.executeTransaction()) && target(transaction);
 	} 

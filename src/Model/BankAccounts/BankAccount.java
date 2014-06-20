@@ -1,4 +1,4 @@
-package Model;
+package Model.BankAccounts;
 
 public interface BankAccount {
 	void deposit(int amount);

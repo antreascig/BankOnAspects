@@ -1,6 +1,6 @@
 package Aspects;
 
-import Model.BankAccount;
+import Model.BankAccounts.BankAccount;
 
 public aspect TransactionSynchronization extends Transactions {
     

@@ -11,7 +11,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import Controllers.TransactionControllers.TransactionController;
+import Controllers.AccountViewController;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,24 +19,22 @@ import java.awt.event.ActionEvent;
 @SuppressWarnings("serial")
 public class AccountView extends JFrame {
 
-	private String accNumber;
 	private int accBalance;
 	
 	private JLabel lblAccNum, lblAccBalance;
 	
-	private TransactionController controller;
+	private AccountViewController controller;
 	
 	/**
 	 * Create the frame.
 	 * @param balance 
 	 * @param accNum 
 	 */
-	public AccountView(String accNum, int accBal, TransactionController trController) 
+	public AccountView(String accNum, int accBal, AccountViewController avController) 
 	{
-		accNumber = accNum;
 		accBalance = accBal;
 		
-		controller = trController;
+		controller = avController;
 		
 		initialize();
 		
@@ -125,6 +123,12 @@ public class AccountView extends JFrame {
 		getContentPane().setLayout(groupLayout);
 	}
 
+	public void showErrorMessage(String message) {
+		JOptionPane.showMessageDialog(null,
+				message,
+			    "Account Operation Error",
+			    JOptionPane.WARNING_MESSAGE);
+	} // showException
 	
 	protected void withdraw() 
 	{
@@ -156,7 +160,7 @@ public class AccountView extends JFrame {
 		int amount = Integer.parseInt(amountString);
 		
 		
-		controller.withdraw(accNumber, amount);			
+		controller.withdraw(amount);			
 		updateScreen();
 	} // withdraw
 
@@ -188,13 +192,13 @@ public class AccountView extends JFrame {
 		} // while	
 		
 		int amount = Integer.parseInt(amountString);
-		controller.deposit(accNumber, amount);
+		controller.deposit(amount);
 		updateScreen();
 	} // deposit	
 
 	private void updateScreen()
 	{
-		accBalance = controller.getBalance(accNumber);
+		accBalance = controller.getBalance();
 		lblAccBalance.setText("£" + accBalance);
 	}
 	

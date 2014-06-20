@@ -1,4 +1,6 @@
-package Model;
+package Model.BankAccounts;
+
+import Model.AccountOperationException;
 
 public class BasicAccount implements BankAccount {
 	private int balance;

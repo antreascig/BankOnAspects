@@ -410,7 +410,8 @@ public class BankDemoInterface extends JFrame implements Observer {
 	public void updateServerLog(String log)
 	{
 		serverLog.append(log);
-	}
+		controller.logServerActivity(log);
+	} // updateServerLog
 	
 	int counter = 1;
 	
