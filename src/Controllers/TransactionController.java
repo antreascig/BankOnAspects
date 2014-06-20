@@ -11,25 +11,21 @@ public class TransactionController {
 	private Integer password;
 	private Transaction tr;
 
-	public TransactionController(UserMode mode) 
-	{
+	public TransactionController(UserMode mode) {
 		userMode = mode;
 		password = null;
 	} // TransactionController
 	
-	public TransactionController(UserMode uRole, int pin)
-	{
+	public TransactionController(UserMode uRole, int pin) {
 		userMode = uRole;
 		password = pin;
-	}
+	} // TransactionController
 	
-	public Pair<?> deposit(String accNumber, int amount)
-	{
+	public Pair<?> deposit(String accNumber, int amount) {
 		Pair<?> result;
 		
 		tr = new DepositTransaction(userMode, password, accNumber, amount);
-		try
-		{
+		try {
 			tr.executeTransaction();
 		
 			result = tr.getResult();
@@ -45,11 +41,10 @@ public class TransactionController {
 	} // deposit
 
 	public Pair<?> withdraw(String accNumber, int amount) {		
-Pair<?> result = null;
+		Pair<?> result = null;
 		
 		tr = new BalanceTransaction(userMode, password, accNumber);
-		try
-		{
+		try {
 			tr.executeTransaction();
 		
 			result = tr.getResult();
@@ -69,8 +64,7 @@ Pair<?> result = null;
 		Pair<?> result;
 		
 		tr = new BalanceTransaction(userMode, password, accNumber);
-		try
-		{
+		try {
 			tr.executeTransaction();
 		
 			result = tr.getResult();
