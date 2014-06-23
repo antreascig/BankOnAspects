@@ -35,10 +35,13 @@ public class Logger
 		{
 			out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));			
 			
-			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date = new Date();
-			message = dateFormat.format(date) + "\t " + message;
-			
+			// An empty message is probably used as a blank line so only add date when message is not empty
+			if (!message.equals("")) {
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				Date date = new Date();
+				message = dateFormat.format(date) + "\t " + message;
+			} // if
+		
 		    out.println(message);
 		}catch (IOException e) {
 		    //exception handling left as an exercise for the reader

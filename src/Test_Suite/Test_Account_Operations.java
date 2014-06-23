@@ -16,7 +16,7 @@ public class Test_Account_Operations {
 	@Test
 	public void test_Account_creation_Only_AccNum() 
 	{
-		String accountNum = "1111";
+		String accountNum = "acc10";
 		BankAccount account = new BasicAccount(accountNum, 1234);
 		
 		assertNotEquals(account, null);
@@ -28,7 +28,7 @@ public class Test_Account_Operations {
 	public void test_Account_creation_both_Param() 
 	{
 		// Check with "correct" parameters
-		String accountNum = "1111";
+		String accountNum = "acc11";
 		BankAccount account = new BasicAccount(accountNum, 1234, 10);
 		
 		assertNotEquals(account, null);	
@@ -52,11 +52,11 @@ public class Test_Account_Operations {
 	@Test
 	public void test_account_get_balance()
 	{
-		BankAccount account = new BasicAccount("1111", 1234, 10);
+		BankAccount account = new BasicAccount("acc12", 1234, 10);
 		
 		assertEquals(10, account.getBalance());
 		
-		account = new BasicAccount("1111", 1234, 0);
+		account = new BasicAccount("acc12", 1234, 0);
 		
 		assertEquals(0, account.getBalance());
 		
@@ -67,7 +67,7 @@ public class Test_Account_Operations {
 	{
 		int amount = 100;
 		
-		BankAccount account = new BasicAccount("1111", 1234);
+		BankAccount account = new BasicAccount("acc13", 1234);
 		
 		account.deposit(amount);
 		
