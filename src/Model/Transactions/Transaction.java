@@ -9,4 +9,5 @@ public interface Transaction {
 	Global.TransactionType getTransactionType();
 	Pair<?> getResult();
 	Integer getAmount();
+	String getAffectingAccNumber();
 }

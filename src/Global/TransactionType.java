@@ -1,5 +1,19 @@
 package Global;
 
-public enum TransactionType { DEPOSIT, WITHDRAW, BALANCE
+public enum TransactionType { 
+	DEPOSIT ("Deposit") , 
+	WITHDRAW ("Withdrawal"), 
+	BALANCE ("Balance");
+							  
+							  
+	private final String text;
 
-}
+    private TransactionType(final String text) {
+        this.text = text;
+    } // TransactionType
+    
+    @Override
+    public String toString() {
+        return text;
+    } // toString
+} // TransactionType

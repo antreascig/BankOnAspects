@@ -59,4 +59,9 @@ public class BalanceTransaction implements Transaction {
 		return null;
 	} // getAmount
 
-}
+	@Override
+	public String getAffectingAccNumber() {
+		// TODO Auto-generated method stub
+		return this.fromAccNumber;
+	} // getAffectingAccNumber
+} // BalanceTransaction

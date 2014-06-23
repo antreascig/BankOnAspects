@@ -1,6 +1,6 @@
 package Model.BankAccounts;
 
-public class BankAccount {
+public abstract class BankAccount {
 
 	protected int balance;
 	protected String accNum;
@@ -43,9 +43,7 @@ public class BankAccount {
 			return false;
 	} // evaluateCredentials
 
-	public String getAccountType() {
-		return "Basic Account";
-	} // getAccountType
+	public abstract String getAccountType();
 
 	public boolean transferTransactionAllowed() {
 		return transferAllowed;

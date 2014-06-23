@@ -63,4 +63,9 @@ public class WithdrawTransaction implements Transaction {
 		// TODO Auto-generated method stub
 		return null;
 	} // getAmount
-}
+
+	@Override
+	public String getAffectingAccNumber() {
+		return this.toAccNumber;
+	} // getAffectingAccNumber
+} // WithdrawTransaction

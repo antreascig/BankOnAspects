@@ -412,15 +412,10 @@ public class BankDemoInterface extends JFrame implements Observer {
 		serverLog.append(log);
 		controller.logServerActivity(log);
 	} // updateServerLog
-	
-	int counter = 1;
-	
-	protected void addAccount() 
-	{
-		String acc1 = "acc" + counter;
-		counter++;
 		
-		controller.addAccount(acc1, null);
+	protected void addAccount() 
+	{	
+		controller.addAccount();
 			
 		updateScreen("viewAccountPanel");
 	} // addAccount

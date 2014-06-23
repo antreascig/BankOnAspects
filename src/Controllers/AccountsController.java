@@ -5,7 +5,6 @@ import java.util.Hashtable;
 
 import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
-import Model.BankAccounts.BasicAccount;
 
 public class AccountsController 
 {
@@ -36,20 +35,14 @@ public class AccountsController
 		accountList.remove(accNumber);
 	} // removeAccount
 	
-	public static void addAccount(String accNumber, Integer initAmount) 
+	public static void addAccount(BankAccount newAccount) 
 	{
 		if ( accountList == null )
 		{
 			initAccList();
 		} // if
-		BankAccount newAccount;
 		
-		if ( initAmount == null)
-			newAccount	 = new BasicAccount(accNumber, 1234);
-		else
-			 newAccount = new BasicAccount(accNumber, 1234, initAmount);
-		
-		accountList.put(accNumber, newAccount);
+		accountList.put(newAccount.getAccNum(), newAccount);
 	} // addAccount
 
 	public static BankAccount getAccount(String accNumber) {
@@ -68,4 +61,5 @@ public class AccountsController
 			throw new AccountOperationException("Account not found!");
 		} // catch		
 	} // getAccount
+	
 } // AccountController

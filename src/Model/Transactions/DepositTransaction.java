@@ -63,4 +63,10 @@ public class DepositTransaction implements Transaction {
 		// TODO Auto-generated method stub
 		return null;
 	} // getAmount
-}
+
+	@Override
+	public String getAffectingAccNumber() {
+		// TODO Auto-generated method stub
+		return this.toAccNumber;
+	} // getAffectingAccNumber
+} // DepositTransaction

@@ -16,5 +16,10 @@ public class BasicAccount extends BankAccount {
 		
 		setTransferAllowed(false);
 	} // BasicAccount
+
+	@Override
+	public String getAccountType() {
+		return "BASIC ACCOUNT";
+	} // getAccountType
 	
 } // BasicAccount

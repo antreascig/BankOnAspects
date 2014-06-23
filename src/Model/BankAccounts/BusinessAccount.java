@@ -13,4 +13,10 @@ public class BusinessAccount extends BankAccount {
 		
 		setTransferAllowed(true);
 	} // BusinessAccount
+
+	@Override
+	public String getAccountType() {
+		// TODO Auto-generated method stub
+		return "BUSINESS ACCOUNT";
+	} //getAccountType
 } // BusinessAccount

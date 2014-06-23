@@ -5,6 +5,7 @@ import java.util.Enumeration;
 
 import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
+import Model.BankAccounts.BasicAccount;
 import Server.Server;
 import Services.Logging.Logger;
 
@@ -30,9 +31,16 @@ public class BankDemoController
 		AccountsController.removeAccount(accNumber);
 	} // removeAccount
 
-	public void addAccount(String accNum, Integer initAmount) 
+	private int counter = 1;
+	
+	public void addAccount() 
 	{
-		AccountsController.addAccount(accNum, initAmount);
+		String accNum = "acc" + counter;
+		counter++;
+		
+		BankAccount newAccount = new BasicAccount(accNum, 1234, 0);		
+		
+		AccountsController.addAccount(newAccount);
 	} // addAccount
 	
 	public ArrayList<String> getAccountList() {
