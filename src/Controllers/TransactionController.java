@@ -1,6 +1,7 @@
 package Controllers;
 
 import Global.Pair;
+import Global.TransactionNumber;
 import Global.UserMode;
 import Model.AccountOperationException;
 import Model.Transactions.*;
@@ -21,10 +22,18 @@ public class TransactionController {
 		password = pin;
 	} // TransactionController
 	
+	private int getID() {
+		TransactionNumber counter = TransactionNumber.getTrNumInstance();
+		
+		return counter.getAndIncreaseNumber();
+	} // getID
+	
 	public Pair<?> deposit(String accNumber, int amount) {
 		Pair<?> result;
 		
-		tr = new DepositTransaction(userMode, password, accNumber, amount);
+		int trID = getID();
+		
+		tr = new DepositTransaction(trID, userMode, password, accNumber, amount);
 		try {
 			tr.executeTransaction();
 		
@@ -34,8 +43,7 @@ public class TransactionController {
 				throw new AccountOperationException("Something went wrong. No result received.");
 			
 			return result;
-		} catch ( AccountOperationException exception ) // Catches Authentication/Authorisation/Or result==null exception
-		{
+		} catch ( AccountOperationException exception ) { // Catches Authentication/Authorisation/Or result==null exception
 			return new Pair<>("FAILED", exception.getMessage()); 
 		} //catch
 	} // deposit
@@ -43,7 +51,9 @@ public class TransactionController {
 	public Pair<?> withdraw(String accNumber, int amount) {		
 		Pair<?> result = null;
 		
-		tr = new BalanceTransaction(userMode, password, accNumber);
+		int trID = getID();
+		
+		tr = new WithdrawTransaction(trID , userMode, password, accNumber, amount);
 		try {
 			tr.executeTransaction();
 		
@@ -53,18 +63,18 @@ public class TransactionController {
 				throw new AccountOperationException("Something went wrong. No result received.");
 			
 			return result;
-		} catch ( AccountOperationException exception ) // Catches Authentication/Authorisation/Or result==null exception
-		{
+		} catch ( AccountOperationException exception )  { // Catches Authentication/Authorisation/Or result==null exception
 			return new Pair<>("FAILED", exception.getMessage());
 		} //catch		
 	} // withdraw
 	
 	
 	public Pair<?> getBalance(String accNumber) {
-		Pair<?> result;
+		Pair<?> result = null;
 		
 		tr = new BalanceTransaction(userMode, password, accNumber);
 		try {
+			
 			tr.executeTransaction();
 		
 			result = tr.getResult();
@@ -73,8 +83,7 @@ public class TransactionController {
 				throw new AccountOperationException("Something went wrong. No result received.");
 			
 			return result;
-		} catch ( AccountOperationException exception ) // Catches Authentication/Authorisation/Or result==null exception
-		{
+		} catch ( AccountOperationException exception ) { // Catches Authentication/Authorisation/Or result==null exception
 			return new Pair<>("FAILED", exception.getMessage());
 		} //catch
 	} // getAccountBalance

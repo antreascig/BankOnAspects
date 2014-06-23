@@ -9,34 +9,36 @@ import Model.BankAccounts.BankAccount;
 
 public class WithdrawTransaction implements Transaction {
 
+	private Integer transactionID;
 	private UserMode userMode;
 	private String toAccNumber;
-	private int password;
+	private Integer password;
 	private int amount;
 	
 	private Pair<?> result;
 	
-	public WithdrawTransaction(UserMode mode, Integer pass, String toAccNum, int am) {
+	public WithdrawTransaction(int trID, UserMode mode, Integer pass, String toAccNum, int am) {
+		transactionID = trID;
 		userMode = mode;
 		password = pass;
 		toAccNumber = toAccNum;
 		result = null;
 		amount = am;
-	}
+	} // WithdrawTransaction
 
 	@Override
 	public void executeTransaction() {
 		try
 		{
 			BankAccount account = AccountsController.getAccount(toAccNumber);
-			account.deposit(amount);
+			account.withdraw(amount);
 			result = new Pair<>("COMPLETED", null);
 		}
 		catch (AccountOperationException exception)
 		{
 			result = new Pair<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
-	}
+	} // executeTransaction
 
 	@Override
 	public int getClientPassword() {
@@ -60,12 +62,16 @@ public class WithdrawTransaction implements Transaction {
 
 	@Override
 	public Integer getAmount() {
-		// TODO Auto-generated method stub
-		return null;
+		return amount;
 	} // getAmount
 
 	@Override
 	public String getAffectingAccNumber() {
 		return this.toAccNumber;
 	} // getAffectingAccNumber
+
+	@Override
+	public Integer getTransactionID() {
+		return transactionID;
+	} // getTransactionID
 } // WithdrawTransaction

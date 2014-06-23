@@ -15,7 +15,7 @@ public class AccountFactory {
 	public static AccountFactory getAccountFactoryInstance()
 	{
 		if ( instance == null ) {
-			return new AccountFactory();
+			instance = new AccountFactory();
 		} //if
 		
 		return instance;

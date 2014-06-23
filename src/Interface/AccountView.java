@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class AccountView extends JFrame {
-
-	private int accBalance;
 	
 	private JLabel lblAccNum, lblAccBalance;
 	
@@ -30,16 +28,15 @@ public class AccountView extends JFrame {
 	 * @param balance 
 	 * @param accNum 
 	 */
-	public AccountView(String accNum, int accBal, AccountViewController avController) 
-	{
-		accBalance = accBal;
-		
+	public AccountView(String accNum, AccountViewController avController) 
+	{		
 		controller = avController;
 		
 		initialize();
 		
 		lblAccNum.setText(accNum);
-		lblAccBalance.setText("£" + accBal);
+		
+		updateScreen();
 		
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -198,7 +195,7 @@ public class AccountView extends JFrame {
 
 	private void updateScreen()
 	{
-		accBalance = controller.getBalance();
+		int accBalance = controller.getBalance();
 		lblAccBalance.setText("£" + accBalance);
 	}
 	

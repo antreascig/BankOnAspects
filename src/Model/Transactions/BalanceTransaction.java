@@ -11,11 +11,11 @@ public class BalanceTransaction implements Transaction {
 	
 	private UserMode userMode;
 	private String fromAccNumber;
-	private int password;
+	private Integer password;
 	
 	private Pair<?> result;
 	
-	public BalanceTransaction(UserMode mode ,int pass, String fromAccNum) {
+	public BalanceTransaction(UserMode mode ,Integer pass, String fromAccNum) {
 		userMode = mode;
 		password = pass;
 		fromAccNumber = fromAccNum;
@@ -64,4 +64,9 @@ public class BalanceTransaction implements Transaction {
 		// TODO Auto-generated method stub
 		return this.fromAccNumber;
 	} // getAffectingAccNumber
+
+	@Override
+	public Integer getTransactionID() {
+		return null;
+	} // getTransactionNumber
 } // BalanceTransaction

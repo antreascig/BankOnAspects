@@ -10,4 +10,5 @@ public interface Transaction {
 	Pair<?> getResult();
 	Integer getAmount();
 	String getAffectingAccNumber();
+	Integer getTransactionID();
 }

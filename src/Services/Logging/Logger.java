@@ -16,6 +16,12 @@ public class Logger
 		writeToFile(transactionFile, message);
 	} // writeLog
 	
+	public static void logAccountTransaction(String accountNumber, String message)
+	{
+		String transactionFile = accountNumber + ".txt";
+		writeToFile(transactionFile, message);
+	}
+	
 	public static void logServerActivity(String message)
 	{
 		String transactionFile = "ServerActivityLog.txt";
@@ -27,7 +33,7 @@ public class Logger
 		PrintWriter out = null;
 		try
 		{
-			out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+			out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));			
 			
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date = new Date();

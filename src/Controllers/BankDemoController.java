@@ -70,6 +70,7 @@ public class BankDemoController
 	
 	public void stopApplication()
 	{
+		Logger.logServerActivity("Server Stopped.");
 		Server server = Server.getServerInstance();
 		server.stopServer();
 	} // stopApplication

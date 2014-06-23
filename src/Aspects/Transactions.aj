@@ -2,6 +2,7 @@ package Aspects;
 
 import Model.BankAccounts.BankAccount;
 import Model.Transactions.Transaction;
+import Model.Transactions.BalanceTransaction;
 
 
 public abstract aspect Transactions {
@@ -18,8 +19,11 @@ public abstract aspect Transactions {
 	pointcut bank_operations( BankAccount account, int amount) : 
 		       deposit( BankAccount, int ) && target(account) && args(amount)
 		    || withdraw(BankAccount, int ) && target(account) && args(amount);
-		    
-		    
-	pointcut basic_transactions(Transaction transaction) : 
+	
+	pointcut transactions(Transaction transaction) : 
 			execution(void Transaction.executeTransaction()) && target(transaction);
-	} 
+	
+	pointcut logged_transactions(Transaction transaction) : 
+		( execution(void Transaction.executeTransaction()) && target(transaction) ) && !within(BalanceTransaction);
+	
+}  // Transactions

@@ -11,18 +11,20 @@ public class DepositTransaction implements Transaction {
 
 	private UserMode userMode;
 	private String toAccNumber;
-	private int password;
+	private Integer password;
 	private int amount;
+	private Integer transactionID;
 	
 	private Pair<?> result;
 	
-	public DepositTransaction(UserMode mode, Integer pass, String toAccNum, int am) {
+	public DepositTransaction(int trID, UserMode mode, Integer pass, String toAccNum, int am) {
+		transactionID = trID;
 		userMode = mode;
 		password = pass;
 		toAccNumber = toAccNum;
 		result = null;
 		amount = am;
-	}
+	} // DepositTransaction
 
 	@Override
 	public void executeTransaction() {
@@ -60,13 +62,17 @@ public class DepositTransaction implements Transaction {
 
 	@Override
 	public Integer getAmount() {
-		// TODO Auto-generated method stub
-		return null;
+		return amount;
 	} // getAmount
 
 	@Override
 	public String getAffectingAccNumber() {
-		// TODO Auto-generated method stub
 		return this.toAccNumber;
 	} // getAffectingAccNumber
+
+	@Override
+	public Integer getTransactionID() {
+		return transactionID;
+	} // geTransactionNumber
+	
 } // DepositTransaction
