@@ -23,6 +23,7 @@ public class Test_Login_Service {
 	@Test
 	public void test_authenticate()
 	{
+		
 		LoginHandler.login();
 		
 	} // test_IsAuntenticated
