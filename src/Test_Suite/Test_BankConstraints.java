@@ -6,9 +6,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import Model.AccountOperationException;
+import Controllers.AccountFactory;
+import Global.AccountType;
 import Model.BankAccounts.BankAccount;
-import Model.BankAccounts.BasicAccount;
+import Model.Exceptions.AccountOperationException;
 
 public class Test_BankConstraints 
 {
@@ -19,7 +20,9 @@ public class Test_BankConstraints
 	@Test
 	public void testWithdrawException() 
 	{
-		BankAccount account = new BasicAccount("1111", 1234);
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
 		
 		assertEquals(account.getBalance(), 0);
 		
@@ -30,7 +33,9 @@ public class Test_BankConstraints
 	@Test
 	public void testDepositException()
 	{
-		BankAccount account = new BasicAccount("1111", 1234);
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
 				
 		exception.expect(AccountOperationException.class);
 		account.deposit(-10);		

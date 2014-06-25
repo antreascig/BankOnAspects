@@ -6,8 +6,8 @@ import Controllers.AccountsController;
 import Global.Pair;
 import Global.TransactionType;
 import Global.UserMode;
-import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountOperationException;
 
 public class DepositTransaction implements Transaction {
 
@@ -35,26 +35,24 @@ public class DepositTransaction implements Transaction {
 
 	@Override
 	public void executeTransaction() {
-		try
-		{
+		try {
 			BankAccount account = AccountsController.getAccount(toAccNumber);
 			account.deposit(amount);
 			result = new Pair<>("COMPLETED", null);
 		}
-		catch (AccountOperationException exception)
-		{
+		catch (AccountOperationException exception) {
 			result = new Pair<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
 	}
 
 	@Override
 	public int getClientPassword() {
-		return password;
+		return this.password;
 	} // getClientPassword
 
 	@Override
 	public UserMode getUserMode() {
-		return userMode;
+		return this.userMode;
 	} // getUserMode
 
 	@Override
@@ -64,22 +62,22 @@ public class DepositTransaction implements Transaction {
 
 	@Override
 	public Pair<?> getResult() {
-		return result;
+		return this.result;
 	} // getResult
 
 	@Override
 	public Integer getAmount() {
-		return amount;
+		return this.amount;
 	} // getAmount
 
 	@Override
 	public ArrayList<String> getAffectingAccNumbers() {
-		return affectingAccNumbers;
+		return this.affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override
 	public Integer getTransactionID() {
-		return transactionID;
+		return this.transactionID;
 	} // geTransactionNumber
 	
 } // DepositTransaction

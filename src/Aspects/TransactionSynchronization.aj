@@ -3,8 +3,8 @@ package Aspects;
 import java.util.ArrayList;
 
 import Controllers.AccountsController;
-import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountOperationException;
 import Model.Transactions.Transaction;
 
 public aspect TransactionSynchronization extends Transactions {
@@ -16,6 +16,7 @@ public aspect TransactionSynchronization extends Transactions {
     	BankAccount account;
     	int numOfLockedAccounts = 0;
     	String accountNum;
+    	
     	for ( int i = 0; i < affectingAccounts.size(); i++ ) {
     		accountNum = affectingAccounts.get(i);
     		account = AccountsController.getAccount(accountNum);

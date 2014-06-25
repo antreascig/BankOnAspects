@@ -6,14 +6,14 @@ import Controllers.AccountsController;
 import Global.Pair;
 import Global.TransactionType;
 import Global.UserMode;
-import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountOperationException;
 
 public class WithdrawTransaction implements Transaction {
 
 	private Integer transactionID;
 	private UserMode userMode;
-	private String toAccNumber;
+	private String fromAccNumber;
 	private Integer password;
 	private int amount;
 	
@@ -21,41 +21,39 @@ public class WithdrawTransaction implements Transaction {
 	private ArrayList<String> affectingAccNumbers;
 
 	
-	public WithdrawTransaction(int trID, UserMode mode, Integer pass, String toAccNum, int am) {
+	public WithdrawTransaction(int trID, UserMode mode, Integer pass, String fromAccNum, int am) {
 		transactionID = trID;
 		userMode = mode;
 		password = pass;
-		toAccNumber = toAccNum;
+		fromAccNumber = fromAccNum;
 		result = null;
 		amount = am;
 		
 		affectingAccNumbers = new ArrayList<>();
-		affectingAccNumbers.add(toAccNum);
+		affectingAccNumbers.add(fromAccNumber);
 		
 	} // WithdrawTransaction
 
 	@Override
 	public void executeTransaction() {
-		try
-		{
-			BankAccount account = AccountsController.getAccount(toAccNumber);
+		try {
+			BankAccount account = AccountsController.getAccount(fromAccNumber);
 			account.withdraw(amount);
 			result = new Pair<>("COMPLETED", null);
 		}
-		catch (AccountOperationException exception)
-		{
+		catch (AccountOperationException exception) {
 			result = new Pair<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
 	} // executeTransaction
 
 	@Override
 	public int getClientPassword() {
-		return password;
+		return this.password;
 	} // getClientPassword
 
 	@Override
 	public UserMode getUserMode() {
-		return userMode;
+		return this.userMode;
 	} // getUserMode
 
 	@Override
@@ -65,21 +63,21 @@ public class WithdrawTransaction implements Transaction {
 
 	@Override
 	public Pair<?> getResult() {
-		return result;
+		return this.result;
 	} // getResult
 
 	@Override
 	public Integer getAmount() {
-		return amount;
+		return this.amount;
 	} // getAmount
 
 	@Override
 	public ArrayList<String> getAffectingAccNumbers() {
-		return affectingAccNumbers;
+		return this.affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override
 	public Integer getTransactionID() {
-		return transactionID;
+		return this.transactionID;
 	} // getTransactionID
 } // WithdrawTransaction

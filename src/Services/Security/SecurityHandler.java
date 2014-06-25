@@ -1,6 +1,11 @@
 package Services.Security;
 
-import Model.AccountOperationException;
+import Controllers.AccountsController;
+import Global.UserMode;
+import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountAuthenticationException;
+import Model.Exceptions.AccountAuthorisationException;
+import Model.Exceptions.AccountOperationException;
 import Model.Transactions.Transaction;
 
 public class SecurityHandler 
@@ -9,27 +14,41 @@ public class SecurityHandler
 
 	public static void evaluateTransaction(Transaction tr) throws AccountOperationException {
 		evaluated = true;
-		if ( !authenticated() )
+		
+		if ( tr.getUserMode() == UserMode.ADMIN )
+			return;
+		
+		if ( !authenticated(tr) )
 		 {
-//			 throw new AccountOperationException("Not authenticated for transaction");
+			 throw new AccountAuthenticationException("Not authenticated for transaction");
 		 }
 		
-		 if ( !authorised() )
+		 if ( !authorised(tr) )
 		 {
-//			 throw new AccountOperationException("Not authorized for transaction");
+			 throw new AccountAuthorisationException("Not authorized for transaction");
 		 }
 		 
 	} // login
 	
-	private static boolean authenticated() {
-//		isAuntenticated = account.evaluateCredentials(password);	
+	private static boolean authenticated(Transaction tr) {
+		String accNumToAuthenticate = tr.getAffectingAccNumbers().get(0);
+		BankAccount accountToAuthenticate = AccountsController.getAccount(accNumToAuthenticate);
 		
-		return false;
+		Integer clientPass = tr.getClientPassword();
+		
+		if ( clientPass == null )
+		{
+			throw new AccountOperationException("Client Password not provided or not found.");
+		}
+		
+		return accountToAuthenticate.evaluateCredentials(clientPass);
 	} // authenticated
 
-	private static boolean authorised () {
+	private static boolean authorised (Transaction tr) {
+		String accNumToAuthorise = tr.getAffectingAccNumbers().get(0);
+		BankAccount accountToAuthorise = AccountsController.getAccount(accNumToAuthorise);
 		
-		return false;
+		return accountToAuthorise.getOperationAvailable(tr.getTransactionType());	
 	} // Authorised
 	
 	

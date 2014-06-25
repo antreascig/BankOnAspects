@@ -1,7 +1,7 @@
 package Aspects;
 
-import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountOperationException;
 
 // Aspect that validates the account operations based on constraints
 // amount must be >= 0 and the account must contain balance >= amount

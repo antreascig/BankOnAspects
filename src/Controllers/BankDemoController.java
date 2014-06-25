@@ -3,9 +3,9 @@ package Controllers;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import Model.AccountOperationException;
+import Global.AccountType;
 import Model.BankAccounts.BankAccount;
-import Model.BankAccounts.BasicAccount;
+import Model.Exceptions.AccountOperationException;
 import Server.Server;
 import Services.Logging.Logger;
 
@@ -38,9 +38,10 @@ public class BankDemoController
 		String accNum = "acc" + counter;
 		counter++;
 		
-		BankAccount newAccount = new BasicAccount(accNum, 1234, 0);		
-		
-		AccountsController.addAccount(newAccount);
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+
+		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, accNum, 1234));
+
 	} // addAccount
 	
 	public ArrayList<String> getAccountList() {
@@ -59,7 +60,7 @@ public class BankDemoController
 	public String getAccountType(String accNumber)
 	{
 		BankAccount account = AccountsController.getAccount(accNumber);
-		return account.getAccountType();
+		return account.getAccountType().toString();
 	} // getAccountType
 
 	public int getClientNumber() {

@@ -1,22 +1,19 @@
 package Model.BankAccounts;
 
-public class BusinessAccount extends BankAccount {
+import java.util.Hashtable;
 
-	public BusinessAccount(String accountNum, Integer pass) {
-		super(accountNum, pass);
-		
-		setTransferAllowed(true);
-	} // BusinessAccount
+import Global.AccountType;
+import Global.TransactionType;
+
+public class BusinessAccount extends BankAccount {
 	
-	public BusinessAccount(String accountNum, Integer pass, int initBalance) {
-		super(accountNum, pass, initBalance);
-		
-		setTransferAllowed(true);
+	public BusinessAccount(String accountNum, Integer pass, Hashtable<TransactionType, Boolean> operations) {
+		super(accountNum, pass, operations);
 	} // BusinessAccount
 
 	@Override
-	public String getAccountType() {
+	public AccountType getAccountType() {
 		// TODO Auto-generated method stub
-		return "BUSINESS ACCOUNT";
+		return AccountType.BUSINESS_ACCOUNT;
 	} //getAccountType
 } // BusinessAccount

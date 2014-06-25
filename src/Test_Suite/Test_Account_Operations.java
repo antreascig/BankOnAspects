@@ -7,42 +7,27 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import Model.AccountOperationException;
+import Controllers.AccountFactory;
+import Global.AccountType;
 import Model.BankAccounts.BankAccount;
-import Model.BankAccounts.BasicAccount;
 
 public class Test_Account_Operations {
 	
 	@Test
-	public void test_Account_creation_Only_AccNum() 
+	public void test_Account_creation_default_operations() 
 	{
-		String accountNum = "acc10";
-		BankAccount account = new BasicAccount(accountNum, 1234);
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
 		
 		assertNotEquals(account, null);
 		
-		assertEquals(accountNum, account.getAccNum());
+		assertEquals("acc1", account.getAccNum());
 	} // test_Account_creation
 	
 	@Test
-	public void test_Account_creation_both_Param() 
+	public void test_Account_creation_custom_operations() 
 	{
-		// Check with "correct" parameters
-		String accountNum = "acc11";
-		BankAccount account = new BasicAccount(accountNum, 1234, 10);
-		
-		assertNotEquals(account, null);	
-		assertEquals(accountNum, account.getAccNum());
-		
-		
-		// Check with initial balance = 0
-		account = new BasicAccount(accountNum, 1234, 10);
-		assertNotEquals(account, null);	
-		assertEquals(accountNum, account.getAccNum());
-		
-		// Check that exception is thrown for initial balance <0
-		exception.expect(AccountOperationException.class);
-		account = new BasicAccount("1111", 1234, -10);
+			
 		
 	} // test_Account_creation
 	
@@ -50,13 +35,9 @@ public class Test_Account_Operations {
 	  public ExpectedException exception = ExpectedException.none();
 	
 	@Test
-	public void test_account_get_balance()
-	{
-		BankAccount account = new BasicAccount("acc12", 1234, 10);
-		
-		assertEquals(10, account.getBalance());
-		
-		account = new BasicAccount("acc12", 1234, 0);
+	public void test_account_get_balance() {
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
 		
 		assertEquals(0, account.getBalance());
 		
@@ -67,11 +48,12 @@ public class Test_Account_Operations {
 	{
 		int amount = 100;
 		
-		BankAccount account = new BasicAccount("acc13", 1234);
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
 		
 		account.deposit(amount);
 		
 		assertEquals(100, account.getBalance());
-	}
+	} // test_account_deposit
 	
 }

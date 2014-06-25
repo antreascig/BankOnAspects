@@ -6,8 +6,8 @@ import Controllers.AccountsController;
 import Global.Pair;
 import Global.TransactionType;
 import Global.UserMode;
-import Model.AccountOperationException;
 import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountOperationException;
 
 public class BalanceTransaction implements Transaction {
 	
@@ -42,12 +42,12 @@ public class BalanceTransaction implements Transaction {
 
 	@Override
 	public int getClientPassword() {
-		return password;
+		return this.password;
 	} // getClientPassword
 
 	@Override
 	public UserMode getUserMode() {
-		return userMode;
+		return this.userMode;
 	} // getUserMode
 
 	@Override
@@ -57,7 +57,7 @@ public class BalanceTransaction implements Transaction {
 
 	@Override
 	public Pair<?> getResult() {
-		return result;
+		return this.result;
 	} // getResult
 
 	@Override
@@ -67,7 +67,7 @@ public class BalanceTransaction implements Transaction {
 
 	@Override
 	public ArrayList<String> getAffectingAccNumbers() {		
-		return affectingAccNumbers;
+		return this.affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override

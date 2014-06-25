@@ -3,7 +3,8 @@ package Global;
 public enum TransactionType { 
 	DEPOSIT ("Deposit") , 
 	WITHDRAW ("Withdrawal"), 
-	BALANCE ("Balance");
+	BALANCE ("Balance"),
+	TRANSFER ("Transfer");
 							  
 							  
 	private final String text;

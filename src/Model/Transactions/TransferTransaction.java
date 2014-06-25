@@ -2,64 +2,83 @@ package Model.Transactions;
 
 import java.util.ArrayList;
 
+import Controllers.AccountsController;
 import Global.Pair;
 import Global.TransactionType;
 import Global.UserMode;
+import Model.BankAccounts.BankAccount;
+import Model.Exceptions.AccountOperationException;
 
 public class TransferTransaction implements Transaction {
-	private Integer transactionID;
+	private UserMode userMode;
+	private String fromAccNumber, toAccNumber;
+	private Integer transactionID, password;
+	private int amount;
 	
+	private Pair<?> result;
 	private ArrayList<String> affectingAccNumbers;
 	
-	public TransferTransaction()
-	{
+	public TransferTransaction(int trID, UserMode mode, Integer pass, String fromAccNum, String toAccNum, int am) {
+		transactionID = trID;
+		userMode = mode;
+		password = pass;
+		fromAccNumber = fromAccNum;
+		toAccNumber = toAccNum;
+		result = null;
+		amount = am;
 		
-	}
+		affectingAccNumbers = new ArrayList<>();
+		affectingAccNumbers.add(fromAccNum);
+		affectingAccNumbers.add(toAccNum);
+	} // TransferTransaction
 
 	@Override
 	public void executeTransaction() {
-		// TODO Auto-generated method stub
-		
-	}
+		try {
+			BankAccount fromAccount = AccountsController.getAccount(fromAccNumber);
+			BankAccount toAccount = AccountsController.getAccount(toAccNumber);
+			
+			fromAccount.withdraw(amount);
+			toAccount.deposit(amount);
+			result = new Pair<>("COMPLETED", null);
+		}
+		catch (AccountOperationException exception) {
+			result = new Pair<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
+		} // catch	
+	} // executeTransaction
 
 	@Override
 	public int getClientPassword() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+		return this.password;
+	} // getClientPassword
 
 	@Override
 	public UserMode getUserMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return this.userMode;
+	} // getUserMode
 
 	@Override
 	public TransactionType getTransactionType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return TransactionType.TRANSFER;
+	} // getTransactionType
 
 	@Override
 	public Pair<?> getResult() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return this.result;
+	} // getResult
 
 	@Override
 	public Integer getAmount() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		return this.amount;
+	} // getAmount
 
 	@Override
 	public ArrayList<String> getAffectingAccNumbers() {
-		// TODO Auto-generated method stub
-		return affectingAccNumbers;
+		return this.affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override
 	public Integer getTransactionID() {
-		return transactionID;
+		return this.transactionID;
 	} // getTransactionNumber
 } // TransferTransaction

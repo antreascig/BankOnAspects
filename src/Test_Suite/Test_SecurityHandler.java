@@ -6,13 +6,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import Controllers.AccountFactory;
 import Controllers.AccountsController;
+import Global.AccountType;
 import Global.UserMode;
-import Model.BankAccounts.BasicAccount;
-import Model.Transactions.BalanceTransaction;
-import Model.Transactions.DepositTransaction;
-import Model.Transactions.Transaction;
-import Model.Transactions.WithdrawTransaction;
+import Model.Transactions.*;
 import Services.Security.SecurityHandler;
 
 public class Test_SecurityHandler {
@@ -23,7 +21,12 @@ public class Test_SecurityHandler {
 	@Test
 	public void test_Security_Pointcut()
 	{
-		AccountsController.addAccount(new BasicAccount("acc1", 1234));
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+
+		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234));
+		
+		AccountsController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, "acc2", 5678));
+		
 		Transaction tr;
 		
 		// Test BalanceTransaction Pointcut
@@ -37,6 +40,8 @@ public class Test_SecurityHandler {
 		SecurityHandler.resetEvaluation();
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
+		
+		
 		// Test DepositTransaction Pointcut
 		tr = new DepositTransaction(0, UserMode.CLIENT, 1234, "acc1", 10 );
 		
@@ -47,6 +52,8 @@ public class Test_SecurityHandler {
 		
 		SecurityHandler.resetEvaluation();
 		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
+		
 		
 		// Test WithdrawTransaction Pointcut
 		tr = new WithdrawTransaction(1, UserMode.CLIENT, 1234, "acc1", 10 );
@@ -59,15 +66,31 @@ public class Test_SecurityHandler {
 		SecurityHandler.resetEvaluation();
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
+		
+		
+		// Test TransferTransaction Pointcut
+		tr = new TransferTransaction(1, UserMode.ADMIN, null, "acc1", "acc2", 10 );
+		
+		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
+		tr.executeTransaction();  // The transaction fails but we do not care. We only test the pointcut 
+		assertEquals(true, SecurityHandler.transactionEvaluated()); 
+		
+		SecurityHandler.resetEvaluation();
+		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
 	} // test_IsAuntenticated
 	
 	@Test
 	public void test_Security_Advice()
 	{
-		AccountsController.addAccount(new BasicAccount("acc1", 1234));
-		AccountsController.addAccount(new BasicAccount("acc2", 4567));
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+
+		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234));
 		
-//		Transaction tr = new 	
+		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc2", 4567));
+		
+		
 		
 	}
 	
