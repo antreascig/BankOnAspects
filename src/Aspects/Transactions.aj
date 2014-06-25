@@ -23,7 +23,7 @@ public abstract aspect Transactions {
 	pointcut transactions(Transaction transaction) : 
 			execution(void Transaction.executeTransaction()) && target(transaction);
 	
-	pointcut logged_transactions(Transaction transaction) : 
+	pointcut critical_transactions(Transaction transaction) : 
 		( execution(void Transaction.executeTransaction()) && target(transaction) ) && !within(BalanceTransaction);
-	
+		
 }  // Transactions

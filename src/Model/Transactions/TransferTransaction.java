@@ -1,5 +1,7 @@
 package Model.Transactions;
 
+import java.util.ArrayList;
+
 import Global.Pair;
 import Global.TransactionType;
 import Global.UserMode;
@@ -7,6 +9,7 @@ import Global.UserMode;
 public class TransferTransaction implements Transaction {
 	private Integer transactionID;
 	
+	private ArrayList<String> affectingAccNumbers;
 	
 	public TransferTransaction()
 	{
@@ -50,9 +53,9 @@ public class TransferTransaction implements Transaction {
 	}
 
 	@Override
-	public String getAffectingAccNumber() {
+	public ArrayList<String> getAffectingAccNumbers() {
 		// TODO Auto-generated method stub
-		return null;
+		return affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override

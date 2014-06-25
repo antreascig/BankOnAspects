@@ -1,5 +1,7 @@
 package Model.Transactions;
 
+import java.util.ArrayList;
+
 import Controllers.AccountsController;
 import Global.Pair;
 import Global.TransactionType;
@@ -14,12 +16,16 @@ public class BalanceTransaction implements Transaction {
 	private Integer password;
 	
 	private Pair<?> result;
+	private ArrayList<String> affectingAccNumbers;
 	
 	public BalanceTransaction(UserMode mode ,Integer pass, String fromAccNum) {
 		userMode = mode;
 		password = pass;
 		fromAccNumber = fromAccNum;
 		result = null;
+		
+		affectingAccNumbers = new ArrayList<>();
+		affectingAccNumbers.add(fromAccNum);
 	} // BalanceTransaction
 
 	@Override
@@ -60,9 +66,8 @@ public class BalanceTransaction implements Transaction {
 	} // getAmount
 
 	@Override
-	public String getAffectingAccNumber() {
-		// TODO Auto-generated method stub
-		return this.fromAccNumber;
+	public ArrayList<String> getAffectingAccNumbers() {		
+		return affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override

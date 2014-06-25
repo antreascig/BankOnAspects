@@ -1,5 +1,7 @@
 package Model.Transactions;
 
+import java.util.ArrayList;
+
 import Global.Pair;
 
 public interface Transaction {
@@ -9,6 +11,6 @@ public interface Transaction {
 	Global.TransactionType getTransactionType();
 	Pair<?> getResult();
 	Integer getAmount();
-	String getAffectingAccNumber();
+	ArrayList<String> getAffectingAccNumbers();
 	Integer getTransactionID();
 }

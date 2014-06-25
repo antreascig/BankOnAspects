@@ -5,7 +5,7 @@ import Model.BankAccounts.BankAccount;
 
 // Aspect that validates the account operations based on constraints
 // amount must be >= 0 and the account must contain balance >= amount
-public aspect BankConstraints extends Transactions{
+public aspect TransactionConstraints extends Transactions{
 		
 	// Advice to check deposit(..)
 	before(BankAccount account, int amount) : deposit(account, amount) 

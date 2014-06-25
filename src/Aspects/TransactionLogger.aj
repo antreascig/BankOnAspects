@@ -8,32 +8,34 @@ import Services.Logging.Logger;
 
 public aspect TransactionLogger extends Transactions
 {
-	after (Transaction transaction) returning : logged_transactions(transaction)
+	// Logs Transactions in Transaction Log file
+	// Logs completed Transaction
+	after (Transaction transaction) returning : critical_transactions(transaction)
 	{		
 		Pair<?> result = transaction.getResult();
 					
 		String log = "" + transaction.getTransactionID()   	  + "\t " 	// Transaction ID
-						+ transaction.getAffectingAccNumber() + "\t"	// Account Number	
+						+ transaction.getAffectingAccNumbers() + "\t"	// Account Number	
 						+ transaction.getTransactionType() 	  + "\t " 	// Transaction Type
 						+ transaction.getAmount() 		  	  + "\t "	// Amount
 						+ result.getKey();								// Status
 		
 		Logger.logTransaction(log);
 	} // before bank_operations
-	
-	after (Transaction transaction) throwing (AccountOperationException e)  : logged_transactions(transaction)
+	// Logs failed Transaction
+	after (Transaction transaction) throwing (AccountOperationException e)  : critical_transactions(transaction)
 	{				
-		String log = "" + transaction.getTransactionID()   	  + "\t " 	// Transaction ID
-						+ transaction.getAffectingAccNumber() + "\t " 	// 	Account Number	
-						+ transaction.getTransactionType() 	  + "\t " 	// Transaction Type
-						+ transaction.getAmount() 		  	  + "\t "	// Amount
-						+ "FAILED" 							  + "\t "	// Status
+		String log = "" + transaction.getTransactionID()   	   + "\t " 	// Transaction ID
+						+ transaction.getAffectingAccNumbers() + "\t " 	// 	Account Number	
+						+ transaction.getTransactionType() 	   + "\t " 	// Transaction Type
+						+ transaction.getAmount() 		  	   + "\t "	// Amount
+						+ "FAILED" 							   + "\t "	// Status
 						+ e.getMessage();								// Failure Reason
 		
 		Logger.logTransaction(log);
 	} // before bank_operations
 	
-	
+	// Logs Transactions in Transaction Log file
 	
 	before(BankAccount account, int amount) : bank_operations(account, amount) 
 	{

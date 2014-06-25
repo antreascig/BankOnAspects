@@ -10,7 +10,9 @@ import Controllers.AccountsController;
 import Global.UserMode;
 import Model.BankAccounts.BasicAccount;
 import Model.Transactions.BalanceTransaction;
+import Model.Transactions.DepositTransaction;
 import Model.Transactions.Transaction;
+import Model.Transactions.WithdrawTransaction;
 import Services.Security.SecurityHandler;
 
 public class Test_SecurityHandler {
@@ -22,8 +24,32 @@ public class Test_SecurityHandler {
 	public void test_Security_Pointcut()
 	{
 		AccountsController.addAccount(new BasicAccount("acc1", 1234));
+		Transaction tr;
 		
-		Transaction tr = new BalanceTransaction(UserMode.CLIENT, 1234, "acc1" );
+		// Test BalanceTransaction Pointcut
+		tr = new BalanceTransaction(UserMode.CLIENT, 1234, "acc1" );
+		
+		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
+		tr.executeTransaction();
+		assertEquals(true, SecurityHandler.transactionEvaluated());
+		
+		SecurityHandler.resetEvaluation();
+		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
+		// Test DepositTransaction Pointcut
+		tr = new DepositTransaction(0, UserMode.CLIENT, 1234, "acc1", 10 );
+		
+		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
+		tr.executeTransaction();
+		assertEquals(true, SecurityHandler.transactionEvaluated());
+		
+		SecurityHandler.resetEvaluation();
+		assertEquals(false, SecurityHandler.transactionEvaluated());
+		
+		// Test WithdrawTransaction Pointcut
+		tr = new WithdrawTransaction(1, UserMode.CLIENT, 1234, "acc1", 10 );
 		
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
@@ -41,9 +67,7 @@ public class Test_SecurityHandler {
 		AccountsController.addAccount(new BasicAccount("acc1", 1234));
 		AccountsController.addAccount(new BasicAccount("acc2", 4567));
 		
-//		Transaction tr = new 
-		
-		
+//		Transaction tr = new 	
 		
 	}
 	

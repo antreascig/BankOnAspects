@@ -1,11 +1,15 @@
 package Model.BankAccounts;
 
-public abstract class BankAccount {
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public abstract class BankAccount{
 
 	protected int balance;
 	protected String accNum;
 	protected Integer credential;
 	private boolean transferAllowed;
+	private final Lock lock = new ReentrantLock();
 
 	public BankAccount(String accountNum, Integer pass) {
 		this.accNum = accountNum;
@@ -52,5 +56,8 @@ public abstract class BankAccount {
 	public void setTransferAllowed(boolean value) {
 		this.transferAllowed = value;		
 	} // setTransferAllowed
-
+	
+	public Lock lock() {
+		return this.lock;
+	}
 }

@@ -1,5 +1,7 @@
 package Model.Transactions;
 
+import java.util.ArrayList;
+
 import Controllers.AccountsController;
 import Global.Pair;
 import Global.TransactionType;
@@ -16,6 +18,7 @@ public class DepositTransaction implements Transaction {
 	private Integer transactionID;
 	
 	private Pair<?> result;
+	private ArrayList<String> affectingAccNumbers;
 	
 	public DepositTransaction(int trID, UserMode mode, Integer pass, String toAccNum, int am) {
 		transactionID = trID;
@@ -24,6 +27,10 @@ public class DepositTransaction implements Transaction {
 		toAccNumber = toAccNum;
 		result = null;
 		amount = am;
+		
+		affectingAccNumbers = new ArrayList<>();
+		affectingAccNumbers.add(toAccNum);
+		
 	} // DepositTransaction
 
 	@Override
@@ -66,8 +73,8 @@ public class DepositTransaction implements Transaction {
 	} // getAmount
 
 	@Override
-	public String getAffectingAccNumber() {
-		return this.toAccNumber;
+	public ArrayList<String> getAffectingAccNumbers() {
+		return affectingAccNumbers;
 	} // getAffectingAccNumber
 
 	@Override
