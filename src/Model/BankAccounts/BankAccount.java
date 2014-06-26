@@ -1,5 +1,6 @@
 package Model.BankAccounts;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -7,8 +8,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import Global.AccountType;
 import Global.TransactionType;;
 
-public abstract class BankAccount{
+public abstract class BankAccount implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	protected int balance;
 	protected String accNum;
 	protected Integer credential;

@@ -15,7 +15,10 @@ public aspect TransactionLogger extends Transactions
 		Pair<?> result = transaction.getResult();
 		
 		String log = String.format("%d \t %-15s \t %s \t %d \t %s", transaction.getTransactionID() , transaction.getAffectingAccNumbers(),
-																   transaction.getTransactionType(), transaction.getAmount(), result.getKey() );	
+																   transaction.getTransactionType(), transaction.getAmount(), result.getKey() );
+		
+		if (result.getKey().equals("FAILED"))
+			log += "\t " + result.getValue();
 		
 //		String log = "" + transaction.getTransactionID()   	   + "\t " 	// Transaction ID
 //						+ transaction.getAffectingAccNumbers() + "\t "	// Account Number	

@@ -12,14 +12,14 @@ import Interface.BankDemoInterface;
 
 public class Server extends Observable
 { 
-	private Boolean running;
+	private Boolean isRunning;
 	private ArrayList<UserThread> clients;
 	private int clientNumber;
 	private ServerSocket listener;
 	
 	
 	private Server() {
-		running = false;
+		isRunning = false;
 		clients = new ArrayList<>();
 	} // Server
 	
@@ -37,11 +37,11 @@ public class Server extends Observable
 		try {
 			listener = new ServerSocket(9898);
 			
-			running = true;
+			isRunning = true;
 			setChanged();
-	    	notifyObservers(new Pair<>("STATUS", running));
+	    	notifyObservers(new Pair<>("STATUS", isRunning));
 	    	
-            while (running) 
+            while (isRunning) 
             {           	
                 addClient(listener.accept());
             } // while
@@ -49,13 +49,14 @@ public class Server extends Observable
 			System.out.println("Exception: " + e.getMessage());
 		} finally {
             try {
-				listener.close();
+            	if ( listener != null )
+            		listener.close();
 			} catch (IOException e) {
 				System.out.println("Exception: " + e.getMessage());
 			} // catch
             finally {
-            	running = false;
-            	notifyObservers(new Pair<>("STATUS", running));
+            	isRunning = false;
+            	notifyObservers(new Pair<>("STATUS", isRunning));
             } // finally
         } // finally
 	} // run
@@ -64,12 +65,11 @@ public class Server extends Observable
 		try {
 			listener.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
-			running = false;
-			notifyObservers(new Pair<>("STATUS", running));
+			isRunning = false;
+			notifyObservers(new Pair<>("STATUS", isRunning));
 		} // finally
 	} // stopServer;
 
@@ -96,7 +96,7 @@ public class Server extends Observable
     } // getClientCount
     
     public boolean isRunning() {
-    	return running;
+    	return isRunning;
     } // isRunning
     
     private static Server instance = null;
@@ -105,7 +105,7 @@ public class Server extends Observable
     	if ( instance == null )
     		instance = new Server();
     	return instance;
-    } // getServerInstance	
+    } // getServerInstance	s
     
 } // Server
 

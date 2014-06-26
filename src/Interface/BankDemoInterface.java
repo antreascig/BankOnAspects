@@ -19,6 +19,7 @@ import javax.swing.ButtonModel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 
@@ -59,7 +60,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 	{
 		controller = bankDemoController;
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		initialize();		
 		setLocationRelativeTo(null);	
 		
@@ -80,8 +81,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		
 		JMenuItem mntmServerStatistics = new JMenuItem("Server Information");
 		mntmServerStatistics.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+			public void actionPerformed(ActionEvent e) {
 				updateScreen("infoScrPane");
 			}
 		});
@@ -89,9 +89,8 @@ public class BankDemoInterface extends JFrame implements Observer {
 		
 		JMenuItem mntmAccountStatistics = new JMenuItem("Exit");
 		mntmAccountStatistics.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				closeApplication();
+			public void actionPerformed(ActionEvent e) {
+				endDemo();
 			}
 		});
 		mnView.add(mntmAccountStatistics);
@@ -110,8 +109,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		
 		JMenuItem mntmViewAccounts = new JMenuItem("View Accounts");
 		mntmViewAccounts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+			public void actionPerformed(ActionEvent e) {
 				updateScreen("viewAccountPanel");
 			}
 		});
@@ -140,36 +138,49 @@ public class BankDemoInterface extends JFrame implements Observer {
 		startPanel.setBackground(new Color(173, 216, 230));
 		mainPanel.add(startPanel, "startPanel");
 		
-		JButton btnNewButton = new JButton("Start Demo");
+		JButton btnNewButton = new JButton("Enable Server's GUI");
 		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+			public void actionPerformed(ActionEvent e) {
 				initializeDemo();
 			}
 		});
 		
 		JLabel lblNewLabel = new JLabel("Welcome to Bank-On-Aspects Demo");
 		lblNewLabel.setFont(new Font("Liberation Serif", Font.BOLD | Font.ITALIC, 24));
+		
+		JButton exitButton = new JButton("EXIT");
+		exitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				endDemo();
+			}
+		});
 		GroupLayout gl_startPanel = new GroupLayout(startPanel);
 		gl_startPanel.setHorizontalGroup(
 			gl_startPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_startPanel.createSequentialGroup()
-					.addGap(196)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(119, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_startPanel.createSequentialGroup()
 					.addContainerGap(102, Short.MAX_VALUE)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
-					.addGap(99))
+					.addGroup(gl_startPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_startPanel.createSequentialGroup()
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 396, GroupLayout.PREFERRED_SIZE)
+							.addGap(99))
+						.addGroup(gl_startPanel.createSequentialGroup()
+							.addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
+				.addGroup(gl_startPanel.createSequentialGroup()
+					.addGap(191)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(239, Short.MAX_VALUE))
 		);
 		gl_startPanel.setVerticalGroup(
 			gl_startPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_startPanel.createSequentialGroup()
 					.addGap(42)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
-					.addGap(63)
+					.addPreferredGap(ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
 					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(143, Short.MAX_VALUE))
+					.addGap(60)
+					.addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+					.addGap(28))
 		);
 		startPanel.setLayout(gl_startPanel);
 		
@@ -229,8 +240,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		
 		JButton newAccButton = new JButton("New Account");
 		newAccButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+			public void actionPerformed(ActionEvent e) {
 				addAccount();
 			}
 		});
@@ -238,8 +248,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		viewAccButton = new JButton("View Account");
 		viewAccButton.setEnabled(false);
 		viewAccButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+			public void actionPerformed(ActionEvent e) {
 				viewAccount();
 			}
 		});
@@ -247,8 +256,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		deleteAccButton = new JButton("Delete Account");
 		deleteAccButton.setEnabled(false);
 		deleteAccButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+			public void actionPerformed(ActionEvent e) {
 				deleteAccount();
 			}
 		});
@@ -312,53 +320,43 @@ public class BankDemoInterface extends JFrame implements Observer {
 		
 		String key = update.getKey();
 		String log;
-		
-		if (key.equals("STATUS"))
-		{
-			boolean serverRunning = (Boolean) update.getValue();
-			
+		Integer clientNumber;
+		if (key.equals("STATUS")) {
+			boolean serverRunning = (Boolean) update.getValue();			
 			log = "Server ";
 			if (serverRunning)
 				log += "is running.";
 			else
 				log += "has stopped.";
-					
-			updateServerLog(log);
-		}
-		else if (key.equals("USER_ADDED"))
-		{
-			Integer clientNumber = (Integer) update.getValue(); 
-			log = "New connection with client# " + clientNumber + "." ;
-			updateServerLog(log);
-		}
-		else if (key.equals("USER_REMOVED"))
-		{
-			Integer clientNumber = (Integer) update.getValue(); 
+			clientNumber = controller.getClientNumber();
+		} // if
+		else if (key.equals("USER_ADDED")) {
+			clientNumber = (Integer) update.getValue();
+			log = "New connection with client# " + clientNumber + "." ;			
+		} // else if
+		else if (key.equals("USER_REMOVED")) {
+			clientNumber = (Integer) update.getValue(); 
 			log = "Client# " + clientNumber + "disconnected." ;
-			updateServerLog(log);
 		} // else if
 		else
 			throw new RuntimeException("Unforseen key update");
-	
-		int clientNumber = controller.getClientNumber();
+		
+		updateServerLog(log);
 		
 		userCountLbl.setText(clientNumber + "");
 	} //update
 
-	protected void initializeDemo() 
-	{
+	protected void initializeDemo() {
 		menuBar.setVisible(true);
-		updateScreen("infoScrPane");		
+		updateScreen("infoScrPane");
 	} // initializeDemo
 	
-	private void updateScreen(String panel)
-	{	
+	private void updateScreen(String panel) {	
 		// Change screen to the - panel - provided as argument
 		panels = (CardLayout) mainPanel.getLayout();  
 		panels.show(mainPanel, panel );
 		
-		if (panel.equals("viewAccountPanel"))
-		{
+		if (panel.equals("viewAccountPanel")) {
 			accountsPanel.removeAll();
 			
 			ArrayList<String> accountList = controller.getAccountList();
@@ -366,19 +364,16 @@ public class BankDemoInterface extends JFrame implements Observer {
 			JRadioButton accountRadio;
 			String radioTxt;	
 						
-			for (String account : accountList)
-			{
+			for (String account : accountList) {
 				radioTxt = account + "\t-\t" + controller.getAccountType(account);
 				accountRadio = new JRadioButton(radioTxt);
 				accountRadio.setActionCommand(account);
 				accountRadio.addActionListener(new ActionListener() {			
 					@Override
-					public void actionPerformed(ActionEvent e) 
-					{
+					public void actionPerformed(ActionEvent e) {
 						updateButtons();
 					}
-				});
-				
+				});	
 				accountRadioGroup.add(accountRadio);
 				accountsPanel.add(accountRadio);			
 			} // for
@@ -392,52 +387,45 @@ public class BankDemoInterface extends JFrame implements Observer {
 		} // if		
 	} // updateScreen
 	
-	protected void updateButtons() 
-	{
+	protected void updateButtons() {
 		ButtonModel selection = accountRadioGroup.getSelection();
-		if (selection != null)
-		{
+		if (selection != null) {
 			viewAccButton.setEnabled(true);
 			deleteAccButton.setEnabled(true);
 		} // if
-		else
-		{
+		else {
 			viewAccButton.setEnabled(false);
 			deleteAccButton.setEnabled(false);
 		} // else				
 	} // updateButtons
 
-	public void updateServerLog(String log)
-	{
+	public void updateServerLog(String log) {
 		serverLog.append(log);
 		controller.logServerActivity(log);
 	} // updateServerLog
 		
-	protected void addAccount() 
-	{	
-		controller.addAccount();
+	protected void addAccount() {	
+		Pair<Integer> newAccountInfo = controller.addAccount();
+		String message = "New Account created.\nAccount Number: " + newAccountInfo.getKey() + "\nPassword: " + newAccountInfo.getValue();
+		JOptionPane.showMessageDialog(this, message);
 			
 		updateScreen("viewAccountPanel");
 	} // addAccount
 	
-	protected void viewAccount() 
-	{
+	protected void viewAccount() {
 		String accNum = accountRadioGroup.getSelection().getActionCommand();
 		controller.viewAccount(accNum);
 	} // viewAccount
 	
-	protected void deleteAccount() 
-	{
+	protected void deleteAccount() {
 		String accNum = accountRadioGroup.getSelection().getActionCommand();
 		controller.removeAccount(accNum);	
 		
 		updateScreen("viewAccountPanel");	
 	} // deleteAccount
 	
-	protected void closeApplication() 
-	{
-		// TODO Auto-generated method stub
+	protected void endDemo() {
 		controller.stopApplication();
 		this.dispose();
 	} // closeApplication
-}
+} // BankDemoInterface

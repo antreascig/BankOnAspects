@@ -16,10 +16,11 @@ public aspect TransactionSynchronization extends Transactions {
     	BankAccount account;
     	int numOfLockedAccounts = 0;
     	String accountNum;
-    	
+    	AccountsController accountController = AccountsController.getInstance();
     	for ( int i = 0; i < affectingAccounts.size(); i++ ) {
     		accountNum = affectingAccounts.get(i);
-    		account = AccountsController.getAccount(accountNum);
+    		
+    		account = accountController.getAccount(accountNum);
     		
     		System.out.println("Attempting to get Lock on Account: " + accountNum);
     		if  ( !account.lock().tryLock() ) {
@@ -38,7 +39,7 @@ public aspect TransactionSynchronization extends Transactions {
     	    } // try
     	    finally {
     	    	for ( String accountNumber :  affectingAccounts) {
-    	    		account = AccountsController.getAccount(accountNumber);
+    	    		account = accountController.getAccount(accountNumber);
     	    		account.lock().unlock();
     	    		System.out.println("Released Lock on Account: " + accountNumber);
     	    	} // for
@@ -48,7 +49,7 @@ public aspect TransactionSynchronization extends Transactions {
     	else {
     		for ( int i = 0; i < numOfLockedAccounts; i++ )	{
         		accountNum = affectingAccounts.get(i);
-        		account = AccountsController.getAccount(accountNum);
+        		account = accountController.getAccount(accountNum);
         		account.lock().unlock();
         		System.out.println("Released Lock on Account: " + accountNum);
         	} // for

@@ -37,7 +37,8 @@ public class WithdrawTransaction implements Transaction {
 	@Override
 	public void executeTransaction() {
 		try {
-			BankAccount account = AccountsController.getAccount(fromAccNumber);
+			AccountsController accountController = AccountsController.getInstance();
+			BankAccount account = accountController.getAccount(fromAccNumber);
 			account.withdraw(amount);
 			result = new Pair<>("COMPLETED", null);
 		}

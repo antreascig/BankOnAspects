@@ -35,8 +35,9 @@ public class TransferTransaction implements Transaction {
 	@Override
 	public void executeTransaction() {
 		try {
-			BankAccount fromAccount = AccountsController.getAccount(fromAccNumber);
-			BankAccount toAccount = AccountsController.getAccount(toAccNumber);
+			AccountsController accountController = AccountsController.getInstance();
+			BankAccount fromAccount = accountController.getAccount(fromAccNumber);
+			BankAccount toAccount = accountController.getAccount(toAccNumber);
 			
 			fromAccount.withdraw(amount);
 			toAccount.deposit(amount);

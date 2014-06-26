@@ -7,6 +7,8 @@ import Global.TransactionType;
 
 public class BasicAccount extends BankAccount {
 	
+	private static final long serialVersionUID = 1L;
+
 	public BasicAccount(String accountNum, Integer pass, Hashtable<TransactionType, Boolean> operations)
 	{
 		super(accountNum, pass, operations);	

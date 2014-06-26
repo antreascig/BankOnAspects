@@ -5,61 +5,51 @@ import java.util.Hashtable;
 
 import Model.BankAccounts.BankAccount;
 import Model.Exceptions.AccountOperationException;
+import Services.Persistence.Persistent;
 
-public class AccountsController 
-{
-	private static Hashtable<String, BankAccount> accountList = null;
+public class AccountsController {
+	private Hashtable<String, BankAccount> accountList = null;
+	
+	private static AccountsController instance = null;	
+	
+	private AccountsController() {
+		accountList = Persistent.loadAccounts();
+	} // AccountsController
+	
+	public static AccountsController getInstance() {
+		if ( instance == null )
+			instance = new AccountsController();
+		return instance;
+	} // getInstance
 		
-		public static void initAccList()
-		{
-			accountList = new Hashtable<>();
-			
-			// Restore from file if any
-		} // initAccList
-		
-	public static Enumeration<String> getAccountNumbersList() 
-	{	
-		if ( accountList == null )
-		{
-			initAccList();
-		} // if
+	public Enumeration<String> getAccountNumbersList() {	
 		return accountList.keys();		
 	} // getAccountList
 
-	public static void removeAccount(String accNumber) 
-	{
-		if ( accountList == null || accountList.isEmpty())
-		{
-			throw new NullPointerException("The account list is either unitialized or empty");
-		} // if
+	public synchronized void removeAccount(String accNumber) {
 		accountList.remove(accNumber);
 	} // removeAccount
 	
-	public static void addAccount(BankAccount newAccount) 
-	{
-		if ( accountList == null )
-		{
-			initAccList();
-		} // if
-		
+	public String addAccount(BankAccount newAccount) {
+		if (accountList.containsKey(newAccount.getAccNum()))
+			throw new AccountOperationException("The account key: " + newAccount.getAccNum() + " already exists.");
 		accountList.put(newAccount.getAccNum(), newAccount);
+		
+		return newAccount.getAccNum();
 	} // addAccount
 
-	public static BankAccount getAccount(String accNumber) {
-		if ( accountList == null || accountList.isEmpty())
-		{
-			throw new NullPointerException("The account list is either unitialized or empty");
-		} // if		return ;
-		
-		try
-		{
+	public BankAccount getAccount(String accNumber) {	
+		try {
 			BankAccount account = accountList.get(accNumber);
 			return account;
 		} // try		
-		catch( NullPointerException exc)
-		{
+		catch( NullPointerException exc) {
 			throw new AccountOperationException("Account not found!");
 		} // catch		
 	} // getAccount
 	
+	public void saveAccounts() {
+		Persistent.saveAccounts(accountList);
+	} // saveAccounts
+
 } // AccountController

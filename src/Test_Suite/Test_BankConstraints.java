@@ -22,7 +22,7 @@ public class Test_BankConstraints
 	{
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
 
-		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 		
 		assertEquals(account.getBalance(), 0);
 		
@@ -35,10 +35,10 @@ public class Test_BankConstraints
 	{
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
 
-		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 				
 		exception.expect(AccountOperationException.class);
-		account.deposit(-10);		
+		account.deposit(-10);
 	} // testDepositException
 
 	

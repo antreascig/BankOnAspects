@@ -1,7 +1,7 @@
 package Controllers;
 
 import Global.Pair;
-import Global.TransactionNumber;
+import Global.TransactionNumberGenerator;
 import Global.UserMode;
 import Model.Exceptions.AccountOperationException;
 import Model.Transactions.*;
@@ -23,7 +23,7 @@ public class TransactionController {
 	} // TransactionController
 	
 	private int getID() {
-		TransactionNumber counter = TransactionNumber.getTrNumInstance();
+		TransactionNumberGenerator counter = TransactionNumberGenerator.getTrNumInstance();
 		
 		return counter.getAndIncreaseNumber();
 	} // getID

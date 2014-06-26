@@ -1,6 +1,7 @@
 package Services.Logging;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,29 +11,38 @@ import java.util.Date;
 
 public class Logger 
 {
-	public static void logTransaction(String message)
-	{
-		String transactionFile = "TransactionLog.txt";
+	private static final String transactionFile = "TransactionLog.txt";
+	private static final String serverActivityFile = "ServerActivityLog.txt";
+	
+	public static void logTransaction(String message) {
 		writeToFile(transactionFile, message);
+	} // logTransaction
+	
+	public static void logAccountTransaction(String accountNumber, String message) {
+		String accountTransactionFile = "//Accounts//" + accountNumber + ".txt";
+		writeToFile(accountTransactionFile, message);
+	} // logAccountTransaction
+	
+	public static void logServerActivity(String message) {
+		writeToFile(serverActivityFile, message);
 	} // writeLog
-	
-	public static void logAccountTransaction(String accountNumber, String message)
-	{
-		String transactionFile = accountNumber + ".txt";
-		writeToFile(transactionFile, message);
-	}
-	
-	public static void logServerActivity(String message)
-	{
-		String transactionFile = "ServerActivityLog.txt";
-		writeToFile(transactionFile, message);
-	} // writeLog
-	
-	
-	private static void writeToFile(String file, String message) {
+		
+	private static void writeToFile(String fileName, String message) {
 		PrintWriter out = null;
-		try
-		{
+		File file = null;
+		
+		try {
+			file = new File("Logs", fileName);
+			
+			File parent_directory = file.getParentFile();
+			
+			if ( parent_directory != null ) {
+			    parent_directory.mkdirs();
+			} // if
+			
+			if ( !file.exists() )
+				file.createNewFile();
+			
 			out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));			
 			
 			// An empty message is probably used as a blank line so only add date when message is not empty
@@ -44,10 +54,10 @@ public class Logger
 		
 		    out.println(message);
 		}catch (IOException e) {
-		    //exception handling left as an exercise for the reader
+			e.printStackTrace();
 		}finally {
-			out.close();
+			if ( out != null )
+				out.close();
 		} //finally
-	}
-
-}
+	} // writeToFile
+} // Logger

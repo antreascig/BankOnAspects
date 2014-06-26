@@ -14,19 +14,15 @@ import Model.BankAccounts.BankAccount;
 public class Test_Account_Operations {
 	
 	@Test
-	public void test_Account_creation_default_operations() 
-	{
+	public void test_Account_creation_default_operations() {
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 		
 		assertNotEquals(account, null);
-		
-		assertEquals("acc1", account.getAccNum());
 	} // test_Account_creation
 	
 	@Test
-	public void test_Account_creation_custom_operations() 
-	{
+	public void test_Account_creation_custom_operations() {
 			
 		
 	} // test_Account_creation
@@ -37,23 +33,22 @@ public class Test_Account_Operations {
 	@Test
 	public void test_account_get_balance() {
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 		
 		assertEquals(0, account.getBalance());
 		
 	} // test_account_get_balance
 	
 	@Test
-	public void test_account_deposit()
-	{
+	public void test_account_deposit() {
 		int amount = 100;
 		
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234);
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 		
 		account.deposit(amount);
 		
 		assertEquals(100, account.getBalance());
 	} // test_account_deposit
 	
-}
+} // Test_Account_Operations

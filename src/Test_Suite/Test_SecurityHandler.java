@@ -19,18 +19,18 @@ public class Test_SecurityHandler {
 	  public ExpectedException exception = ExpectedException.none();
 	
 	@Test
-	public void test_Security_Pointcut()
-	{
+	public void test_Security_Pointcut() {
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-
-		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234));
+		AccountsController accountController = AccountsController.getInstance();
 		
-		AccountsController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, "acc2", 5678));
+		String accNumber1 = accountController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234));
+		
+		String accNumber2 = accountController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, 5678));
 		
 		Transaction tr;
 		
 		// Test BalanceTransaction Pointcut
-		tr = new BalanceTransaction(UserMode.CLIENT, 1234, "acc1" );
+		tr = new BalanceTransaction(UserMode.CLIENT, 1234,  accNumber1);
 		
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
@@ -43,7 +43,7 @@ public class Test_SecurityHandler {
 		
 		
 		// Test DepositTransaction Pointcut
-		tr = new DepositTransaction(0, UserMode.CLIENT, 1234, "acc1", 10 );
+		tr = new DepositTransaction(0, UserMode.CLIENT, 1234, accNumber1, 10 );
 		
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
@@ -56,7 +56,7 @@ public class Test_SecurityHandler {
 		
 		
 		// Test WithdrawTransaction Pointcut
-		tr = new WithdrawTransaction(1, UserMode.CLIENT, 1234, "acc1", 10 );
+		tr = new WithdrawTransaction(1, UserMode.CLIENT, 1234, accNumber1, 10 );
 		
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
@@ -69,7 +69,7 @@ public class Test_SecurityHandler {
 		
 		
 		// Test TransferTransaction Pointcut
-		tr = new TransferTransaction(1, UserMode.ADMIN, null, "acc1", "acc2", 10 );
+		tr = new TransferTransaction(1, UserMode.ADMIN, null, accNumber1, accNumber2, 10 );
 		
 		assertEquals(false, SecurityHandler.transactionEvaluated());
 		
@@ -82,18 +82,16 @@ public class Test_SecurityHandler {
 	} // test_IsAuntenticated
 	
 	@Test
-	public void test_Security_Advice()
-	{
-		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-
-		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc1", 1234));
+	public void test_Security_Advice() {
+//		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+//		
+//		AccountsController accountController = AccountsController.getInstance();
 		
-		AccountsController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, "acc2", 4567));
-		
-		
+//		String accNumber1 = accountController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234));
+//		
+//		String accNumber2 = accountController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, 5678));
 		
 	}
-	
 	
 
 } // Test_SecurityHandler

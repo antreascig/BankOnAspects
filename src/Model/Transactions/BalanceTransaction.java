@@ -32,7 +32,8 @@ public class BalanceTransaction implements Transaction {
 	public void executeTransaction() {
 		try
 		{
-			BankAccount account = AccountsController.getAccount(fromAccNumber);
+			AccountsController accountController = AccountsController.getInstance();
+			BankAccount account = accountController.getAccount(fromAccNumber);
 			int balance  = account.getBalance();
 			result = new Pair<>("COMPLETED", balance);
 		} catch (AccountOperationException exception) {

@@ -36,7 +36,8 @@ public class DepositTransaction implements Transaction {
 	@Override
 	public void executeTransaction() {
 		try {
-			BankAccount account = AccountsController.getAccount(toAccNumber);
+			AccountsController accountController = AccountsController.getInstance();
+			BankAccount account = accountController.getAccount(toAccNumber);
 			account.deposit(amount);
 			result = new Pair<>("COMPLETED", null);
 		}
