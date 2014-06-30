@@ -26,7 +26,12 @@ public abstract class BankAccount implements Serializable{
 	} // BankAccount
 
 	public void deposit(int amount) {
-		balance += amount;
+		try {
+			Thread.sleep(500);
+			balance += amount;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
 	} // deposit
 
 	public void withdraw(int amount) {

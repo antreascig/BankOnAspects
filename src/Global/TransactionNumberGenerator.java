@@ -3,8 +3,7 @@ package Global;
 import Services.Persistence.Persistent;
 
 public class TransactionNumberGenerator {
-	private int counter;
-	
+	private Integer counter;
 	private static TransactionNumberGenerator instance = null;
 	
 	private TransactionNumberGenerator() {
@@ -21,8 +20,15 @@ public class TransactionNumberGenerator {
 		return this.counter;
 	} // getTrNumber
 
-	public synchronized int getAndIncreaseNumber() {
-		return counter++;
+	public int getAndIncr() {
+		synchronized (counter) {
+			return counter++;
+		} // synchronised
 	} // getAndIncreaseNumber
 	
+	public void resetCounter() {
+		synchronized(counter) {
+			this.counter = 0;
+		} // synchronised
+	} // resetCounter
 } // TransactionNumber

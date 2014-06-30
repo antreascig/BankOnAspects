@@ -30,11 +30,22 @@ public class BankDemoController
 		accountController.removeAccount(accNumber);
 	} // removeAccount
 	
-	public Pair<Integer> addAccount() {		
+	public Pair<Integer> addAccount(int option) {
+		
+		AccountType type;
+		switch(option){
+			case 0: type = AccountType.BASIC_ACCOUNT;
+					break;
+			case 1: type = AccountType.BUSINESS_ACCOUNT;
+					break;
+			default:
+					type = AccountType.BASIC_ACCOUNT;
+		} // switch
+		
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
 		Pair<Integer> newAccountInfo = null;
 		try {
-			String newAccNumber = accountController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234));
+			String newAccNumber = accountController.addAccount(accFactory.createAccount(type, 1234));
 			newAccountInfo = new Pair<Integer>(newAccNumber, 1234);
 			return newAccountInfo;
 			

@@ -30,7 +30,7 @@ public class SecurityHandler
 		 
 	} // login
 	
-	private static boolean authenticated(Transaction tr) {
+	private static boolean authenticated(Transaction tr) {	
 		String accNumToAuthenticate = tr.getAffectingAccNumbers().get(0);
 		AccountsController accountController = AccountsController.getInstance();
 		BankAccount accountToAuthenticate = accountController.getAccount(accNumToAuthenticate);
@@ -45,7 +45,7 @@ public class SecurityHandler
 		return accountToAuthenticate.evaluateCredentials(clientPass);
 	} // authenticated
 
-	private static boolean authorised (Transaction tr) {
+	private static boolean authorised (Transaction tr) {	
 		String accNumToAuthorise = tr.getAffectingAccNumbers().get(0);
 		AccountsController accountController = AccountsController.getInstance();
 		BankAccount accountToAuthorise = accountController.getAccount(accNumToAuthorise);

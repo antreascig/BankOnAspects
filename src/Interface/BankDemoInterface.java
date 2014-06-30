@@ -308,6 +308,9 @@ public class BankDemoInterface extends JFrame implements Observer {
 				
 		
 		viewAccountPanel.setLayout(gl_viewAccountPanel);
+		
+		JPanel transferPanel = new JPanel();
+		mainPanel.add(transferPanel, "name_276208750985002");
 		getContentPane().setLayout(groupLayout);
 		
 		this.setSize(601, 407);
@@ -404,8 +407,13 @@ public class BankDemoInterface extends JFrame implements Observer {
 		controller.logServerActivity(log);
 	} // updateServerLog
 		
-	protected void addAccount() {	
-		Pair<Integer> newAccountInfo = controller.addAccount();
+	protected void addAccount()
+	{
+		Object[] options = {"Basic Account",
+                			"Business Account"};
+		int option = JOptionPane.showOptionDialog(this, "Select Bank Account Type: ", "Bank Account Selection", 
+												 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
+		Pair<Integer> newAccountInfo = controller.addAccount(option);
 		String message = "New Account created.\nAccount Number: " + newAccountInfo.getKey() + "\nPassword: " + newAccountInfo.getValue();
 		JOptionPane.showMessageDialog(this, message);
 			

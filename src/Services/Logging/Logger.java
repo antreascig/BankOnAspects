@@ -13,13 +13,14 @@ public class Logger
 {
 	private static final String transactionFile = "TransactionLog.txt";
 	private static final String serverActivityFile = "ServerActivityLog.txt";
+	private static String directory =  "Logs";  
 	
 	public static void logTransaction(String message) {
 		writeToFile(transactionFile, message);
 	} // logTransaction
 	
-	public static void logAccountTransaction(String accountNumber, String message) {
-		String accountTransactionFile = "//Accounts//" + accountNumber + ".txt";
+	public static void logAccountTransaction(String accountNumber, String accType, String message) {
+		String accountTransactionFile = "//Accounts//" + accountNumber + ":" + accType + ".txt";
 		writeToFile(accountTransactionFile, message);
 	} // logAccountTransaction
 	
@@ -32,10 +33,11 @@ public class Logger
 		File file = null;
 		
 		try {
-			file = new File("Logs", fileName);
+			file = new File(directory, fileName);
 			
 			File parent_directory = file.getParentFile();
 			
+//			System.out.println("Directory: " + directory);
 			if ( parent_directory != null ) {
 			    parent_directory.mkdirs();
 			} // if
@@ -60,4 +62,13 @@ public class Logger
 				out.close();
 		} //finally
 	} // writeToFile
+	
+	public static void changeDirectory(String dir) {
+		directory = dir + "//" + directory;
+	} // changeDirectory
+	
+	public static void resetDirectory() {
+		directory = "Logs";
+	} // resetDirectory
+	
 } // Logger

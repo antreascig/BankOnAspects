@@ -1,9 +1,10 @@
 package Controllers;
 
-import Global.Pair;
+import Global.Result;
 import Global.TransactionNumberGenerator;
 import Global.UserMode;
 import Model.Exceptions.AccountOperationException;
+import Model.Exceptions.BankSystemException;
 import Model.Transactions.*;
 
 public class TransactionController {
@@ -25,11 +26,11 @@ public class TransactionController {
 	private int getID() {
 		TransactionNumberGenerator counter = TransactionNumberGenerator.getTrNumInstance();
 		
-		return counter.getAndIncreaseNumber();
+		return counter.getAndIncr();
 	} // getID
 	
-	public Pair<?> deposit(String accNumber, int amount) {
-		Pair<?> result;
+	public Result<?> deposit(String accNumber, int amount) {
+		Result<?> result;
 		
 		int trID = getID();
 		
@@ -43,13 +44,13 @@ public class TransactionController {
 				throw new AccountOperationException("Something went wrong. No result received.");
 			
 			return result;
-		} catch ( AccountOperationException exception ) { // Catches Authentication/Authorisation/Or result==null exception
-			return new Pair<>("FAILED", exception.getMessage()); 
+		} catch ( BankSystemException exception ) { // Catches Authentication/Authorisation/Or result==null exception
+			return new Result<>("FAILED", exception.getMessage()); 
 		} //catch
 	} // deposit
 
-	public Pair<?> withdraw(String accNumber, int amount) {		
-		Pair<?> result = null;
+	public Result<?> withdraw(String accNumber, int amount) {		
+		Result<?> result = null;
 		
 		int trID = getID();
 		
@@ -63,14 +64,13 @@ public class TransactionController {
 				throw new AccountOperationException("Something went wrong. No result received.");
 			
 			return result;
-		} catch ( AccountOperationException exception )  { // Catches Authentication/Authorisation/Or result==null exception
-			return new Pair<>("FAILED", exception.getMessage());
+		} catch ( BankSystemException exception )  { // Catches Authentication/Authorisation/Or result==null exception
+			return new Result<>("FAILED", exception.getMessage());
 		} //catch		
 	} // withdraw
 	
-	
-	public Pair<?> getBalance(String accNumber) {
-		Pair<?> result = null;
+	public Result<?> getBalance(String accNumber) {
+		Result<?> result = null;
 		
 		tr = new BalanceTransaction(userMode, password, accNumber);
 		try {
@@ -83,8 +83,8 @@ public class TransactionController {
 				throw new AccountOperationException("Something went wrong. No result received.");
 			
 			return result;
-		} catch ( AccountOperationException exception ) { // Catches Authentication/Authorisation/Or result==null exception
-			return new Pair<>("FAILED", exception.getMessage());
+		} catch ( BankSystemException exception ) { // Catches Authentication/Authorisation/Or result==null exception
+			return new Result<>("FAILED", exception.getMessage());
 		} //catch
 	} // getAccountBalance
 }

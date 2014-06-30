@@ -3,7 +3,7 @@ package Model.Transactions;
 import java.util.ArrayList;
 
 import Controllers.AccountsController;
-import Global.Pair;
+import Global.Result;
 import Global.TransactionType;
 import Global.UserMode;
 import Model.BankAccounts.BankAccount;
@@ -17,7 +17,7 @@ public class WithdrawTransaction implements Transaction {
 	private Integer password;
 	private int amount;
 	
-	private Pair<?> result;
+	private Result<?> result;
 	private ArrayList<String> affectingAccNumbers;
 
 	
@@ -40,10 +40,10 @@ public class WithdrawTransaction implements Transaction {
 			AccountsController accountController = AccountsController.getInstance();
 			BankAccount account = accountController.getAccount(fromAccNumber);
 			account.withdraw(amount);
-			result = new Pair<>("COMPLETED", null);
-		}
+			result = new Result<>("COMPLETED", null);
+		} // try
 		catch (AccountOperationException exception) {
-			result = new Pair<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
+			result = new Result<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
 	} // executeTransaction
 
@@ -59,11 +59,11 @@ public class WithdrawTransaction implements Transaction {
 
 	@Override
 	public TransactionType getTransactionType() {
-		return TransactionType.DEPOSIT;
+		return TransactionType.WITHDRAW;
 	} // getTransactionType
 
 	@Override
-	public Pair<?> getResult() {
+	public Result<?> getResult() {
 		return this.result;
 	} // getResult
 

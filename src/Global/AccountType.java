@@ -14,5 +14,4 @@ public enum AccountType {
     public String toString() {
         return text;
     } // toString
-
-}
+} // AccountType

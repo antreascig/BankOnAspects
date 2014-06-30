@@ -8,8 +8,7 @@ import Model.Exceptions.AccountOperationException;
 public aspect TransactionConstraints extends Transactions{
 		
 	// Advice to check deposit(..)
-	before(BankAccount account, int amount) : deposit(account, amount) 
-	{
+	before(BankAccount account, int amount) : deposit(account, amount) {
 		if ( amount < 0 )
 		{
 //			System.out.println("Exception thrown - Error: Deposit amount must not be negative");
@@ -18,20 +17,17 @@ public aspect TransactionConstraints extends Transactions{
 	} // before deposit
 	
 	// Advice to check withdrawal
-	before(BankAccount account, int amount) : withdraw(account, amount) 
-	{
+	before(BankAccount account, int amount) : withdraw(account, amount) {
 		int accountBalance = account.getBalance();
 		
-		if ( accountBalance < amount )
-		{
+		if ( accountBalance < amount ) {
 //			System.out.println("Exception thrown - Error: The account contains insufficient funds");
 			throw new AccountOperationException("The account contains insufficient funds.");
 		} // if
 		
-		if ( amount < 0 )
-		{
+		if ( amount < 0 ) {
 //			System.out.println("Exception thrown - Error: Withdrawal amount must not be negative");
 			throw new AccountOperationException("Withdrawal amount must not be negative.");
 		} // if
 	} // before withdraw
-}
+} // TransactionConstraints

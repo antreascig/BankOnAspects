@@ -1,7 +1,6 @@
 package Controllers;
 
-
-import Global.Pair;
+import Global.Result;
 import Global.UserMode;
 import Interface.AccountView;
 
@@ -23,33 +22,33 @@ public class AccountViewController {
 	} // viewAccount
 
 	public void withdraw(int amount) {
-		Pair<?> result = controller.withdraw(accNumber, amount);
+		Result<?> result = controller.withdraw(accNumber, amount);
 		checkResult(result);
 	} // withdraw
 
 	public void deposit(int amount) {
-		Pair<?> result = controller.deposit(accNumber, amount);
+		Result<?> result = controller.deposit(accNumber, amount);
 		checkResult(result);
 	} // deposit
 
 	public Integer getBalance() {
-		Pair<?> result = controller.getBalance(accNumber);
+		Result<?> result = controller.getBalance(accNumber);
 		Integer balance = null;
 		
 		boolean trCompleted = checkResult(result);
 		
 		if ( trCompleted )
-			balance = (Integer) result.getValue();
+			balance = (Integer) result.getInfo();
 		
 		return balance;
 	} // getBalance
 
-	private boolean checkResult(Pair<?> result) {
-		String status = result.getKey();
+	private boolean checkResult(Result<?> result) {
+		String status = result.getStatus();
 		if ( status.equals("COMPLETED")) 
 			return true;
 		else if (status.equals("FAILED")) {
-			String failureReason =  (String) result.getValue();
+			String failureReason =  (String) result.getInfo();
 			accountView.showErrorMessage(failureReason);
 			return false;
 		} // else if

@@ -3,9 +3,7 @@ package Test_Suite;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import Controllers.AccountFactory;
 import Global.AccountType;
@@ -20,15 +18,6 @@ public class Test_Account_Operations {
 		
 		assertNotEquals(account, null);
 	} // test_Account_creation
-	
-	@Test
-	public void test_Account_creation_custom_operations() {
-			
-		
-	} // test_Account_creation
-	
-	@Rule
-	  public ExpectedException exception = ExpectedException.none();
 	
 	@Test
 	public void test_account_get_balance() {

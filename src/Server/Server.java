@@ -41,8 +41,7 @@ public class Server extends Observable
 			setChanged();
 	    	notifyObservers(new Pair<>("STATUS", isRunning));
 	    	
-            while (isRunning) 
-            {           	
+            while (isRunning) {           	
                 addClient(listener.accept());
             } // while
         } catch (IOException e) {
@@ -74,7 +73,7 @@ public class Server extends Observable
 	} // stopServer;
 
 	private void addClient(Socket newClientSocket) {
-		UserThread newClient = new UserThread(newClientSocket, clientNumber );		
+		UserThread newClient = new UserThread(newClientSocket, clientNumber, "" );		
 		clients.add(newClient);
 		setChanged();
 		notifyObservers("");

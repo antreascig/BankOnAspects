@@ -3,8 +3,7 @@ package Global;
 import Services.Persistence.Persistent;
 
 public class AccountNumberGenerator {
-private int counter;
-	
+private Integer counter;
 	private static AccountNumberGenerator instance = null;
 	
 	private AccountNumberGenerator() {
@@ -13,8 +12,7 @@ private int counter;
 	
 	public static AccountNumberGenerator getInstance() {
 		if (instance == null)
-			instance = new AccountNumberGenerator();
-		
+			instance = new AccountNumberGenerator();	
 		return instance;
 	} // getTrNumInstance
 	
@@ -22,8 +20,15 @@ private int counter;
 		return this.counter;
 	} // getTrNumber
 
-	public synchronized int getAndIncreaseNumber() {
-		return counter++;
+	public int getAndIncreaseNumber() {
+		synchronized (counter) {
+			return counter++;
+		} // synchronised
 	} // getAndIncreaseNumber
-
+	
+	public void resetCounter() {
+		synchronized(counter) {
+			this.counter = 0;
+		} // synchronised
+	} // resetCounter	
 } // AccountNumber

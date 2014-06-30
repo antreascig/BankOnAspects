@@ -1,5 +1,5 @@
 package Global;
 
-public enum UserMode { ADMIN, BANKER, CLIENT
+public enum UserMode { ADMIN, CLIENT
 
-}
+} // UserMode

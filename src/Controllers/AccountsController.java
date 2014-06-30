@@ -10,7 +10,7 @@ import Services.Persistence.Persistent;
 public class AccountsController {
 	private Hashtable<String, BankAccount> accountList = null;
 	
-	private static AccountsController instance = null;	
+	private static AccountsController instance = null;
 	
 	private AccountsController() {
 		accountList = Persistent.loadAccounts();
@@ -51,5 +51,9 @@ public class AccountsController {
 	public void saveAccounts() {
 		Persistent.saveAccounts(accountList);
 	} // saveAccounts
-
+	
+	public void clearAccounts() {
+		accountList.clear();
+	} // clearAccounts
+	
 } // AccountController

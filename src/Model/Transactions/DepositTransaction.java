@@ -3,7 +3,7 @@ package Model.Transactions;
 import java.util.ArrayList;
 
 import Controllers.AccountsController;
-import Global.Pair;
+import Global.Result;
 import Global.TransactionType;
 import Global.UserMode;
 import Model.BankAccounts.BankAccount;
@@ -17,7 +17,7 @@ public class DepositTransaction implements Transaction {
 	private int amount;
 	private Integer transactionID;
 	
-	private Pair<?> result;
+	private Result<?> result;
 	private ArrayList<String> affectingAccNumbers;
 	
 	public DepositTransaction(int trID, UserMode mode, Integer pass, String toAccNum, int am) {
@@ -39,10 +39,10 @@ public class DepositTransaction implements Transaction {
 			AccountsController accountController = AccountsController.getInstance();
 			BankAccount account = accountController.getAccount(toAccNumber);
 			account.deposit(amount);
-			result = new Pair<>("COMPLETED", null);
+			result = new Result<>("COMPLETED", null);
 		}
 		catch (AccountOperationException exception) {
-			result = new Pair<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
+			result = new Result<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
 	}
 
@@ -62,7 +62,7 @@ public class DepositTransaction implements Transaction {
 	} // getTransactionType
 
 	@Override
-	public Pair<?> getResult() {
+	public Result<?> getResult() {
 		return this.result;
 	} // getResult
 

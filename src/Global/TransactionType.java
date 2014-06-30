@@ -5,8 +5,7 @@ public enum TransactionType {
 	WITHDRAW ("Withdrawal"), 
 	BALANCE ("Balance"),
 	TRANSFER ("Transfer");
-							  
-							  
+							  						  
 	private final String text;
 
     private TransactionType(final String text) {
