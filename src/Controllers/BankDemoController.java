@@ -1,10 +1,15 @@
 package Controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+
+import javax.swing.DefaultComboBoxModel;
 
 import Global.AccountType;
 import Global.Pair;
+import Global.Result;
+import Global.UserMode;
 import Model.BankAccounts.BankAccount;
 import Model.Exceptions.AccountOperationException;
 import Server.Server;
@@ -15,11 +20,13 @@ public class BankDemoController
 {	
 	private AccountsController accountController;
 	private Server server;
+	private TransactionController trController;
 	
 	public BankDemoController() {
 		accountController = AccountsController.getInstance();
 		server = Server.getServerInstance();
-	}
+		trController = new TransactionController(UserMode.ADMIN);
+	} // BankDemoController
 	
 	public void viewAccount(String accNumber) {
 		AccountViewController newAccountViewCtrl = new AccountViewController(accNumber);
@@ -39,7 +46,7 @@ public class BankDemoController
 			case 1: type = AccountType.BUSINESS_ACCOUNT;
 					break;
 			default:
-					type = AccountType.BASIC_ACCOUNT;
+					return null;
 		} // switch
 		
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
@@ -64,8 +71,20 @@ public class BankDemoController
 		while (accNumbers.hasMoreElements()) {
 			accList.add(accNumbers.nextElement());
 		} // while
+		Collections.sort(accList);
 		return accList;
 	} // getAccountList
+	
+	public DefaultComboBoxModel<String> getAccountComboList() {
+		ArrayList<String> accArrayList = getAccountList();
+		
+		DefaultComboBoxModel<String> accList = new DefaultComboBoxModel<>();
+		for (String accNum :accArrayList) {
+			accList.addElement(accNum);
+		} // whileW
+		
+		return accList;
+	} // getAccountComboList
 	
 	public String getAccountType(String accNumber) {
 		BankAccount account = accountController.getAccount(accNumber);
@@ -90,5 +109,22 @@ public class BankDemoController
 	public void runServer() {
 		server.runServer();
 	} // runServer
+
+	public Integer getBalance(String accNum) {
+		Result result = trController.getBalance(accNum);
+		if (result.getStatus().equals("COMPLETED") )
+			return Integer.parseInt(result.getInfo());
+		else
+			return null;
+		
+	} // getBalance
+
+	public Boolean transfer(String fromAccNumber, String toAccNumber, int amount) {
+		Result result = trController.transfer(fromAccNumber, toAccNumber, amount);
+		if (result.getStatus().equals("COMPLETED") )
+			return true;
+		else
+			return false;
+	}
 	
 } // BankDemoController

@@ -41,10 +41,13 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+
 @SuppressWarnings("serial")
 public class BankDemoInterface extends JFrame implements Observer {
 	
-	private JPanel mainPanel, accountsPanel;
+	private JPanel mainPanel, accountsPanel, transferPanel;
 	private CardLayout panels;
 	private JMenuBar menuBar;
 	private JTextArea serverLog;
@@ -55,9 +58,17 @@ public class BankDemoInterface extends JFrame implements Observer {
 	private JLabel userCountLbl;
 	
 	private BankDemoController controller;
+	@SuppressWarnings("rawtypes")
+	private JComboBox toList, fromList;
+	private JLabel fromBalanceLbl;
+	private JLabel fromAccTypeLbl;
+	private JLabel toAccTypeLbl;
+	private JLabel toBalanceLbl;
+	private JTextField amountTxt;
 				
 	public BankDemoInterface(BankDemoController bankDemoController) 
 	{
+		setResizable(false);
 		controller = bankDemoController;
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -119,18 +130,25 @@ public class BankDemoInterface extends JFrame implements Observer {
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmTransferBetweenAccounts = new JMenuItem("Transfer Between Accounts");
+		mntmTransferBetweenAccounts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateScreen("transferPanel");
+			}
+		});
 		mnNewMenu.add(mntmTransferBetweenAccounts);
 		
 		mainPanel = new JPanel();
-		mainPanel.setBackground(new Color(255, 255, 255));
+		mainPanel.setBackground(new Color(173, 216, 230));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
+				.addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(mainPanel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, 386, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		mainPanel.setLayout(new CardLayout(0, 0));
 		
@@ -262,16 +280,18 @@ public class BankDemoInterface extends JFrame implements Observer {
 		});
 		
 		textField = new JTextField();
+		textField.setVisible(false);
 		textField.setColumns(10);
 		
 		JComboBox<String> searchOptions = new JComboBox<>();
+		searchOptions.setVisible(false);
 		searchOptions.setModel(new DefaultComboBoxModel<String>(new String[] {"Account Number", "Account Type"}));
 		
 		JLabel lblSeravhBy = new JLabel("Search By:");
+		lblSeravhBy.setVisible(false);
 		GroupLayout gl_viewAccountPanel = new GroupLayout(viewAccountPanel);
 		gl_viewAccountPanel.setHorizontalGroup(
 			gl_viewAccountPanel.createParallelGroup(Alignment.LEADING)
-				.addComponent(accountScrollPane, GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
 				.addGroup(gl_viewAccountPanel.createSequentialGroup()
 					.addGap(12)
 					.addComponent(textField, GroupLayout.PREFERRED_SIZE, 296, GroupLayout.PREFERRED_SIZE)
@@ -279,15 +299,16 @@ public class BankDemoInterface extends JFrame implements Observer {
 					.addComponent(lblSeravhBy)
 					.addGap(26)
 					.addComponent(searchOptions, GroupLayout.PREFERRED_SIZE, 148, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(35, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_viewAccountPanel.createSequentialGroup()
-					.addContainerGap(59, Short.MAX_VALUE)
+					.addContainerGap(73, Short.MAX_VALUE))
+				.addGroup(gl_viewAccountPanel.createSequentialGroup()
+					.addContainerGap(143, Short.MAX_VALUE)
 					.addComponent(newAccButton)
 					.addGap(56)
 					.addComponent(viewAccButton)
 					.addGap(31)
 					.addComponent(deleteAccButton)
 					.addGap(90))
+				.addComponent(accountScrollPane, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
 		);
 		gl_viewAccountPanel.setVerticalGroup(
 			gl_viewAccountPanel.createParallelGroup(Alignment.TRAILING)
@@ -303,20 +324,186 @@ public class BankDemoInterface extends JFrame implements Observer {
 						.addComponent(lblSeravhBy)
 						.addComponent(searchOptions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(accountScrollPane, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE))
+					.addComponent(accountScrollPane, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE))
 		);
 				
 		
 		viewAccountPanel.setLayout(gl_viewAccountPanel);
 		
-		JPanel transferPanel = new JPanel();
-		mainPanel.add(transferPanel, "name_276208750985002");
+		transferPanel = new JPanel();
+		transferPanel.setBackground(Color.WHITE);
+		mainPanel.add(transferPanel, "transferPanel");	
+				
+		fromList = new JComboBox<>();
+		fromList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setFromAccount();
+			}
+		});
+		fromList.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		
+		JLabel lblFromAccount = new JLabel("From Account:");
+		lblFromAccount.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblFromAccount.setLabelFor(fromList);
+		
+		JLabel lblAccountType = new JLabel("Account Type:");
+		lblAccountType.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		fromAccTypeLbl = new JLabel("New label");
+		fromAccTypeLbl.setBackground(Color.LIGHT_GRAY);
+		fromAccTypeLbl.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblAccountType.setLabelFor(fromAccTypeLbl);
+		
+		JLabel lblNewLabel_1 = new JLabel("Balance:");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		fromBalanceLbl = new JLabel("New label");
+		fromBalanceLbl.setBackground(Color.LIGHT_GRAY);
+		fromBalanceLbl.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setBackground(Color.BLUE);
+		separator_1.setForeground(Color.BLUE);
+		
+		JButton transferButton = new JButton("Transfer");
+		transferButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				transfer();
+			}
+		});
+		
+		JLabel lblToAccount = new JLabel("To Account:");
+		lblToAccount.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		toList = new JComboBox<>();
+		toList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setToAccount();
+			}
+		});
+		lblToAccount.setLabelFor(toList);
+		toList.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		
+		JLabel label = new JLabel("Account Type:");
+		label.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		toAccTypeLbl = new JLabel("New label");
+		label.setLabelFor(toAccTypeLbl);
+		toAccTypeLbl.setFont(new Font("Tahoma", Font.BOLD, 12));
+		toAccTypeLbl.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel label_1 = new JLabel("Balance:");
+		label_1.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		toBalanceLbl = new JLabel("New label");
+		label_1.setLabelFor(toBalanceLbl);
+		toBalanceLbl.setFont(new Font("Tahoma", Font.BOLD, 16));
+		toBalanceLbl.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel lblAmountToTransfer = new JLabel("Amount to Transfer:");
+		lblAmountToTransfer.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		amountTxt = new JTextField();
+		amountTxt.setText("0");
+		lblAmountToTransfer.setLabelFor(amountTxt);
+		amountTxt.setColumns(10);
+		GroupLayout gl_transferPanel = new GroupLayout(transferPanel);
+		gl_transferPanel.setHorizontalGroup(
+			gl_transferPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_transferPanel.createSequentialGroup()
+					.addGap(25)
+					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblFromAccount)
+								.addComponent(lblAccountType))
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_transferPanel.createSequentialGroup()
+									.addGap(6)
+									.addComponent(fromList, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_transferPanel.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+										.addComponent(fromBalanceLbl)
+										.addComponent(fromAccTypeLbl, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)))))
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addGap(28)
+							.addComponent(lblNewLabel_1)))
+					.addGap(18)
+					.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_transferPanel.createSequentialGroup()
+								.addComponent(label, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.UNRELATED))
+							.addGroup(gl_transferPanel.createSequentialGroup()
+								.addComponent(lblToAccount, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+								.addGap(29)))
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+							.addGap(56)))
+					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(toBalanceLbl, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
+						.addComponent(toAccTypeLbl, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+						.addComponent(toList, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
+					.addGap(45))
+				.addGroup(Alignment.LEADING, gl_transferPanel.createSequentialGroup()
+					.addGap(36)
+					.addComponent(lblAmountToTransfer)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(amountTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
+					.addComponent(transferButton, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+					.addGap(81))
+		);
+		gl_transferPanel.setVerticalGroup(
+			gl_transferPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_transferPanel.createSequentialGroup()
+					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addGap(70)
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblFromAccount)
+								.addComponent(fromList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(31)
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblAccountType)
+								.addComponent(fromAccTypeLbl))
+							.addGap(28)
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_1)
+								.addComponent(fromBalanceLbl)))
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addGap(31)
+							.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addGap(69)
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblToAccount)
+								.addComponent(toList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(32)
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+								.addComponent(toAccTypeLbl, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
+							.addGap(23)
+							.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(toBalanceLbl, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+								.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))))
+					.addGap(14)
+					.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(transferButton, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblAmountToTransfer)
+						.addComponent(amountTxt, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+					.addGap(74))
+		);
+		transferPanel.setLayout(gl_transferPanel);
 		getContentPane().setLayout(groupLayout);
 		
-		this.setSize(601, 407);
+		this.setSize(623, 407);
 	} // Initialise
-	
-	
+
 	@Override
 	public void update(Observable o, Object arg) {	
 		Pair<?> update = (Pair<?>)arg;
@@ -354,6 +541,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		updateScreen("infoScrPane");
 	} // initializeDemo
 	
+	@SuppressWarnings("unchecked")
 	private void updateScreen(String panel) {	
 		// Change screen to the - panel - provided as argument
 		panels = (CardLayout) mainPanel.getLayout();  
@@ -378,16 +566,27 @@ public class BankDemoInterface extends JFrame implements Observer {
 					}
 				});	
 				accountRadioGroup.add(accountRadio);
-				accountsPanel.add(accountRadio);			
+				accountsPanel.add(accountRadio);
+				
+				
 			} // for
 			
 			accountsPanel.repaint();
-			accountsPanel.validate();		
+			accountsPanel.validate();
+			accountScrollPane.repaint();
 			accountScrollPane.revalidate();
-			
 			accountRadioGroup.clearSelection();
 			updateButtons();
-		} // if		
+		} // if
+		else if ( panel.equals("transferPanel") ) {			
+	
+			DefaultComboBoxModel<String> fromModel =  controller.getAccountComboList();
+			DefaultComboBoxModel<String> toModel = controller.getAccountComboList();
+			fromList.setModel( fromModel );
+			toList.setModel(toModel);
+			setFromAccount();
+			setToAccount();
+		} // else if
 	} // updateScreen
 	
 	protected void updateButtons() {
@@ -406,6 +605,57 @@ public class BankDemoInterface extends JFrame implements Observer {
 		serverLog.append(log);
 		controller.logServerActivity(log);
 	} // updateServerLog
+	
+	protected void setFromAccount() {
+		String fromAccNum = fromList.getSelectedItem().toString();
+		Integer fromBalance = controller.getBalance(fromAccNum);
+		String fromAccType = controller.getAccountType(fromAccNum);
+		
+		fromAccTypeLbl.setText(fromAccType);
+		fromBalanceLbl.setText("£" + fromBalance);	
+	} // setFromAccount
+	
+	protected void setToAccount() {
+		String toAccNum = toList.getSelectedItem().toString();
+		Integer balance = controller.getBalance(toAccNum);
+		String toAccType = controller.getAccountType(toAccNum);
+		
+		toAccTypeLbl.setText(toAccType);
+		toBalanceLbl.setText("£" + balance);
+	} // setToAccount
+	
+	protected void transfer() 
+	{
+		String fromAccNumber = fromList.getSelectedItem().toString();
+		String toAccNumber = toList.getSelectedItem().toString();
+		if (fromAccNumber.equals(toAccNumber)) {
+			JOptionPane.showMessageDialog(this, "Cannot transfer between the same account. Choose different accounts");
+			return;
+		} // if
+		try {			
+			int amount = Integer.parseInt(amountTxt.getText());		
+			
+			if (amount <= 0) {
+				JOptionPane.showMessageDialog(this, "Amount must be a greater than 0");
+				return;
+			} // if
+			
+			Boolean completed = controller.transfer(fromAccNumber, toAccNumber, amount);
+			
+			if (completed)
+				JOptionPane.showMessageDialog(this, "Transfer Completed.");
+			else
+				JOptionPane.showMessageDialog(this, "Transfer Did Not Complete.");
+					
+		} catch ( NumberFormatException exc) { 
+			JOptionPane.showMessageDialog(this, "Amount must be an Integer Number");			
+		} //catch
+		finally {
+			amountTxt.setText("0");
+			updateScreen("transferPanel");			
+		} //finally
+	} // deposit
+	
 		
 	protected void addAccount()
 	{
@@ -413,6 +663,8 @@ public class BankDemoInterface extends JFrame implements Observer {
                 			"Business Account"};
 		int option = JOptionPane.showOptionDialog(this, "Select Bank Account Type: ", "Bank Account Selection", 
 												 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
+		if ( option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION )
+			return;
 		Pair<Integer> newAccountInfo = controller.addAccount(option);
 		String message = "New Account created.\nAccount Number: " + newAccountInfo.getKey() + "\nPassword: " + newAccountInfo.getValue();
 		JOptionPane.showMessageDialog(this, message);
