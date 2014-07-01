@@ -17,7 +17,6 @@ public class WithdrawTransaction implements Transaction {
 	private Integer password;
 	private int amount;
 	
-	private Result<?> result;
 	private ArrayList<String> affectingAccNumbers;
 
 	
@@ -26,7 +25,6 @@ public class WithdrawTransaction implements Transaction {
 		userMode = mode;
 		password = pass;
 		fromAccNumber = fromAccNum;
-		result = null;
 		amount = am;
 		
 		affectingAccNumbers = new ArrayList<>();
@@ -35,20 +33,20 @@ public class WithdrawTransaction implements Transaction {
 	} // WithdrawTransaction
 
 	@Override
-	public void executeTransaction() {
+	public Result executeTransaction() {
 		try {
 			AccountsController accountController = AccountsController.getInstance();
 			BankAccount account = accountController.getAccount(fromAccNumber);
 			account.withdraw(amount);
-			result = new Result<>("COMPLETED", null);
+			return new Result("COMPLETED", null);
 		} // try
 		catch (AccountOperationException exception) {
-			result = new Result<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
+			return new Result("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
 	} // executeTransaction
 
 	@Override
-	public int getClientPassword() {
+	public Integer getClientPassword() {
 		return this.password;
 	} // getClientPassword
 
@@ -61,11 +59,6 @@ public class WithdrawTransaction implements Transaction {
 	public TransactionType getTransactionType() {
 		return TransactionType.WITHDRAW;
 	} // getTransactionType
-
-	@Override
-	public Result<?> getResult() {
-		return this.result;
-	} // getResult
 
 	@Override
 	public Integer getAmount() {

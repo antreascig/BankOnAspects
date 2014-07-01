@@ -1,10 +1,10 @@
 package Global;
 
-public class Result <E>{
+public class Result {
 	private String status;
-	private E info;
+	private String info;
 	
-	public Result(String s, E i) {
+	public Result(String s, String i) {
 		this.status = s;
 		this.info = i;
 	} // Pair
@@ -13,7 +13,7 @@ public class Result <E>{
 		return this.status;
 	} // getKey
 	
-	public E getInfo() {
+	public String getInfo() {
 		return this.info;
 	} // getValue
 } // Pair

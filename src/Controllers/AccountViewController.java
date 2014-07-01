@@ -22,28 +22,28 @@ public class AccountViewController {
 	} // viewAccount
 
 	public void withdraw(int amount) {
-		Result<?> result = controller.withdraw(accNumber, amount);
+		Result result = controller.withdraw(accNumber, amount);
 		checkResult(result);
 	} // withdraw
 
 	public void deposit(int amount) {
-		Result<?> result = controller.deposit(accNumber, amount);
+		Result result = controller.deposit(accNumber, amount);
 		checkResult(result);
 	} // deposit
 
 	public Integer getBalance() {
-		Result<?> result = controller.getBalance(accNumber);
+		Result result = controller.getBalance(accNumber);
 		Integer balance = null;
 		
 		boolean trCompleted = checkResult(result);
 		
 		if ( trCompleted )
-			balance = (Integer) result.getInfo();
+			balance = Integer.parseInt(result.getInfo());
 		
 		return balance;
 	} // getBalance
 
-	private boolean checkResult(Result<?> result) {
+	private boolean checkResult(Result result) {
 		String status = result.getStatus();
 		if ( status.equals("COMPLETED")) 
 			return true;

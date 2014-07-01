@@ -11,8 +11,7 @@ public aspect TransactionLogger extends Transactions
 {
 	// Logs Transactions in Transaction Log file
 	// Logs completed Transaction
-	after (Transaction transaction) returning : critical_transactions(transaction) {		
-		Result<?> result = transaction.getResult();
+	after (Transaction transaction) returning(Result result) : critical_transactions(transaction) {		
 		
 		String log = String.format("%d \t %-8s  \t %-15s \t %s \t %d \t %s", transaction.getTransactionID(), transaction.getUserMode().name() , 
 																			transaction.getAffectingAccNumbers(), transaction.getTransactionType(), 
@@ -50,8 +49,7 @@ public aspect TransactionLogger extends Transactions
 	
 	// Logs Transactions in Transaction Log file
 	
-	before(BankAccount account, int amount) : bank_operations(account, amount) 
-	{
+	before(BankAccount account, int amount) : bank_operations(account, amount) {
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
 		String transactionLog = "Account:" + account.getAccNum() + "\tPrior Balance: " + account.getBalance()
@@ -65,17 +63,21 @@ public aspect TransactionLogger extends Transactions
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
 		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance:   " + account.getBalance()
-		        				+ " \tOperation: " + operation + "\tStatus: Completed" + " \tAmount: " + amount + "\n";
+		        				+ " \tOperation: " + operation + "\tStatus: Completed" + " \tAmount: " + amount + "\r\n";
 		
 		Logger.logAccountTransaction(account.getAccNum(), account.getAccountType().toString(), transactionLog);
 	} // before bank_operations
 	
 	// Advice to log after a deposit transaction has failed
 	after(BankAccount account, int amount) throwing (AccountOperationException e) : bank_operations(account, amount) {
+		
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
+		System.out.println(operation);
+
+		
 		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance:   " + account.getBalance()
-		        + " \tOperation: " + operation + "\tStatus: Failed" + " \tAmount: " + amount + "\n";     
+		        + " \tOperation: " + operation + "\tStatus: Failed" + " \tAmount: " + amount + "\r\n";     
 		
 		Logger.logAccountTransaction(account.getAccNum(), account.getAccountType().toString(), transactionLog);
 	} // before bank_operations

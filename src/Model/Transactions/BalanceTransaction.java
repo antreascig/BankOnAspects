@@ -15,34 +15,31 @@ public class BalanceTransaction implements Transaction {
 	private String fromAccNumber;
 	private Integer password;
 	
-	private Result<?> result;
 	private ArrayList<String> affectingAccNumbers;
 	
 	public BalanceTransaction(UserMode mode ,Integer pass, String fromAccNum) {
 		userMode = mode;
 		password = pass;
-		fromAccNumber = fromAccNum;
-		result = null;
-		
+		fromAccNumber = fromAccNum;		
 		affectingAccNumbers = new ArrayList<>();
 		affectingAccNumbers.add(fromAccNum);
 	} // BalanceTransaction
 
 	@Override
-	public void executeTransaction() {
+	public Result executeTransaction() {
 		try
 		{
 			AccountsController accountController = AccountsController.getInstance();
 			BankAccount account = accountController.getAccount(fromAccNumber);
-			int balance  = account.getBalance();
-			result = new Result<>("COMPLETED", balance);
+			Integer balance  = account.getBalance();
+			return new Result("COMPLETED", balance.toString());
 		} catch (AccountOperationException exception) {
-			result = new Result<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
+			return new Result("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch				
 	} // executeTransaction
 
 	@Override
-	public int getClientPassword() {
+	public Integer getClientPassword() {
 		return this.password;
 	} // getClientPassword
 
@@ -55,11 +52,6 @@ public class BalanceTransaction implements Transaction {
 	public TransactionType getTransactionType() {
 		return TransactionType.BALANCE;
 	} // getTransactionType
-
-	@Override
-	public Result<?> getResult() {
-		return this.result;
-	} // getResult
 
 	@Override
 	public Integer getAmount() {

@@ -13,7 +13,7 @@ public class UserThread extends Thread {
 	private Socket socket;
 	private int clientNumber;
 	private TransactionController controller;
-	private Result<?> result;
+	private Result result;
 	
 	private String accNumber;
 	
@@ -64,11 +64,11 @@ public class UserThread extends Thread {
     }
 
 
-	private Result<?> deposit(String toAccNum, int amount ) {
+	private Result deposit(String toAccNum, int amount ) {
 		return controller.deposit(toAccNum, amount);
 	} // deposit
 
-	public Result<?> getResult() throws InterruptedException {
+	public Result getResult() throws InterruptedException {
 		while (!resultReceived){
 			Thread.sleep(1000);
 		}

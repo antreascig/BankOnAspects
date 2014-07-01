@@ -15,7 +15,6 @@ public class TransferTransaction implements Transaction {
 	private Integer transactionID, password;
 	private int amount;
 	
-	private Result<?> result;
 	private ArrayList<String> affectingAccNumbers;
 	
 	public TransferTransaction(int trID, UserMode mode, Integer pass, String fromAccNum, String toAccNum, int am) {
@@ -24,7 +23,6 @@ public class TransferTransaction implements Transaction {
 		password = pass;
 		fromAccNumber = fromAccNum;
 		toAccNumber = toAccNum;
-		result = null;
 		amount = am;
 		
 		affectingAccNumbers = new ArrayList<>();
@@ -33,7 +31,7 @@ public class TransferTransaction implements Transaction {
 	} // TransferTransaction
 
 	@Override
-	public void executeTransaction() {
+	public Result executeTransaction() {
 		try {
 			AccountsController accountController = AccountsController.getInstance();
 			BankAccount fromAccount = accountController.getAccount(fromAccNumber);
@@ -41,15 +39,15 @@ public class TransferTransaction implements Transaction {
 			
 			fromAccount.withdraw(amount);
 			toAccount.deposit(amount);
-			result = new Result<>("COMPLETED", null);
+			return new Result("COMPLETED", "");
 		}
 		catch (AccountOperationException exception) {
-			result = new Result<>("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
+			return new Result("FAILED", exception.getMessage()); // Transaction Failed Because it broke a BankConstraint
 		} // catch	
 	} // executeTransaction
 
 	@Override
-	public int getClientPassword() {
+	public Integer getClientPassword() {
 		return this.password;
 	} // getClientPassword
 
@@ -62,11 +60,6 @@ public class TransferTransaction implements Transaction {
 	public TransactionType getTransactionType() {
 		return TransactionType.TRANSFER;
 	} // getTransactionType
-
-	@Override
-	public Result<?> getResult() {
-		return this.result;
-	} // getResult
 
 	@Override
 	public Integer getAmount() {

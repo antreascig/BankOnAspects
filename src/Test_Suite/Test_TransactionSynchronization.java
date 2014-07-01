@@ -51,26 +51,20 @@ public class Test_TransactionSynchronization {
 		UserThread newClient1 = new UserThread(null, 1 , basicAccNum1);
 		
 		UserThread newClient2 = new UserThread(null, 2, basicAccNum1 );
+		try {	
 		newClient1.start();
 		newClient2.start();
-
-		try
-		{
-		Result<?> resultForUser1 = newClient1.getResult();
-		Result<?> resultForUser2 = newClient2.getResult();
+	
+		Result resultForUser1 = newClient1.getResult();
+		Result resultForUser2 = newClient2.getResult();
 		
 		System.out.println("Result 1: Status: " + resultForUser1.getStatus() + "\t Info: " + resultForUser1.getInfo());
 		System.out.println("Result 2: Status: " + resultForUser2.getStatus() + "\t Info: " + resultForUser2.getInfo());
 		
 		assertNotEquals(resultForUser2.getStatus(), resultForUser1.getStatus());
-
-		}
-		catch (Exception exc)
-		{
+		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-		
-		
 	}
 
 }

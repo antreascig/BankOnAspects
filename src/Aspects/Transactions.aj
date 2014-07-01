@@ -3,6 +3,7 @@ package Aspects;
 import Model.BankAccounts.BankAccount;
 import Model.Transactions.Transaction;
 import Model.Transactions.BalanceTransaction;
+import Global.Result;
 
 
 public abstract aspect Transactions {
@@ -21,9 +22,9 @@ public abstract aspect Transactions {
 		    || withdraw(BankAccount, int ) && target(account) && args(amount);
 	
 	pointcut transactions(Transaction transaction) : 
-			execution(void Transaction.executeTransaction()) && target(transaction);
+			execution(Result Transaction.executeTransaction()) && target(transaction);
 	
 	pointcut critical_transactions(Transaction transaction) : 
-		( execution(void Transaction.executeTransaction()) && target(transaction) ) && !within(BalanceTransaction);
+		( execution(Result Transaction.executeTransaction()) && target(transaction) ) && !within(BalanceTransaction);
 		
 }  // Transactions

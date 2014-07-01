@@ -3,13 +3,13 @@ package Aspects;
 import java.util.ArrayList;
 
 import Controllers.AccountsController;
+import Global.Result;
 import Model.BankAccounts.BankAccount;
-import Model.Exceptions.AccountOperationException;
 import Model.Transactions.Transaction;
 
 public aspect TransactionSynchronization extends Transactions {
     
-    Object around(Transaction transaction): critical_transactions(transaction)
+    Result around(Transaction transaction): critical_transactions(transaction)
     {
     	try {
     	
@@ -56,11 +56,12 @@ public aspect TransactionSynchronization extends Transactions {
 	        		System.out.println("Released Lock on Account: " + accountNum);
 	        	} // for
 	    		System.out.println();
-	    	    throw new AccountOperationException("Another transaction on account " + affectingAccounts.get(numOfLockedAccounts) + " is in process! Try again later!");
+	    		String info = "Another transaction on account " + affectingAccounts.get(numOfLockedAccounts) 
+	    						+ " is in process! Try again later!";
+	    	    return new Result("FAILED", info);
 	    	} //else
-    	} catch (NullPointerException exc)
-    	{
-    		throw new AccountOperationException("Account not found!");
+    	} catch (NullPointerException exc) {
+    		return new Result("FAILED", "Account not found!");
     	} 
     } // around bank_operations
 

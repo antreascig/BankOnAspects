@@ -20,7 +20,7 @@ public class Logger
 	} // logTransaction
 	
 	public static void logAccountTransaction(String accountNumber, String accType, String message) {
-		String accountTransactionFile = "//Accounts//" + accountNumber + ":" + accType + ".txt";
+		String accountTransactionFile = "//Accounts//" + accountNumber + "-" + accType + ".txt";
 		writeToFile(accountTransactionFile, message);
 	} // logAccountTransaction
 	

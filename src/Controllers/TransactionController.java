@@ -3,8 +3,6 @@ package Controllers;
 import Global.Result;
 import Global.TransactionNumberGenerator;
 import Global.UserMode;
-import Model.Exceptions.AccountOperationException;
-import Model.Exceptions.BankSystemException;
 import Model.Transactions.*;
 
 public class TransactionController {
@@ -29,62 +27,60 @@ public class TransactionController {
 		return counter.getAndIncr();
 	} // getID
 	
-	public Result<?> deposit(String accNumber, int amount) {
-		Result<?> result;
+	public Result deposit(String accNumber, int amount) {
+		Result result;
 		
 		int trID = getID();
 		
 		tr = new DepositTransaction(trID, userMode, password, accNumber, amount);
-		try {
-			tr.executeTransaction();
 		
-			result = tr.getResult();
-		
-			if ( result == null )
-				throw new AccountOperationException("Something went wrong. No result received.");
-			
+		result = tr.executeTransaction();
+		if (result == null)
+			return new Result("FAILED", "Transaction not completed");
+		else
 			return result;
-		} catch ( BankSystemException exception ) { // Catches Authentication/Authorisation/Or result==null exception
-			return new Result<>("FAILED", exception.getMessage()); 
-		} //catch
 	} // deposit
 
-	public Result<?> withdraw(String accNumber, int amount) {		
-		Result<?> result = null;
+	public Result withdraw(String accNumber, int amount) {		
+		Result result = null;
 		
 		int trID = getID();
 		
 		tr = new WithdrawTransaction(trID , userMode, password, accNumber, amount);
-		try {
-			tr.executeTransaction();
+		result = tr.executeTransaction();
 		
-			result = tr.getResult();
-		
-			if ( result == null )
-				throw new AccountOperationException("Something went wrong. No result received.");
-			
-			return result;
-		} catch ( BankSystemException exception )  { // Catches Authentication/Authorisation/Or result==null exception
-			return new Result<>("FAILED", exception.getMessage());
-		} //catch		
+		result = tr.executeTransaction();
+		if (result == null)
+			return new Result("FAILED", "Transaction not completed");
+		else
+			return result;	
 	} // withdraw
 	
-	public Result<?> getBalance(String accNumber) {
-		Result<?> result = null;
+	public Result getBalance(String accNumber) {
+		Result result = null;
 		
 		tr = new BalanceTransaction(userMode, password, accNumber);
-		try {
-			
-			tr.executeTransaction();
+		result = tr.executeTransaction();
 		
-			result = tr.getResult();
-		
-			if ( result == null )
-				throw new AccountOperationException("Something went wrong. No result received.");
-			
-			return result;
-		} catch ( BankSystemException exception ) { // Catches Authentication/Authorisation/Or result==null exception
-			return new Result<>("FAILED", exception.getMessage());
-		} //catch
+		result = tr.executeTransaction();
+		if (result == null)
+			return new Result("FAILED", "Transaction not completed");
+		else
+			return result;	
 	} // getAccountBalance
+	
+	public Result transfer(String fromAccNumber, String toAccNumber, int amount) {
+		Result result = null;
+		
+		int trID = getID();
+		
+		tr = new TransferTransaction(trID , userMode, password, fromAccNumber, toAccNumber, amount);
+		result = tr.executeTransaction();
+		
+		result = tr.executeTransaction();
+		if (result == null)
+			return new Result("FAILED", "Transaction not completed");
+		else
+			return result;	
+	}
 }
