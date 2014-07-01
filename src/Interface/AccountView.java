@@ -196,7 +196,7 @@ public class AccountView extends JFrame {
 	private void updateScreen()
 	{
 		int accBalance = controller.getBalance();
-		lblAccBalance.setText("Â£" + accBalance);
+		lblAccBalance.setText("£" + accBalance);
 	}
 	
 	protected void closeView() {

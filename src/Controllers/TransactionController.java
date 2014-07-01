@@ -28,13 +28,11 @@ public class TransactionController {
 	} // getID
 	
 	public Result deposit(String accNumber, int amount) {
-		Result result;
-		
-		int trID = getID();
-		
-		tr = new DepositTransaction(trID, userMode, password, accNumber, amount);
-		
+		Result result;		
+		int trID = getID();		
+		tr = new DepositTransaction(trID, userMode, password, accNumber, amount);	
 		result = tr.executeTransaction();
+		
 		if (result == null)
 			return new Result("FAILED", "Transaction not completed");
 		else
@@ -42,14 +40,11 @@ public class TransactionController {
 	} // deposit
 
 	public Result withdraw(String accNumber, int amount) {		
-		Result result = null;
-		
-		int trID = getID();
-		
+		Result result = null;		
+		int trID = getID();	
 		tr = new WithdrawTransaction(trID , userMode, password, accNumber, amount);
 		result = tr.executeTransaction();
 		
-		result = tr.executeTransaction();
 		if (result == null)
 			return new Result("FAILED", "Transaction not completed");
 		else
@@ -58,11 +53,9 @@ public class TransactionController {
 	
 	public Result getBalance(String accNumber) {
 		Result result = null;
-		
 		tr = new BalanceTransaction(userMode, password, accNumber);
 		result = tr.executeTransaction();
 		
-		result = tr.executeTransaction();
 		if (result == null)
 			return new Result("FAILED", "Transaction not completed");
 		else
@@ -77,10 +70,9 @@ public class TransactionController {
 		tr = new TransferTransaction(trID , userMode, password, fromAccNumber, toAccNumber, amount);
 		result = tr.executeTransaction();
 		
-		result = tr.executeTransaction();
 		if (result == null)
 			return new Result("FAILED", "Transaction not completed");
 		else
 			return result;	
-	}
+	} // transfer
 }
