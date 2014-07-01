@@ -73,7 +73,7 @@ public aspect TransactionLogger extends Transactions
 		
 		String operation = getOperation(thisJoinPoint.getSignature().toShortString());
 		
-		System.out.println(operation);
+//		System.out.println(operation);
 
 		
 		String transactionLog = "Account:" + account.getAccNum() + "\tNew Balance:   " + account.getBalance()

@@ -17,7 +17,6 @@ public class Test_BankConstraints
 {
 	@BeforeClass
 	public static void setUp() {
-		
 		TestSetUp.setUpTestingEnvironment("BankConstraints");
 	} // setUp
 	
@@ -37,7 +36,6 @@ public class Test_BankConstraints
 		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 		
 		assertEquals(account.getBalance(), 0);
-		
 		exception.expect(AccountOperationException.class);
 		account.withdraw(10);				
 	} // testWithdrawException
