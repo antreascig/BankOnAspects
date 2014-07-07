@@ -64,7 +64,11 @@ public class Test_TransactionSynchronization {
 		assertNotEquals(resultForUser2.getStatus(), resultForUser1.getStatus());
 		} catch (Exception exc) {
 			exc.printStackTrace();
-		}
+		} //catch
+	} //test
+	
+	public void warningSuppress() {
+		busAccNum1 = busAccNum1 + basicAccNum2 + busAccNum2;
 	}
 
 }

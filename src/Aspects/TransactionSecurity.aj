@@ -1,5 +1,7 @@
 package Aspects;
 
+import org.aspectj.lang.annotation.AdviceName;
+
 import Model.Transactions.Transaction;
 import Services.Security.SecurityHandler;
 import Global.Result;
@@ -7,6 +9,7 @@ import Global.UserMode;
 
 public aspect TransactionSecurity extends Transactions 
 {		
+	@AdviceName("TransactionSecurity")
 	Result around(Transaction transaction) : transactions(transaction)
 	{		
 		SecurityHandler.setEvaluated();

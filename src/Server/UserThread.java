@@ -29,30 +29,32 @@ public class UserThread extends Thread {
 
     boolean resultReceived;
     public void run() {
-//        try {
-//        	if (socket == null)
-//        		return;
-//        	ArrayList<String> testing = new ArrayList<>();
-//        	
-//        	testing.add("Andreas");
-//        	testing.add("Giorgos");
-//        
-//          System.out.print("Sending string: '" + testing + "'\n");
-//
-//          ObjectOutputStream socketOut = new ObjectOutputStream(socket.getOutputStream());    
-//          
-//          socketOut.writeObject(testing);
-//          socketOut.flush();         
-//                    
-//          socket.close();
-//          Server server = Server.getServerInstance();
-//          server.removeClient(this);
-//        }catch(Exception e) {
-//            System.out.print("Whoops! It didn't work!\n");
-//        }
+    	
     	resultReceived = false;
     	result = deposit(accNumber, 100);
     	resultReceived = true;
+    	
+        try {
+        	if (socket == null)
+        		return;
+        	ArrayList<String> testing = new ArrayList<>();
+        	
+        	testing.add("Andreas");
+        	testing.add("Giorgos");
+        
+          System.out.print("Sending string: '" + testing + "'\n");
+
+          ObjectOutputStream socketOut = new ObjectOutputStream(socket.getOutputStream());    
+          
+          socketOut.writeObject(testing);
+          socketOut.flush();         
+                    
+          socket.close();
+          Server server = Server.getServerInstance();
+          server.removeClient(this);
+        }catch(Exception e) {
+            System.out.print("Whoops! It didn't work!\n");
+        }  	
     } // run
     
     public int getClientNumber(){

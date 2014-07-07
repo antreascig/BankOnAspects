@@ -9,6 +9,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import fr.irisa.triskell.advicetracer.AdviceTracer;
+import fr.irisa.triskell.advicetracer.junit.Assert;
 import Controllers.AccountFactory;
 import Controllers.AccountsController;
 import Global.AccountType;
@@ -55,6 +57,29 @@ public class Test_SecurityHandler {
 		TestSetUp.tearDownTestingEnvironment();
 	} // tearDown
 	
+	
+	public void test_PointCut() {
+		
+	}
+	
+	@Test
+	public void test_Security_Pointcut_With_Trace() {
+		
+		Transaction tr;
+		
+		tr = new BalanceTransaction(UserMode.ADMIN, basicAccPass1,  basicAccNum1);
+		
+		AdviceTracer.addTracedAdvice("TransactionSecurity");
+		AdviceTracer.setAdviceTracerOn();
+		
+		tr.executeTransaction();		
+		
+		AdviceTracer.setAdviceTracerOff();
+		
+	    Assert.assertAdviceExecutionsEquals(1);
+	}
+	
+	
 	@Test
 	public void test1_Security_Pointcut() {
 		Transaction tr;
@@ -100,6 +125,8 @@ public class Test_SecurityHandler {
 			assertEquals(false, SecurityHandler.transactionEvaluated());
 		} // for
 	} // test_IsAuntenticated
+	
+	//////	TESTING ADVICE
 	
 	@Test
 	public void test2_Authorization_ClientMode_Basic_Account_Exceptions() {
@@ -260,7 +287,6 @@ public class Test_SecurityHandler {
 
 	} // test_Authentication_Basic_Account_Client_Transfer_Exceptions
 	
-	
 	@Test
 	public void test8_AdminMode_No_Exceptions_On_Any_Transaction() {
 		Transaction tr;
@@ -320,6 +346,7 @@ public class Test_SecurityHandler {
 		}
 	} // test_Security_Advice_Authorization_Basic_Account_Exceptions
 	
+	////////////////////////////
 	@After
 	public void resetEvaluation() {
 		SecurityHandler.resetEvaluation();

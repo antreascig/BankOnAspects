@@ -1,5 +1,6 @@
 package Aspects;
 
+import org.aspectj.lang.annotation.AdviceName;
 import Model.BankAccounts.BankAccount;
 import Model.Exceptions.AccountOperationException;
 
@@ -8,7 +9,8 @@ import Model.Exceptions.AccountOperationException;
 public aspect TransactionConstraints extends Transactions{
 		
 	// Advice to check deposit(..)
-	before(BankAccount account, int amount) : deposit(account, amount) {
+	@AdviceName("DepositConstraint")
+	before(BankAccount account, int amount) : deposit(account, amount) {			
 		if ( amount < 0 )
 		{
 //			System.out.println("Exception thrown - Error: Deposit amount must not be negative");
@@ -17,6 +19,7 @@ public aspect TransactionConstraints extends Transactions{
 	} // before deposit
 	
 	// Advice to check withdrawal
+	@AdviceName("WithdrawConstraint")
 	before(BankAccount account, int amount) : withdraw(account, amount) {
 		int accountBalance = account.getBalance();
 		

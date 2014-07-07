@@ -26,14 +26,14 @@ public class Test_BankConstraints
 	} // tearDown
 	
 	@Rule
-	  public ExpectedException exception = ExpectedException.none();
+	public ExpectedException exception = ExpectedException.none();
 	
 	@Test
 	public void testWithdrawException() 
 	{
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
 
-		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);	
 		
 		assertEquals(account.getBalance(), 0);
 		exception.expect(AccountOperationException.class);

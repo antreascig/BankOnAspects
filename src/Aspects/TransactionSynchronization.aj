@@ -1,7 +1,7 @@
 package Aspects;
 
 import java.util.ArrayList;
-
+import org.aspectj.lang.annotation.AdviceName;
 import Controllers.AccountsController;
 import Global.Result;
 import Model.BankAccounts.BankAccount;
@@ -9,10 +9,9 @@ import Model.Transactions.Transaction;
 
 public aspect TransactionSynchronization extends Transactions {
     
-    Result around(Transaction transaction): critical_transactions(transaction)
-    {
-    	try {
-    	
+	@AdviceName("TransactionSynchronisation")
+    Result around(Transaction transaction): critical_transactions(transaction) {
+    	try {   	
 	    	ArrayList<String> affectingAccounts = transaction.getAffectingAccNumbers();
 	    	boolean allLocked = true;
 	    	BankAccount account;
@@ -64,5 +63,4 @@ public aspect TransactionSynchronization extends Transactions {
     		return new Result("FAILED", "Account not found!");
     	} 
     } // around bank_operations
-
-}
+} // TransactionSynchronization
