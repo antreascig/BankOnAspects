@@ -2,6 +2,8 @@ package Test_Suite;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -10,6 +12,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import fr.irisa.triskell.advicetracer.AdviceTracer;
+import fr.irisa.triskell.advicetracer.AdviceTracer.TraceElement;
 import fr.irisa.triskell.advicetracer.junit.Assert;
 import Controllers.AccountFactory;
 import Controllers.AccountsController;
@@ -57,27 +60,30 @@ public class Test_SecurityHandler {
 		TestSetUp.tearDownTestingEnvironment();
 	} // tearDown
 	
-	
-	public void test_PointCut() {
-		
-	}
-	
 	@Test
 	public void test_Security_Pointcut_With_Trace() {
-		
-		Transaction tr;
-		
-		tr = new BalanceTransaction(UserMode.ADMIN, basicAccPass1,  basicAccNum1);
-		
+		for ( UserMode mode : UserMode.values()) {
+			test_Transaction_Pointcut(new BalanceTransaction(mode, basicAccPass1,  basicAccNum1));
+			test_Transaction_Pointcut(new DepositTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, 100 ));
+			test_Transaction_Pointcut(new WithdrawTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, 10 ));
+			test_Transaction_Pointcut(new TransferTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, busAccNum1, 10 ));
+		} // for
+
+	} // test_Security_Pointcut_With_Trace
+	
+	private void test_Transaction_Pointcut(Transaction tr) {
 		AdviceTracer.addTracedAdvice("TransactionSecurity");
 		AdviceTracer.setAdviceTracerOn();
 		
-		tr.executeTransaction();		
+		tr.executeTransaction();				
 		
-		AdviceTracer.setAdviceTracerOff();
-		
+		AdviceTracer.setAdviceTracerOff();	
 	    Assert.assertAdviceExecutionsEquals(1);
-	}
+	    
+//	    List<TraceElement> advList = AdviceTracer.getExecutedAdvices();	
+//		assertEquals("TransactionSecurity", advList.get(0).getAdvice());
+//		System.out.println(advList.get(0).getAdvice());
+	} // test_Transaction_Pointcut
 	
 	
 	@Test

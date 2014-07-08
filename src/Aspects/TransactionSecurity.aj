@@ -15,7 +15,7 @@ public aspect TransactionSecurity extends Transactions
 		SecurityHandler.setEvaluated();
 		
 		if ( transaction.getUserMode() == UserMode.ADMIN )
-			return proceed(transaction);;
+			return proceed(transaction);
 		
 		if (!SecurityHandler.authenticated(transaction)) 
 			return new Result("FAILED", "Not authenticated for transaction");

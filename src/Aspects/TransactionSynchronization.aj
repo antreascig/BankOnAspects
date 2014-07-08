@@ -9,6 +9,8 @@ import Model.Transactions.Transaction;
 
 public aspect TransactionSynchronization extends Transactions {
     
+	private static boolean outputOn = false; 
+	
 	@AdviceName("TransactionSynchronisation")
     Result around(Transaction transaction): critical_transactions(transaction) {
     	try {   	
@@ -23,13 +25,13 @@ public aspect TransactionSynchronization extends Transactions {
 	    		
 	    		account = accountController.getAccount(accountNum);
 	    		
-	    		System.out.println("Attempting to get Lock on Account: " + accountNum);
+	    		output("Attempting to get Lock on Account: " + accountNum);
 	    		if  ( !account.lock().tryLock() ) {
 	    			allLocked = false; 			
 	    			break;
 	    		} // if
 	    		
-	    		System.out.println("\tLock on Account: " + accountNum);
+	    		output("\tLock on Account: " + accountNum);
 	    		numOfLockedAccounts++;
 	    	} // for
 	    	   	
@@ -42,9 +44,9 @@ public aspect TransactionSynchronization extends Transactions {
 	    	    	for ( String accountNumber :  affectingAccounts) {
 	    	    		account = accountController.getAccount(accountNumber);
 	    	    		account.lock().unlock();
-	    	    		System.out.println("Released Lock on Account: " + accountNumber);
+	    	    		output("Released Lock on Account: " + accountNumber);
 	    	    	} // for
-	    	    	System.out.println();
+	    	    	output("\n");
 	    	    } // finally
 	    	} // if
 	    	else {
@@ -52,9 +54,9 @@ public aspect TransactionSynchronization extends Transactions {
 	        		accountNum = affectingAccounts.get(i);
 	        		account = accountController.getAccount(accountNum);
 	        		account.lock().unlock();
-	        		System.out.println("Released Lock on Account: " + accountNum);
+	        		output("Released Lock on Account: " + accountNum);
 	        	} // for
-	    		System.out.println();
+	    		output("\n");
 	    		String info = "Another transaction on account " + affectingAccounts.get(numOfLockedAccounts) 
 	    						+ " is in process! Try again later!";
 	    	    return new Result("FAILED", info);
@@ -63,4 +65,9 @@ public aspect TransactionSynchronization extends Transactions {
     		return new Result("FAILED", "Account not found!");
     	} 
     } // around bank_operations
+    
+    private void output (String msg) {
+    	if ( outputOn )
+    		System.out.println(msg);
+    }
 } // TransactionSynchronization
