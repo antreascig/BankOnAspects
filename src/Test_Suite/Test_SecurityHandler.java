@@ -80,9 +80,9 @@ public class Test_SecurityHandler {
 		AdviceTracer.setAdviceTracerOff();	
 	    Assert.assertAdviceExecutionsEquals(1);
 	    
-//	    List<TraceElement> advList = AdviceTracer.getExecutedAdvices();	
-//		assertEquals("TransactionSecurity", advList.get(0).getAdvice());
-//		System.out.println(advList.get(0).getAdvice());
+	    List<TraceElement> advList = AdviceTracer.getExecutedAdvices();	
+		assertEquals("TransactionSecurity", advList.get(0).getAdvice());
+		System.out.println(advList.get(0).getAdvice());
 	} // test_Transaction_Pointcut
 	
 	

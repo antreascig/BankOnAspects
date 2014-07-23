@@ -21,6 +21,7 @@ public class BankDemoController
 	private AccountsController accountController;
 	private Server server;
 	private TransactionController trController;
+	private AccountViewController accountViewCtrl;
 	
 	public BankDemoController() {
 		accountController = AccountsController.getInstance();
@@ -29,8 +30,8 @@ public class BankDemoController
 	} // BankDemoController
 	
 	public void viewAccount(String accNumber) {
-		AccountViewController newAccountViewCtrl = new AccountViewController(accNumber);
-		newAccountViewCtrl.viewAccount();
+		accountViewCtrl = new AccountViewController(accNumber);
+		accountViewCtrl.viewAccount();
 	} // viewAccount
 
 	public void removeAccount(String accNumber) {
@@ -105,10 +106,6 @@ public class BankDemoController
 	public void logServerActivity(String message) {
 		Logger.logServerActivity(message);
 	} // logServerActivity
-
-	public void runServer() {
-		server.runServer();
-	} // runServer
 
 	public Integer getBalance(String accNum) {
 		Result result = trController.getBalance(accNum);

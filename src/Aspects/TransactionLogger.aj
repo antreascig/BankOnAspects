@@ -3,7 +3,6 @@ package Aspects;
 import Global.Result;
 import Model.BankAccounts.BankAccount;
 import Model.Exceptions.AccountOperationException;
-import Model.Exceptions.BankSystemException;
 import Model.Transactions.Transaction;
 import Services.Logging.Logger;
 import org.aspectj.lang.annotation.AdviceName;
@@ -26,7 +25,7 @@ public aspect TransactionLogger extends Transactions
 	
 	// Logs failed Transaction
 	@AdviceName("LogTransactionWithError")
-	after (Transaction transaction) throwing (BankSystemException e)  : critical_transactions(transaction) {
+	after (Transaction transaction) throwing (AccountOperationException e)  : critical_transactions(transaction) {
 		String log = String.format("%d \t %-8s  \t %-15s \t %s \t %d \t FAILED  \t %s", transaction.getTransactionID(), transaction.getUserMode().name() , 
 																					transaction.getAffectingAccNumbers(), transaction.getTransactionType(), 
 																					transaction.getAmount(), e.getMessage() );

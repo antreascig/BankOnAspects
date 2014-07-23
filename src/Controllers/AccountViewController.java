@@ -8,31 +8,30 @@ public class AccountViewController {
 	
 	private String accNumber;
 	private AccountView accountView;
-	private TransactionController controller;
+	private TransactionController trController;
 	
 	public AccountViewController(String accNum) {
 		accNumber = accNum;
-		controller = new TransactionController(UserMode.ADMIN);
+		trController = new TransactionController(UserMode.ADMIN);
 	} // AccountViewController
 	
-	public void viewAccount()
-	{
+	public void viewAccount() {
 		accountView = new AccountView(accNumber, this );
 		accountView.setVisible(true);
 	} // viewAccount
 
 	public void withdraw(int amount) {
-		Result result = controller.withdraw(accNumber, amount);
+		Result result = trController.withdraw(accNumber, amount);
 		checkResult(result);
 	} // withdraw
 
 	public void deposit(int amount) {
-		Result result = controller.deposit(accNumber, amount);
+		Result result = trController.deposit(accNumber, amount);
 		checkResult(result);
 	} // deposit
 
 	public Integer getBalance() {
-		Result result = controller.getBalance(accNumber);
+		Result result = trController.getBalance(accNumber);
 		Integer balance = null;
 		
 		boolean trCompleted = checkResult(result);
@@ -58,8 +57,7 @@ public class AccountViewController {
 		} // else
 	} // checkResult
 
-	public boolean isInteger(String amountString) 
-	{
+	public boolean isInteger(String amountString) {
 		try {
 			Integer.parseInt(amountString);
 			return true;
@@ -67,4 +65,4 @@ public class AccountViewController {
 			return false;
 		}	
 	}
-}
+} // AccountViewController

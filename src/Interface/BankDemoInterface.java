@@ -66,8 +66,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 	private JLabel toBalanceLbl;
 	private JTextField amountTxt;
 				
-	public BankDemoInterface(BankDemoController bankDemoController) 
-	{
+	public BankDemoInterface(BankDemoController bankDemoController) {
 		setResizable(false);
 		controller = bankDemoController;
 		
@@ -337,7 +336,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		fromList = new JComboBox<>();
 		fromList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setFromAccount();
+				setFromAccountList();
 			}
 		});
 		fromList.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -379,7 +378,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		toList = new JComboBox<>();
 		toList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setToAccount();
+				setToAccountList();
 			}
 		});
 		lblToAccount.setLabelFor(toList);
@@ -584,8 +583,8 @@ public class BankDemoInterface extends JFrame implements Observer {
 			DefaultComboBoxModel<String> toModel = controller.getAccountComboList();
 			fromList.setModel( fromModel );
 			toList.setModel(toModel);
-			setFromAccount();
-			setToAccount();
+			setFromAccountList();
+			setToAccountList();
 		} // else if
 	} // updateScreen
 	
@@ -606,26 +605,25 @@ public class BankDemoInterface extends JFrame implements Observer {
 		controller.logServerActivity(log);
 	} // updateServerLog
 	
-	protected void setFromAccount() {
+	protected void setFromAccountList() {
 		String fromAccNum = fromList.getSelectedItem().toString();
 		Integer fromBalance = controller.getBalance(fromAccNum);
 		String fromAccType = controller.getAccountType(fromAccNum);
 		
 		fromAccTypeLbl.setText(fromAccType);
-		fromBalanceLbl.setText("£" + fromBalance);	
+		fromBalanceLbl.setText("ï¿½" + fromBalance);	
 	} // setFromAccount
 	
-	protected void setToAccount() {
+	protected void setToAccountList() {
 		String toAccNum = toList.getSelectedItem().toString();
 		Integer balance = controller.getBalance(toAccNum);
 		String toAccType = controller.getAccountType(toAccNum);
 		
 		toAccTypeLbl.setText(toAccType);
-		toBalanceLbl.setText("£" + balance);
+		toBalanceLbl.setText("ï¿½" + balance);
 	} // setToAccount
 	
-	protected void transfer() 
-	{
+	protected void transfer() {
 		String fromAccNumber = fromList.getSelectedItem().toString();
 		String toAccNumber = toList.getSelectedItem().toString();
 		if (fromAccNumber.equals(toAccNumber)) {
@@ -655,10 +653,8 @@ public class BankDemoInterface extends JFrame implements Observer {
 			updateScreen("transferPanel");			
 		} //finally
 	} // deposit
-	
 		
-	protected void addAccount()
-	{
+	protected void addAccount() {
 		Object[] options = {"Basic Account",
                 			"Business Account"};
 		int option = JOptionPane.showOptionDialog(this, "Select Bank Account Type: ", "Bank Account Selection", 
