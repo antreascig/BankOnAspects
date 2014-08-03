@@ -25,6 +25,5 @@ public abstract aspect Transactions {
 			execution(Result Transaction.executeTransaction()) && target(transaction);
 	
 	pointcut critical_transactions(Transaction transaction) : 
-		( execution(Result Transaction.executeTransaction()) && target(transaction) ) && !within(BalanceTransaction);
-		
+		( execution(Result Transaction.executeTransaction()) && target(transaction) ) && !within(BalanceTransaction);	
 }  // Transactions

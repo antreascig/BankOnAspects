@@ -28,8 +28,7 @@ public class AccountView extends JFrame {
 	 * @param balance 
 	 * @param accNum 
 	 */
-	public AccountView(String accNum, AccountViewController avController) 
-	{		
+	public AccountView(String accNum, AccountViewController avController) {		
 		controller = avController;
 		
 		initialize();
@@ -42,7 +41,7 @@ public class AccountView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setLocationRelativeTo(null);
-	}
+	} // AccountView
 
 	private void initialize() {
 		JLabel lblAccount = new JLabel("Account:");
@@ -54,7 +53,7 @@ public class AccountView extends JFrame {
 		JLabel lblBalance = new JLabel("Balance:");
 		lblBalance.setFont(new Font("Dialog", Font.BOLD, 20));
 		
-		lblAccBalance = new JLabel("...");
+		lblAccBalance = new JLabel("£0");
 		lblAccBalance.setFont(new Font("Dialog", Font.BOLD, 18));
 		
 		JButton depositButton = new JButton("Deposit");
@@ -127,8 +126,7 @@ public class AccountView extends JFrame {
 			    JOptionPane.WARNING_MESSAGE);
 	} // showException
 	
-	protected void withdraw() 
-	{
+	protected void withdraw() {
 		String amountString = (String) JOptionPane.showInputDialog(
 				this,
                 "Enter amount to withdraw:",
@@ -138,8 +136,7 @@ public class AccountView extends JFrame {
                 null,
                 0);		
 		
-		while ( !controller.isInteger(amountString) )
-		{
+		while ( !controller.isInteger(amountString) ) {
 			if (amountString == null)
 				return;
 			
@@ -161,8 +158,7 @@ public class AccountView extends JFrame {
 		updateScreen();
 	} // withdraw
 
-	protected void deposit() 
-	{
+	protected void deposit() {
 		String amountString = (String) JOptionPane.showInputDialog(
 				this,
                 "Enter amount to deposit:",
@@ -172,8 +168,7 @@ public class AccountView extends JFrame {
                 null,
                 0);	
 		
-		while ( !controller.isInteger(amountString) )
-		{
+		while ( !controller.isInteger(amountString) ) {
 			if (amountString == null)
 				return;
 			
@@ -193,13 +188,12 @@ public class AccountView extends JFrame {
 		updateScreen();
 	} // deposit	
 
-	private void updateScreen()
-	{
+	private void updateScreen() {
 		int accBalance = controller.getBalance();
-		lblAccBalance.setText("�" + accBalance);
+		lblAccBalance.setText("£" + accBalance);
 	}
 	
 	protected void closeView() {
 		this.dispose();
-	}
-}
+	} // closeView
+} // AccountView

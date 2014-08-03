@@ -39,8 +39,9 @@ public class UserThread extends Thread {
         		return;
         	ArrayList<String> testing = new ArrayList<>();
         	
-        	testing.add("Andreas");
-        	testing.add("Giorgos");
+        	testing.add("Testing");
+        	testing.add("Client");
+        	testing.add("Communication");
         
           System.out.print("Sending string: '" + testing + "'\n");
 
@@ -48,7 +49,9 @@ public class UserThread extends Thread {
           
           socketOut.writeObject(testing);
           socketOut.flush();         
-                    
+          
+          Thread.sleep(10000);
+          
           socket.close();
           Server server = Server.getServerInstance();
           server.removeClient(this);

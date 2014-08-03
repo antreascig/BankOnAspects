@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import javax.swing.DefaultComboBoxModel;
 
 import Global.AccountType;
-import Global.Pair;
+import Global.Update;
 import Global.Result;
 import Global.UserMode;
 import Model.BankAccounts.BankAccount;
@@ -38,7 +38,7 @@ public class BankDemoController
 		accountController.removeAccount(accNumber);
 	} // removeAccount
 	
-	public Pair<Integer> addAccount(int option) {
+	public Update<Integer> addAccount(int option) {
 		
 		AccountType type;
 		switch(option){
@@ -51,14 +51,14 @@ public class BankDemoController
 		} // switch
 		
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-		Pair<Integer> newAccountInfo = null;
+		Update<Integer> newAccountInfo = null;
 		try {
 			String newAccNumber = accountController.addAccount(accFactory.createAccount(type, 1234));
-			newAccountInfo = new Pair<Integer>(newAccNumber, 1234);
+			newAccountInfo = new Update<Integer>(newAccNumber, 1234);
 			return newAccountInfo;
 			
 		} catch ( AccountOperationException exception) {
-			newAccountInfo = new Pair<Integer>(exception.getMessage(), null);
+			newAccountInfo = new Update<Integer>(exception.getMessage(), null);
 			return newAccountInfo;
 		} // catch		
 	} // addAccount

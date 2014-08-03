@@ -12,7 +12,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 
 import Controllers.BankDemoController;
-import Global.Pair;
+import Global.Update;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -409,14 +409,16 @@ public class BankDemoInterface extends JFrame implements Observer {
 		amountTxt.setColumns(10);
 		GroupLayout gl_transferPanel = new GroupLayout(transferPanel);
 		gl_transferPanel.setHorizontalGroup(
-			gl_transferPanel.createParallelGroup(Alignment.TRAILING)
+			gl_transferPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_transferPanel.createSequentialGroup()
 					.addGap(25)
 					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_transferPanel.createSequentialGroup()
 							.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblFromAccount)
-								.addComponent(lblAccountType))
+								.addGroup(gl_transferPanel.createSequentialGroup()
+									.addComponent(lblAccountType, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addGap(2)))
 							.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_transferPanel.createSequentialGroup()
 									.addGap(6)
@@ -425,7 +427,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 										.addComponent(fromBalanceLbl)
-										.addComponent(fromAccTypeLbl, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)))))
+										.addComponent(fromAccTypeLbl, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)))))
 						.addGroup(gl_transferPanel.createSequentialGroup()
 							.addGap(28)
 							.addComponent(lblNewLabel_1)))
@@ -435,25 +437,27 @@ public class BankDemoInterface extends JFrame implements Observer {
 					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 							.addGroup(gl_transferPanel.createSequentialGroup()
-								.addComponent(label, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.UNRELATED))
+								.addComponent(label, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+								.addGap(11))
 							.addGroup(gl_transferPanel.createSequentialGroup()
-								.addComponent(lblToAccount, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+								.addComponent(lblToAccount, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addGap(29)))
 						.addGroup(gl_transferPanel.createSequentialGroup()
 							.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 							.addGap(56)))
 					.addGroup(gl_transferPanel.createParallelGroup(Alignment.LEADING)
 						.addComponent(toBalanceLbl, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
-						.addComponent(toAccTypeLbl, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
-						.addComponent(toList, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE))
+						.addComponent(toList, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_transferPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(toAccTypeLbl, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
 					.addGap(45))
-				.addGroup(Alignment.LEADING, gl_transferPanel.createSequentialGroup()
+				.addGroup(gl_transferPanel.createSequentialGroup()
 					.addGap(36)
 					.addComponent(lblAmountToTransfer)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(amountTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
 					.addComponent(transferButton, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
 					.addGap(81))
 		);
@@ -468,12 +472,13 @@ public class BankDemoInterface extends JFrame implements Observer {
 								.addComponent(fromList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(31)
 							.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblAccountType)
+								.addComponent(lblAccountType, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(fromAccTypeLbl))
 							.addGap(28)
 							.addGroup(gl_transferPanel.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblNewLabel_1)
-								.addComponent(fromBalanceLbl)))
+								.addComponent(fromBalanceLbl))
+							.addGap(34))
 						.addGroup(gl_transferPanel.createSequentialGroup()
 							.addGap(31)
 							.addComponent(separator_1, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE))
@@ -495,7 +500,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 						.addComponent(transferButton, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblAmountToTransfer)
 						.addComponent(amountTxt, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
-					.addGap(74))
+					.addGap(86))
 		);
 		transferPanel.setLayout(gl_transferPanel);
 		getContentPane().setLayout(groupLayout);
@@ -505,19 +510,24 @@ public class BankDemoInterface extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {	
-		Pair<?> update = (Pair<?>)arg;
+		
+		if ( !(arg instanceof Update<?> )) {
+			updateServerLog("Error With Update");
+			return;
+		} // if
+		Update<?> update = (Update<?>)arg;
 		
 		String key = update.getKey();
 		String log;
 		Integer clientNumber;
+		Integer numOfClients;
 		if (key.equals("STATUS")) {
 			boolean serverRunning = (Boolean) update.getValue();			
 			log = "Server ";
 			if (serverRunning)
 				log += "is running.";
 			else
-				log += "has stopped.";
-			clientNumber = controller.getClientNumber();
+				log += "has stopped.";			
 		} // if
 		else if (key.equals("USER_ADDED")) {
 			clientNumber = (Integer) update.getValue();
@@ -525,14 +535,14 @@ public class BankDemoInterface extends JFrame implements Observer {
 		} // else if
 		else if (key.equals("USER_REMOVED")) {
 			clientNumber = (Integer) update.getValue(); 
-			log = "Client# " + clientNumber + "disconnected." ;
+			log = "Client# " + clientNumber + " disconnected." ;
 		} // else if
 		else
 			throw new RuntimeException("Unforseen key update");
 		
 		updateServerLog(log);
-		
-		userCountLbl.setText(clientNumber + "");
+		numOfClients = controller.getClientNumber();
+		userCountLbl.setText(numOfClients + "");
 	} //update
 
 	protected void initializeDemo() {
@@ -555,8 +565,12 @@ public class BankDemoInterface extends JFrame implements Observer {
 			String radioTxt;	
 						
 			for (String account : accountList) {
-				radioTxt = account + "\t-\t" + controller.getAccountType(account);
+				radioTxt = account + "         -         " + controller.getAccountType(account);
 				accountRadio = new JRadioButton(radioTxt);
+				
+				accountRadio.setFont(accountRadio.getFont().deriveFont(18.0f));
+
+				
 				accountRadio.setActionCommand(account);
 				accountRadio.addActionListener(new ActionListener() {			
 					@Override
@@ -601,7 +615,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 	} // updateButtons
 
 	public void updateServerLog(String log) {
-		serverLog.append(log);
+		serverLog.append(log + "\n");
 		controller.logServerActivity(log);
 	} // updateServerLog
 	
@@ -611,7 +625,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		String fromAccType = controller.getAccountType(fromAccNum);
 		
 		fromAccTypeLbl.setText(fromAccType);
-		fromBalanceLbl.setText("�" + fromBalance);	
+		fromBalanceLbl.setText("£" + fromBalance);	
 	} // setFromAccount
 	
 	protected void setToAccountList() {
@@ -620,7 +634,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 		String toAccType = controller.getAccountType(toAccNum);
 		
 		toAccTypeLbl.setText(toAccType);
-		toBalanceLbl.setText("�" + balance);
+		toBalanceLbl.setText("£" + balance);
 	} // setToAccount
 	
 	protected void transfer() {
@@ -661,7 +675,7 @@ public class BankDemoInterface extends JFrame implements Observer {
 												 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
 		if ( option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION )
 			return;
-		Pair<Integer> newAccountInfo = controller.addAccount(option);
+		Update<Integer> newAccountInfo = controller.addAccount(option);
 		String message = "New Account created.\nAccount Number: " + newAccountInfo.getKey() + "\nPassword: " + newAccountInfo.getValue();
 		JOptionPane.showMessageDialog(this, message);
 			

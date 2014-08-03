@@ -1,10 +1,10 @@
 package Global;
 
-public class Pair <E>{
+public class Update <E>{
 	private String key;
 	private E value;
 	
-	public Pair(String k, E v) {
+	public Update(String k, E v) {
 		this.key = k;
 		this.value = v;
 	} // Pair
@@ -16,4 +16,5 @@ public class Pair <E>{
 	public E getValue() {
 		return this.value;
 	} // getValue
+	
 } // Pair

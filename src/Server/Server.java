@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import Controllers.BankDemoController;
-import Global.Pair;
+import Global.Update;
 import Interface.BankDemoInterface;
 
 public class Server extends Observable
@@ -39,7 +39,7 @@ public class Server extends Observable
 			
 			isRunning = true;
 			setChanged();
-	    	notifyObservers(new Pair<>("STATUS", isRunning));
+	    	notifyObservers(new Update<>("STATUS", isRunning));
 	    	
             while (isRunning) {           	
                 addClient(listener.accept());
@@ -55,7 +55,7 @@ public class Server extends Observable
 			} // catch
             finally {
             	isRunning = false;
-            	notifyObservers(new Pair<>("STATUS", isRunning));
+            	notifyObservers(new Update<>("STATUS", isRunning));
             } // finally
         } // finally
 	} // run
@@ -68,7 +68,7 @@ public class Server extends Observable
 		}
 		finally {
 			isRunning = false;
-			notifyObservers(new Pair<>("STATUS", isRunning));
+			notifyObservers(new Update<>("STATUS", isRunning));
 		} // finally
 	} // stopServer;
 
@@ -76,8 +76,7 @@ public class Server extends Observable
 		UserThread newClient = new UserThread(newClientSocket, clientNumber, "" );		
 		clients.add(newClient);
 		setChanged();
-		notifyObservers("");
-		notifyObservers(new Pair<>("USER_ADDED", clientNumber));
+		notifyObservers(new Update<>("USER_ADDED", clientNumber));
 		
 		newClient.start();
 			
@@ -87,7 +86,7 @@ public class Server extends Observable
     public void removeClient(UserThread client) {
     	clients.remove(client);
     	setChanged();
-    	notifyObservers(new Pair<>("USER_REMOVED", client.getClientNumber() ));
+    	notifyObservers(new Update<>("USER_REMOVED", client.getClientNumber() ));
     } // removeClient
     
     public int getClientCount() {
