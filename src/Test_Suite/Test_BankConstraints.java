@@ -29,25 +29,22 @@ public class Test_BankConstraints
 	public ExpectedException exception = ExpectedException.none();
 	
 	@Test
-	public void testWithdrawException() 
-	{
+	public void testWithdrawException() {
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-
 		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);	
 		
-		assertEquals(account.getBalance(), 0);
 		exception.expect(AccountOperationException.class);
+		exception.expectMessage("The account contains insufficient funds.");
 		account.withdraw(10);				
 	} // testWithdrawException
 	
 	@Test
-	public void testDepositException()
-	{
+	public void testDepositException() {
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
-
 		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);
 				
 		exception.expect(AccountOperationException.class);
+		exception.expectMessage("Deposit amount must not be negative");
 		account.deposit(-10);
 	} // testDepositException
 
