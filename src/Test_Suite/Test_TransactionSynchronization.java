@@ -39,7 +39,7 @@ public class Test_TransactionSynchronization {
 	} // tearDown
 	
 	@Test
-	public void testSynchronisationCriterio1() {
+	public void testSynchronisationCriterion1() {
 		UserThread newClient1 = new UserThread(null, 1 , basicAccNum1);
 		
 		UserThread newClient2 = new UserThread(null, 2, basicAccNum1 );
@@ -66,7 +66,7 @@ public class Test_TransactionSynchronization {
 	
 	
 	@Test
-	public void testSynchronisationCriterio2() {
+	public void testSynchronisationCriterion2() {
 		System.out.println("----------------------------------------------------------------------------------------");
 		
 		UserThread newClient1 = new UserThread(null, 1 , basicAccNum1);
