@@ -1,7 +1,5 @@
 package Test_Suite;
 
-import static org.junit.Assert.*;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -29,13 +27,23 @@ public class Test_BankConstraints
 	public ExpectedException exception = ExpectedException.none();
 	
 	@Test
-	public void testWithdrawException() {
+	public void testWithdrawFundsException() {
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
 		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);	
 		
 		exception.expect(AccountOperationException.class);
 		exception.expectMessage("The account contains insufficient funds.");
 		account.withdraw(10);				
+	} // testWithdrawException
+	
+	@Test
+	public void testWithdrawNegativeException() {
+		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
+		BankAccount account = accFactory.createAccount(AccountType.BASIC_ACCOUNT, 1234);	
+		
+		exception.expect(AccountOperationException.class);
+		exception.expectMessage("Withdrawal amount must not be negative.");
+		account.withdraw(-10);				
 	} // testWithdrawException
 	
 	@Test
