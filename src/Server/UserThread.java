@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import Controllers.TransactionController;
 import Global.Result;
+import Global.TransactionType;
 import Global.UserMode;
 
 public class UserThread extends Thread {
@@ -13,9 +14,12 @@ public class UserThread extends Thread {
 	private Socket socket;
 	private int clientNumber;
 	private TransactionController controller;
-	private Result result;
 	
 	private String accNumber;
+	private Result result;
+	
+	private TransactionType selectedTransaction;
+	private String toAccountNumber = null;
 	
     public UserThread(Socket socket, int clientNum, String accNum) {
         this.socket = socket;
@@ -25,15 +29,32 @@ public class UserThread extends Thread {
         accNumber = accNum;
         
         controller = new TransactionController(UserMode.ADMIN);
+        
+        selectedTransaction = TransactionType.DEPOSIT;
+        
     } // UserThread
 
     boolean resultReceived;
-    public void run() {
+    public void run() {	
     	
     	resultReceived = false;
-    	result = deposit(accNumber, 100);
-    	resultReceived = true;
     	
+    	switch ( selectedTransaction ) {
+    		case DEPOSIT : 
+    						result = deposit(10);
+    						break;
+    		case WITHDRAW : 
+    						result = withdraw(10);
+    						break;
+    		case TRANSFER : 
+			    			result = transfer(toAccountNumber, 10);
+							break;    						
+    		default:
+    						break;
+    	} // switch
+    	
+    	resultReceived = true;
+    	/* TESTING COMMUNICATION
         try {
         	if (socket == null)
         		return;
@@ -58,25 +79,38 @@ public class UserThread extends Thread {
         }catch(Exception e) {
             System.out.print("Whoops! It didn't work!\n");
         }  	
+        */
     } // run
+    
+    public void selectOperation(TransactionType transaction, String toAccount) {
+    	selectedTransaction = transaction;
+    	toAccountNumber = toAccount;
+    } // selectOperation
     
     public int getClientNumber(){
     	return this.clientNumber;
-    }
+    } // getClientNumber
     
     private void log(String message) {
         System.out.println(message);
-    }
-
-
-	private Result deposit(String toAccNum, int amount ) {
-		return controller.deposit(toAccNum, amount);
-	} // deposit
-
-	public Result getResult() throws InterruptedException {
+    } // log
+    
+    public Result getResult() throws InterruptedException {
 		while (!resultReceived){
 			Thread.sleep(1000);
-		}
+		} // while
 		return result;
-	}
-}
+	} // getResult
+    
+	private Result deposit( int amount ) {
+		return controller.deposit(accNumber, amount);
+	} // deposit
+	
+	private Result withdraw(int amount ) {
+		return controller.deposit(accNumber, amount);
+	} // withdraw
+	
+	private Result transfer(String toAccNum, int amount) {
+		return controller.transfer(accNumber, toAccNum, amount);
+	} // transfer
+} // UserThread
