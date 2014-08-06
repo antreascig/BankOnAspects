@@ -24,7 +24,7 @@ import Model.Transactions.*;
 import Services.Security.SecurityHandler;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class Test_SecurityHandler {
+public class Test_TransactionSecurity {
 	
 	private static String basicAccNum1, busAccNum1, basicAccNum2, busAccNum2;
 	private static int basicAccPass1, busAccPass1, basicAccPass2, busAccPass2;
@@ -46,13 +46,9 @@ public class Test_SecurityHandler {
 		busAccPass2 = 4567;
 		
 		basicAccNum1 = accountController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, basicAccPass1));
-//		System.out.println("Basic Account1 Num: " + basicAccNum1);
 		basicAccNum2 = accountController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, basicAccPass2));
-//		System.out.println("Basic Account1 Num: " + basicAccNum2);
 		busAccNum1 = accountController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, busAccPass1));
-//		System.out.println("Basic Account1 Num: " + busAccPass1);		
 		busAccNum2 = accountController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, busAccPass2));
-//		System.out.println("Basic Account1 Num: " + busAccPass2);
 	} // setAccounts
 	
 	@AfterClass
@@ -82,10 +78,9 @@ public class Test_SecurityHandler {
 	    
 	    List<TraceElement> advList = AdviceTracer.getExecutedAdvices();	
 		assertEquals("TransactionSecurity", advList.get(0).getAdvice());
-		System.out.println(advList.get(0).getAdvice());
+//		System.out.println(advList.get(0).getAdvice());
 	} // test_Transaction_Pointcut
-	
-	
+		
 	@Test
 	public void test1_Security_Pointcut() {
 		Transaction tr;

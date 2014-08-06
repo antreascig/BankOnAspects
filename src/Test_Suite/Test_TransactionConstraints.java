@@ -11,7 +11,7 @@ import Global.AccountType;
 import Model.BankAccounts.BankAccount;
 import Model.Exceptions.AccountOperationException;
 
-public class Test_BankConstraints 
+public class Test_TransactionConstraints 
 {
 	@BeforeClass
 	public static void setUp() {

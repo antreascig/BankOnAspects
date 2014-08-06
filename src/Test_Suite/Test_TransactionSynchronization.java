@@ -66,7 +66,6 @@ public class Test_TransactionSynchronization {
 		} //catch
 	} //test
 	
-	
 	@Test
 	public void testSynchronisationCriterion2() {
 		System.out.println("----------------------------------------------------------------------------------------");
