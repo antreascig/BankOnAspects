@@ -2,16 +2,17 @@ package Test_Suite;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import Controllers.AccountFactory;
 import Controllers.AccountsController;
 import Global.AccountType;
 import Global.Result;
 import Global.TransactionType;
 import Server.UserThread;
+import Services.Synchronization.AccountLocker;
 
 public class Test_TransactionSynchronization {
 	
@@ -30,7 +31,8 @@ public class Test_TransactionSynchronization {
 		busAccPass1 = 5678;
 		
 		basicAccNum1 = accountController.addAccount(accFactory.createAccount(AccountType.BASIC_ACCOUNT, basicAccPass1));
-		busAccNum1 = accountController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, busAccPass1));		
+		busAccNum1 = accountController.addAccount(accFactory.createAccount(AccountType.BUSINESS_ACCOUNT, busAccPass1));
+		
 	} // setAccounts
 	
 	@AfterClass
@@ -57,7 +59,7 @@ public class Test_TransactionSynchronization {
 		System.out.println();
 		System.out.println("Deposit on account: " + basicAccNum1 + " \t Status: " + resultForUser1.getStatus() + " \t Info: " + resultForUser1.getInfo());
 		System.out.println("Deposit on account: " + basicAccNum1 + " \t Status: " + resultForUser2.getStatus() + " \t Info: " + resultForUser2.getInfo());
-		
+				
 		assertNotEquals(resultForUser2.getStatus(), resultForUser1.getStatus());
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -93,4 +95,22 @@ public class Test_TransactionSynchronization {
 		} //catch
 	} //test
 
-}
+	@Test
+	public void testLocker() {
+		System.out.println("----------------------------------------------------------------------------------------");
+		ArrayList<String> accounts = new ArrayList<>();
+		accounts.add(basicAccNum1);
+		AccountLocker locker = new AccountLocker(accounts);
+		AccountLocker locker2 = new AccountLocker(accounts);
+		
+		// Account not Locked
+		locker.lockAccounts();
+		locker.unlockAccounts();		
+
+		new Thread(locker).start();
+		new Thread(locker2).start();
+		System.out.println("Locker 1: " + locker.getError());
+		System.out.println("Locker 2: " + locker2.getError());
+		assertNotEquals(locker.getError(), locker2.getError());
+	} // testLocker
+} // Test_TransactionSynchronization

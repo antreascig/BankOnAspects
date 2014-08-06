@@ -97,7 +97,7 @@ public class UserThread extends Thread {
     
     public Result getResult() throws InterruptedException {
 		while (!resultReceived){
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} // while
 		return result;
 	} // getResult
