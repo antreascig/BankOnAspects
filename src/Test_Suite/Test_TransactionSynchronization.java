@@ -3,14 +3,17 @@ package Test_Suite;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import Controllers.AccountFactory;
 import Controllers.AccountsController;
 import Global.AccountType;
 import Global.Result;
 import Global.TransactionType;
+import Model.BankAccounts.BankAccount;
 import Server.UserThread;
 import Services.Synchronization.AccountLocker;
 
@@ -39,6 +42,45 @@ public class Test_TransactionSynchronization {
 	public static void tearDown() {
 		TestSetUp.tearDownTestingEnvironment();
 	} // tearDown
+	
+	@Test
+	public void testLocker() {
+		System.out.println("----------------------------------------------------------------------------------------");
+		ArrayList<String> accounts = new ArrayList<>();
+		accounts.add(basicAccNum1);
+		AccountLocker locker = new AccountLocker(accounts);
+		AccountLocker locker2 = new AccountLocker(accounts);
+		
+		// Account not Locked
+		locker.lockAccounts();
+		locker.unlockAccounts();		
+
+		new Thread(locker).start();
+		new Thread(locker2).start();
+		System.out.println("Locker 1: " + locker.getError());
+		System.out.println("Locker 2: " + locker2.getError());
+		assertNotEquals(locker.getError(), locker2.getError());
+	} // testLocker
+
+	@Test
+	public void testUnlocker() {
+		System.out.println("----------------------------------------------------------------------------------------");
+		ArrayList<String> accounts = new ArrayList<>();
+		accounts.add(basicAccNum1);
+		accounts.add(busAccNum1);
+		AccountLocker locker = new AccountLocker(accounts);
+		
+		locker.lockAccounts();
+		locker.unlockAccounts();
+		
+		AccountsController controller = AccountsController.getInstance();
+		
+		BankAccount accountTest1 = controller.getAccount(basicAccNum1);
+		BankAccount accountTest2 = controller.getAccount(busAccNum1);
+		
+		assertEquals(false, accountTest1.lock().isLocked());
+		assertEquals(false, accountTest2.lock().isLocked());
+	} // testUnlocker
 	
 	@Test
 	public void testSynchronisationCriterion1() {
@@ -94,22 +136,4 @@ public class Test_TransactionSynchronization {
 		} //catch
 	} //test
 
-	@Test
-	public void testLocker() {
-		System.out.println("----------------------------------------------------------------------------------------");
-		ArrayList<String> accounts = new ArrayList<>();
-		accounts.add(basicAccNum1);
-		AccountLocker locker = new AccountLocker(accounts);
-		AccountLocker locker2 = new AccountLocker(accounts);
-		
-		// Account not Locked
-		locker.lockAccounts();
-		locker.unlockAccounts();		
-
-		new Thread(locker).start();
-		new Thread(locker2).start();
-		System.out.println("Locker 1: " + locker.getError());
-		System.out.println("Locker 2: " + locker2.getError());
-		assertNotEquals(locker.getError(), locker2.getError());
-	} // testLocker
 } // Test_TransactionSynchronization

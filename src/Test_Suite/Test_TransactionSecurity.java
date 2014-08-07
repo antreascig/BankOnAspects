@@ -33,7 +33,7 @@ public class Test_TransactionSecurity {
 	@BeforeClass
 	public static void setUp() {
 		
-		TestSetUp.setUpTestingEnvironment("SecurityHandler");
+		TestSetUp.setUpTestingEnvironment("Test_TransactionSecurity");
 		
 		AccountFactory accFactory = AccountFactory.getAccountFactoryInstance();	
 		AccountsController accountController = AccountsController.getInstance();
@@ -127,219 +127,204 @@ public class Test_TransactionSecurity {
 		} // for
 	} // test_IsAuntenticated
 	
-	//////	TESTING ADVICE
+	////// Testing Delegated Code
 	
 	@Test
-	public void test2_Authorization_ClientMode_Basic_Account_Exceptions() {
+	public void test_Authorization_ClientMode() {
 		Transaction tr;
 		UserMode mode = UserMode.CLIENT;
-		Result result = null;
+		boolean authorized;
 		
-		// Authorisation for getting Balance - It should Complete
+		//// BASIC ACCOUNT
+		// Authorisation for Balance - TRUE
 		tr = new BalanceTransaction(mode, basicAccPass1, basicAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
 		
-		
-		// Authorisation for Deposit Transaction - It should Complete
+		// Authorisation for Deposit Transaction - TRUE
 		tr = new DepositTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		// Authorisation for Withdrawal Transaction - It should Complete
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
+				
+		// Authorisation for Withdrawal Transaction - TRUE
 		tr = new WithdrawTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, 10);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
 		
-		// Authorisation for Transfer between BASIC_ACCOUNT -> BASIC_ACCOUNT - It should fail 		
+		// Authorisation for Transfer between BASIC_ACCOUNT -> BASIC_ACCOUNT - FALSE		
 		tr = new TransferTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, basicAccNum2, 10 );
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals("Not authorized for transaction", result.getInfo());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(false, authorized);
 		
-		// Authorisation for Transfer between BASIC_ACCOUNT -> BUSINESS_ACCOUNT - It should fail 		
+		// Authorisation for Transfer between BASIC_ACCOUNT -> BUSINESS_ACCOUNT - FALSE		
 		tr = new TransferTransaction(trGen.getAndIncr(), mode, basicAccPass1, basicAccNum1, busAccNum1, 10 );
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals("Not authorized for transaction", result.getInfo());				
-	} // test_Security_Advice_Authorization_Basic_Account_Exceptions
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(false, authorized);
 		
-	@Test
-	public void test3_Authorization_ClientMode_Business_Account() {
-		UserMode mode = UserMode.CLIENT;
-		Transaction tr;
-		Result result = null;
+		//// BUSINESS ACCOUNT
+		
 		// Authorisation for getting Balance - It should Complete
 		tr = new BalanceTransaction(mode, busAccPass1, busAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
 		
 		// Authorisation for Deposit Transaction - It should Complete
 		tr = new DepositTransaction(trGen.getAndIncr(), mode, busAccPass1, busAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
 		
 		// Authorisation for Withdrawal Transaction - It should Complete
 		tr = new WithdrawTransaction(trGen.getAndIncr(), mode, busAccPass1, busAccNum1, 10);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
 		
 		// Authorisation for Transfer between BUSINESS_ACCOUNT -> BASIC_ACCOUNT - It should Complete
 		tr = new TransferTransaction(trGen.getAndIncr(), mode, busAccPass1, busAccNum1, basicAccNum1, 10 );
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);
 
 		// Authorisation for Transfer between BUSINESS_ACCOUNT -> BUSINESS_ACCOUNT - It should Complete		
 		tr = new TransferTransaction(trGen.getAndIncr(), mode, busAccPass1, busAccNum1, busAccNum2, 10 );
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());							
-	} // test_Security_Advice_Authorization_Basic_Account_Exceptions
+		authorized = SecurityHandler.authorised(tr);
+		assertEquals(true, authorized);	
+	} // test_Authorization
 	
 	@Test
-	public void test4_Authentication_ClientMode_Balance() {
+	public void test_Authentication_ClientMode_Balance() {
 		UserMode mode = UserMode.CLIENT;
-		Result result = null;
-		String expectedErrorMessage = "Not authenticated for transaction";
+		boolean authenticated = false;
 		Transaction tr;
+		
 		// Test Authentication for Balance
-		// It Should Complete
+		// TRUE
 		tr = new BalanceTransaction(mode, basicAccPass1, basicAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		// It should Fail - Null Password
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(true, authenticated);
+		// FALSE - Null Password
 		tr = new BalanceTransaction(mode, null, basicAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
-		// It should Fail - Wrong password
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);
+		// FALSE - Wrong password
 		tr = new BalanceTransaction(mode, -1111, basicAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);	
 	} // test103_Authentication_ClientMode_Balance
 	
 	@Test
-	public void test5_Authentication_ClientMode__Deposit_() {
+	public void test_Authentication_ClientMode__Deposit() {
 		UserMode mode = UserMode.CLIENT;
-		Result result = null;
-		String expectedErrorMessage = "Not authenticated for transaction";
+		boolean authenticated;
 		Transaction tr;
+		
 		// Test Authentication for Balance
-		// It Should Complete
+		// True
 		tr = new DepositTransaction(trGen.getAndIncr(),mode, basicAccPass1, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		// It should Fail - Null Password
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(true, authenticated);	
+		// False - Null Password
 		tr = new DepositTransaction(trGen.getAndIncr(),mode, null, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
-		// It should Fail - Wrong Password
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);	
+		// False - Wrong Password
 		tr = new DepositTransaction(trGen.getAndIncr(),mode, -1111, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);		
 	} // test_Authentication_Basic_Account_Client_Deposit_Exception
 	
 	@Test
-	public void test6_Authentication_ClientMode_Withdrawal() {
+	public void test_Authentication_ClientMode_Withdrawal() {
 		UserMode mode = UserMode.CLIENT;
-		Result result = null;
-		String expectedErrorMessage = "Not authenticated for transaction";
+		boolean authenticated;
 		Transaction tr;
+		
 		// Test Authentication for Balance
-		// It Should Complete
+		// True
 		tr = new WithdrawTransaction(trGen.getAndIncr(),mode, basicAccPass1, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		// It should Fail - Null Password
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(true, authenticated);
+		// False - Null Password
 		tr = new WithdrawTransaction(trGen.getAndIncr(),mode, null, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
-		// It should Fail - Wrong Password
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);
+		// False - Wrong Password
 		tr = new WithdrawTransaction(trGen.getAndIncr(),mode, -1111, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);
 	} // test_Authentication_Basic_Account_Client_Withdrawal_Exception
 	
 	@Test
-	public void test7_Authentication_ClientMode_Transfer(){
+	public void test_Authentication_ClientMode_Transfer(){
 		UserMode mode = UserMode.CLIENT;
-		Result result = null;
-		String expectedErrorMessage = "Not authenticated for transaction";
+		boolean authenticated;
 		Transaction tr;
+		
 		// Test Authentication for Balance
 		// It Should Complete
 		tr = new TransferTransaction(trGen.getAndIncr(),mode, busAccPass1, busAccNum1, basicAccNum2, 0);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(true, authenticated);
 		// It should Fail - Null Password
 		tr = new TransferTransaction(trGen.getAndIncr(),mode, null, busAccNum1, basicAccNum2, 0);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);
 		// It should Fail - Wrong Password
 		tr = new TransferTransaction(trGen.getAndIncr(),mode, -1111, busAccNum1, basicAccNum2, 0);
-		result = tr.executeTransaction();
-		assertEquals("FAILED", result.getStatus());
-		assertEquals(expectedErrorMessage, result.getInfo());	
+		authenticated = SecurityHandler.authenticated(tr);
+		assertEquals(false, authenticated);	
 
 	} // test_Authentication_Basic_Account_Client_Transfer_Exceptions
 	
 	@Test
-	public void test8_AdminMode_No_Exceptions_On_Any_Transaction() {
+	public void test_AdminMode() {
 		Transaction tr;
 		int randomPass = 12321;
 		Result result = null;
-		try
-		{
-		UserMode mode = UserMode.ADMIN;
-		// Authorisation for getting Balance
-		tr = new BalanceTransaction(mode, randomPass, basicAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		tr = new BalanceTransaction(mode, null, basicAccNum1);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-
-		// Authorisation for Deposit Transaction
-		tr = new DepositTransaction(trGen.getAndIncr(), mode, randomPass, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		tr = new DepositTransaction(trGen.getAndIncr(), mode, null, basicAccNum1, 100);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		// Authorisation for Withdrawal Transaction
-		tr = new WithdrawTransaction(trGen.getAndIncr(), mode, randomPass, basicAccNum1, 10);		
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		tr = new WithdrawTransaction(trGen.getAndIncr(), mode, null, basicAccNum1, 10);
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-
-		// Authorisation for Transfer between BASIC_ACCOUNT -> BASIC_ACCOUNT 		
-		tr = new TransferTransaction(32, mode, randomPass, basicAccNum1, basicAccNum2, 10 );
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		tr = new TransferTransaction(32, mode, null, basicAccNum1, basicAccNum2, 10 );
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-
-		// Authorisation for Transfer between BASIC_ACCOUNT -> BUSINESS_ACCOUNT 		
-		tr = new TransferTransaction(33, mode, randomPass, basicAccNum1, busAccNum1, 10 );
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
-		
-		tr = new TransferTransaction(33, mode, null, basicAccNum1, busAccNum1, 10 );
-		result = tr.executeTransaction();
-		assertEquals("COMPLETED", result.getStatus());
+		try {
+			UserMode mode = UserMode.ADMIN;
+			// Authorisation for getting Balance
+			tr = new BalanceTransaction(mode, randomPass, basicAccNum1);
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+			
+			tr = new BalanceTransaction(mode, null, basicAccNum1);
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+	
+			// Authorisation for Deposit Transaction
+			tr = new DepositTransaction(trGen.getAndIncr(), mode, randomPass, basicAccNum1, 100);
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+			
+			tr = new DepositTransaction(trGen.getAndIncr(), mode, null, basicAccNum1, 100);
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+			
+			// Authorisation for Withdrawal Transaction
+			tr = new WithdrawTransaction(trGen.getAndIncr(), mode, randomPass, basicAccNum1, 10);		
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+			
+			tr = new WithdrawTransaction(trGen.getAndIncr(), mode, null, basicAccNum1, 10);
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+	
+			// Authorisation for Transfer between BASIC_ACCOUNT -> BASIC_ACCOUNT 		
+			tr = new TransferTransaction(32, mode, randomPass, basicAccNum1, basicAccNum2, 10 );
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+			
+			tr = new TransferTransaction(32, mode, null, basicAccNum1, basicAccNum2, 10 );
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+	
+			// Authorisation for Transfer between BASIC_ACCOUNT -> BUSINESS_ACCOUNT 		
+			tr = new TransferTransaction(33, mode, randomPass, basicAccNum1, busAccNum1, 10 );
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
+			
+			tr = new TransferTransaction(33, mode, null, basicAccNum1, busAccNum1, 10 );
+			result = tr.executeTransaction();
+			assertEquals("COMPLETED", result.getStatus());
 		}
 		catch(Exception exc)
 		{

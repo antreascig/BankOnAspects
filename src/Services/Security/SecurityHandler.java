@@ -1,6 +1,7 @@
 package Services.Security;
 
 import Controllers.AccountsController;
+import Global.UserMode;
 import Model.BankAccounts.BankAccount;
 import Model.Transactions.Transaction;
 
@@ -8,7 +9,10 @@ public class SecurityHandler
 {	
 	private static boolean evaluated = false;
 	
-	public static boolean authenticated(Transaction tr) {	
+	public static boolean authenticated(Transaction tr) {
+		if ( tr.getUserMode() == UserMode.ADMIN )
+			return true;
+		
 		String accNumToAuthenticate = tr.getAffectingAccNumbers().get(0);
 		AccountsController accountController = AccountsController.getInstance();
 		BankAccount accountToAuthenticate = accountController.getAccount(accNumToAuthenticate);
@@ -21,6 +25,9 @@ public class SecurityHandler
 	} // authenticated
 
 	public static boolean authorised (Transaction tr) {	
+		if ( tr.getUserMode() == UserMode.ADMIN )
+			return true;
+		
 		String accNumToAuthorise = tr.getAffectingAccNumbers().get(0);
 		AccountsController accountController = AccountsController.getInstance();
 		BankAccount accountToAuthorise = accountController.getAccount(accNumToAuthorise);

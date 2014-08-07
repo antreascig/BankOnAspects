@@ -15,7 +15,7 @@ public class Test_TransactionConstraints
 {
 	@BeforeClass
 	public static void setUp() {
-		TestSetUp.setUpTestingEnvironment("BankConstraints");
+		TestSetUp.setUpTestingEnvironment("Test_TransactionConstraints");
 	} // setUp
 	
 	@AfterClass

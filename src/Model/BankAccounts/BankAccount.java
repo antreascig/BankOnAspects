@@ -2,7 +2,6 @@ package Model.BankAccounts;
 
 import java.io.Serializable;
 import java.util.Hashtable;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Global.AccountType;
@@ -14,7 +13,7 @@ public abstract class BankAccount implements Serializable{
 	protected int balance;
 	protected String accNum;
 	protected Integer credential;
-	private final Lock lock = new ReentrantLock();
+	private final ReentrantLock lock = new ReentrantLock();
 	
 	private Hashtable<TransactionType, Boolean> operations;
 
@@ -58,7 +57,7 @@ public abstract class BankAccount implements Serializable{
 
 	public abstract AccountType getAccountType();
 	
-	public Lock lock() {
+	public ReentrantLock lock() {
 		return this.lock;
 	} // lock
 	
